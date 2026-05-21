@@ -15,18 +15,17 @@ import {
 } from 'lucide-react'
 
 export default function DashboardPage() {
-  const [data, setData] = useState<{
-    stats: { projects: number; skills: number; experiences: number; certificates: number; messages: number }
-    recentProjects: any[]
-  } | null>(null)
+  const [data, setData] = useState<{ stats: { projects: number; skills: number; experiences: number; certificates: number; messages: number }; recentProjects: any[] }>({ stats: { projects: 0, skills: 0, experiences: 0, certificates: 0, messages: 0 }, recentProjects: [] });
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
         const res = await fetch('/api/admin/stats')
-        const json = await res.json()
-        setData(json)
+        if (res.ok) {
+          const json = await res.json()
+          setData(json)
+        }
       } catch (err) {
         console.error(err)
       } finally {
@@ -35,14 +34,14 @@ export default function DashboardPage() {
     }
     fetchStats()
   }, [])
+const statCards: { label: string; value: number; icon: any; color: string }[] = [
+  { label: 'Total Projects', value: data?.stats?.projects || 0, icon: Briefcase, color: 'var(--accent)' },
+  { label: 'Skills Added', value: data?.stats?.skills || 0, icon: TrendingUp, color: 'var(--accent-3)' },
+  { label: 'Experiences', value: data?.stats?.experiences || 0, icon: Clock, color: 'var(--accent-4)' },
+  { label: 'Certificates', value: data?.stats?.certificates || 0, icon: Award, color: 'var(--accent-2)' },
+  { label: 'Messages', value: data?.stats?.messages || 0, icon: MessageSquare, color: '#ef4444' },
+];
 
-  const statCards = [
-    { label: 'Total Projects', value: data?.stats.projects || 0, icon: Briefcase, color: 'var(--accent)' },
-    { label: 'Skills Added', value: data?.stats.skills || 0, icon: TrendingUp, color: 'var(--accent-3)' },
-    { label: 'Experiences', value: data?.stats.experiences || 0, icon: Clock, color: 'var(--accent-4)' },
-    { label: 'Certificates', value: data?.stats.certificates || 0, icon: Award, color: 'var(--accent-2)' },
-    { label: 'Messages', value: data?.stats.messages || 0, icon: MessageSquare, color: '#ef4444' },
-  ]
 
   return (
     <div>
@@ -52,7 +51,7 @@ export default function DashboardPage() {
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px', marginBottom: '48px' }}>
-        {statCards.map((stat, i) => (
+        {statCards.map((stat: { label: string; value: number; icon: any; color: string }, i: number) => (
           <motion.div
             key={i}
             initial={{ opacity: 0, y: 20 }}
