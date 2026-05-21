@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getAuthUser } from '@/lib/auth'
+import { translateIdToEn } from '@/lib/translate'
 
 export async function GET() {
   try {
@@ -19,6 +20,12 @@ export async function PATCH(request: Request) {
 
   try {
     const body = await request.json()
+    
+    // Auto translate from Indonesian to English
+    if (body.description_id) {
+      body.description_en = await translateIdToEn(body.description_id)
+    }
+    
     const about = await prisma.about.findFirst()
     if (!about) {
       const newAbout = await prisma.about.create({ data: body })

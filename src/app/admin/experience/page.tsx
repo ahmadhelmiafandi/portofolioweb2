@@ -118,15 +118,9 @@ export default function AdminExperiencePage() {
           <div className="modal" style={{ maxWidth: '700px' }}>
             <h2 style={{ marginBottom: '24px', fontFamily: 'Syne' }}>Experience Details</h2>
             <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: '600' }}>Title (EN)</label>
-                  <input className="input" required value={current?.title_en || ''} onChange={(e) => setCurrent({ ...current, title_en: e.target.value })} />
-                </div>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: '600' }}>Title (ID)</label>
-                  <input className="input" required value={current?.title_id || ''} onChange={(e) => setCurrent({ ...current, title_id: e.target.value })} />
-                </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: '600' }}>Title (ID)</label>
+                <input className="input" required value={current?.title_id || ''} onChange={(e) => setCurrent({ ...current, title_id: e.target.value })} />
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
@@ -151,10 +145,6 @@ export default function AdminExperiencePage() {
                 </div>
               </div>
 
-              <div>
-                <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: '600' }}>Description (EN)</label>
-                <textarea className="input" style={{ height: '80px' }} required value={current?.description_en || ''} onChange={(e) => setCurrent({ ...current, description_en: e.target.value })} />
-              </div>
               <div>
                 <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: '600' }}>Description (ID)</label>
                 <textarea className="input" style={{ height: '80px' }} required value={current?.description_id || ''} onChange={(e) => setCurrent({ ...current, description_id: e.target.value })} />

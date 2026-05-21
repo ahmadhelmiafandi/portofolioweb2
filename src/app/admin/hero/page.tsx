@@ -55,81 +55,41 @@ export default function AdminHeroPage() {
       </div>
 
       <form onSubmit={handleSave} className="card" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-          <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Title (EN)</label>
-            <textarea 
-              className="input" style={{ height: '120px', fontFamily: 'monospace' }} required 
-              value={data.title_en}
-              onChange={(e) => setData({ ...data, title_en: e.target.value })}
-            />
-            <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px' }}>Use \n for line breaks</p>
-          </div>
-          <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Title (ID)</label>
-            <textarea 
-              className="input" style={{ height: '120px', fontFamily: 'monospace' }} required 
-              value={data.title_id}
-              onChange={(e) => setData({ ...data, title_id: e.target.value })}
-            />
-          </div>
+        <div>
+          <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Title (ID)</label>
+          <textarea 
+            className="input" style={{ height: '120px', fontFamily: 'monospace' }} required 
+            value={data.title_id}
+            onChange={(e) => setData({ ...data, title_id: e.target.value })}
+          />
+          <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px' }}>Gunakan \n untuk baris baru (line break)</p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-          <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Subtitle (EN)</label>
-            <textarea 
-              className="input" style={{ height: '100px' }} required 
-              value={data.subtitle_en}
-              onChange={(e) => setData({ ...data, subtitle_en: e.target.value })}
-            />
-          </div>
-          <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Subtitle (ID)</label>
-            <textarea 
-              className="input" style={{ height: '100px' }} required 
-              value={data.subtitle_id}
-              onChange={(e) => setData({ ...data, subtitle_id: e.target.value })}
-            />
-          </div>
+        <div>
+          <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Subtitle (ID)</label>
+          <textarea 
+            className="input" style={{ height: '100px' }} required 
+            value={data.subtitle_id}
+            onChange={(e) => setData({ ...data, subtitle_id: e.target.value })}
+          />
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-          <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Badge (EN)</label>
-            <input 
-              type="text" className="input" 
-              value={data.badge_en}
-              onChange={(e) => setData({ ...data, badge_en: e.target.value })}
-            />
-          </div>
-          <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Badge (ID)</label>
-            <input 
-              type="text" className="input" 
-              value={data.badge_id}
-              onChange={(e) => setData({ ...data, badge_id: e.target.value })}
-            />
-          </div>
+        <div>
+          <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Badge (ID)</label>
+          <input 
+            type="text" className="input" 
+            value={data.badge_id}
+            onChange={(e) => setData({ ...data, badge_id: e.target.value })}
+          />
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-          <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>CTA Label (EN)</label>
-            <input 
-              type="text" className="input" 
-              value={data.cta_en}
-              onChange={(e) => setData({ ...data, cta_en: e.target.value })}
-            />
-          </div>
-          <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>CTA Label (ID)</label>
-            <input 
-              type="text" className="input" 
-              value={data.cta_id}
-              onChange={(e) => setData({ ...data, cta_id: e.target.value })}
-            />
-          </div>
+        <div>
+          <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>CTA Label (ID)</label>
+          <input 
+            type="text" className="input" 
+            value={data.cta_id}
+            onChange={(e) => setData({ ...data, cta_id: e.target.value })}
+          />
         </div>
 
         <div>

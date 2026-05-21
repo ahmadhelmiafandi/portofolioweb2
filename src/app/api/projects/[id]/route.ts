@@ -20,6 +20,8 @@ export async function GET(
   }
 }
 
+import { translateIdToEn } from '@/lib/translate'
+
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -30,12 +32,22 @@ export async function PATCH(
 
   try {
     const body = await request.json()
+
+    // Auto translate fields if Indonesian text is modified
+    if (body.title_id) {
+      body.title_en = await translateIdToEn(body.title_id)
+    }
+    if (body.description_id) {
+      body.description_en = await translateIdToEn(body.description_id)
+    }
+
     const project = await prisma.project.update({
       where: { id },
       data: body
     })
     return NextResponse.json(project)
   } catch (error) {
+    console.error('Update project error:', error)
     return NextResponse.json({ error: 'Failed to update project' }, { status: 500 })
   }
 }

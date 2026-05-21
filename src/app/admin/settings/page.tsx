@@ -103,16 +103,7 @@ export default function AdminSettingsPage() {
           <h3 style={{ fontSize: '18px', fontWeight: '700', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-primary)' }}>
             <MessageSquare size={20} color="var(--accent)" /> Contact Text & Description
           </h3>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
-            <div>
-              <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', fontWeight: '600', color: 'var(--text-secondary)' }}>Title (English)</label>
-              <input 
-                className="input" 
-                value={data.title_en || ''} 
-                onChange={(e) => setData({ ...data, title_en: e.target.value })} 
-                placeholder="Let's Talk"
-              />
-            </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div>
               <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', fontWeight: '600', color: 'var(--text-secondary)' }}>Title (Indonesian)</label>
               <input 
@@ -122,16 +113,7 @@ export default function AdminSettingsPage() {
                 placeholder="Mari Bicara"
               />
             </div>
-            <div style={{ gridColumn: 'span 2' }}>
-              <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', fontWeight: '600', color: 'var(--text-secondary)' }}>Description (English)</label>
-              <textarea 
-                className="input" 
-                style={{ height: '80px' }}
-                value={data.desc_en || ''} 
-                onChange={(e) => setData({ ...data, desc_en: e.target.value })} 
-              />
-            </div>
-            <div style={{ gridColumn: 'span 2' }}>
+            <div>
               <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', fontWeight: '600', color: 'var(--text-secondary)' }}>Description (Indonesian)</label>
               <textarea 
                 className="input" 

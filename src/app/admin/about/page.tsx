@@ -49,16 +49,6 @@ export default function AdminAboutPage() {
 
       <form onSubmit={handleSave} className="card" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
         <div>
-          <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Description (EN)</label>
-          <textarea 
-            className="input" style={{ height: '180px' }} required 
-            value={data.description_en}
-            onChange={(e) => setData({ ...data, description_en: e.target.value })}
-            placeholder="Tell your story in English..."
-          />
-        </div>
-
-        <div>
           <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Description (ID)</label>
           <textarea 
             className="input" style={{ height: '180px' }} required 

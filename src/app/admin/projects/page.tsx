@@ -187,42 +187,22 @@ export default function AdminProjectsPage() {
           <div className="modal" style={{ maxWidth: '800px' }}>
             <h2 style={{ marginBottom: '24px', fontFamily: 'Syne' }}>{currentProject?.id ? 'Edit Project' : 'New Project'}</h2>
             <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Title (EN)</label>
-                  <input 
-                    type="text" className="input" required 
-                    value={currentProject?.title_en || ''}
-                    onChange={(e) => setCurrentProject({ ...currentProject, title_en: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Title (ID)</label>
-                  <input 
-                    type="text" className="input" required 
-                    value={currentProject?.title_id || ''}
-                    onChange={(e) => setCurrentProject({ ...currentProject, title_id: e.target.value })}
-                  />
-                </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Title (ID)</label>
+                <input 
+                  type="text" className="input" required 
+                  value={currentProject?.title_id || ''}
+                  onChange={(e) => setCurrentProject({ ...currentProject, title_id: e.target.value })}
+                />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Description (EN)</label>
-                  <textarea 
-                    className="input" style={{ height: '100px' }} required 
-                    value={currentProject?.description_en || ''}
-                    onChange={(e) => setCurrentProject({ ...currentProject, description_en: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Description (ID)</label>
-                  <textarea 
-                    className="input" style={{ height: '100px' }} required 
-                    value={currentProject?.description_id || ''}
-                    onChange={(e) => setCurrentProject({ ...currentProject, description_id: e.target.value })}
-                  />
-                </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Description (ID)</label>
+                <textarea 
+                  className="input" style={{ height: '100px' }} required 
+                  value={currentProject?.description_id || ''}
+                  onChange={(e) => setCurrentProject({ ...currentProject, description_id: e.target.value })}
+                />
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>

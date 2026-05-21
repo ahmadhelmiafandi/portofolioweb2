@@ -18,12 +18,23 @@ export async function GET() {
   }
 }
 
+import { translateIdToEn } from '@/lib/translate'
+
 export async function POST(request: Request) {
   const user = await getAuthUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   try {
     const body = await request.json()
+
+    // Auto translate fields if English fields not manually filled
+    if (body.title_id && !body.title_en) {
+      body.title_en = await translateIdToEn(body.title_id)
+    }
+    if (body.description_id && !body.description_en) {
+      body.description_en = await translateIdToEn(body.description_id)
+    }
+
     const experience = await prisma.experience.create({ 
       data: {
         ...body,

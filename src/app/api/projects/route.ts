@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getAuthUser } from '@/lib/auth'
 
+import { translateIdToEn } from '@/lib/translate'
+
 export async function GET() {
   try {
     const projects = await prisma.project.findMany({
@@ -23,11 +25,16 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json()
+    
+    // Auto translate fields if English fields not manually filled
+    const title_en = body.title_en || (body.title_id ? await translateIdToEn(body.title_id) : '')
+    const description_en = body.description_en || (body.description_id ? await translateIdToEn(body.description_id) : '')
+
     const project = await prisma.project.create({
       data: {
-        title_en: body.title_en,
+        title_en,
         title_id: body.title_id,
-        description_en: body.description_en,
+        description_en,
         description_id: body.description_id,
         image: body.image,
         tech_stack: body.tech_stack || [],
@@ -41,6 +48,7 @@ export async function POST(request: Request) {
     })
     return NextResponse.json(project)
   } catch (error) {
+    console.error('Create project error:', error)
     return NextResponse.json({ error: 'Failed to create project' }, { status: 500 })
   }
 }
