@@ -8,6 +8,7 @@ export const translations = {
       skills: 'Skills',
       projects: 'Projects',
       experience: 'Experience',
+      certificates: 'Certificates',
       contact: 'Contact',
     },
     hero: {
@@ -31,6 +32,14 @@ export const translations = {
       view_project: 'Project Details',
       source_code: 'Source Code',
       featured: 'Featured',
+    },
+    certificates: {
+      title: 'Certifications',
+      subtitle: 'My Verified Credentials',
+      issuer: 'Issued by',
+      date: 'Date of Issue',
+      id: 'Credential ID',
+      view_pdf: 'View PDF / Certificate',
     },
     experience: {
       title: 'Experience',
@@ -62,6 +71,7 @@ export const translations = {
       skills: 'Keahlian',
       projects: 'Proyek',
       experience: 'Pengalaman',
+      certificates: 'Sertifikat',
       contact: 'Kontak',
     },
     hero: {
@@ -85,6 +95,14 @@ export const translations = {
       view_project: 'Detail Proyek',
       source_code: 'Kode Sumber',
       featured: 'Unggulan',
+    },
+    certificates: {
+      title: 'Sertifikasi',
+      subtitle: 'Kredensial Terverifikasi Saya',
+      issuer: 'Diterbitkan oleh',
+      date: 'Tanggal Terbit',
+      id: 'ID Kredensial',
+      view_pdf: 'Lihat PDF / Sertifikat',
     },
     experience: {
       title: 'Pengalaman',

@@ -33,6 +33,7 @@ model Hero {
   badge_en    String   @default("Available for Freelance")
   badge_id    String   @default("Tersedia untuk Freelance")
   image       String?
+  cv_url      String?
   published   Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -106,13 +107,45 @@ model Social {
 }
 
 model Contact {
+  id                 String   @id @default(cuid())
+  email              String
+  phone              String?
+  location           String?
+  title_en           String?  @default("Let's Talk")
+  title_id           String?  @default("Mari Bicara")
+  desc_en            String?  @default("I'm always open to new opportunities and collaborations. Whether you have a project, a question, or just want to say hi — my inbox is always open.")
+  desc_id            String?  @default("Saya selalu terbuka untuk peluang dan kolaborasi baru. Apapun yang ingin Anda diskusikan, jangan ragu untuk menghubungi saya.")
+  footer_copy        String?  @default("© 2026 Helmi. Hak cipta dilindungi.")
+  footer_made        String?  @default("© 2026 Helmi. All rights reserved.")
+  portfolio_extra_en String?  @default("Languages: Indonesian (Native), English (Professional)")
+  portfolio_extra_id String?  @default("Bahasa: Indonesia (Native), Inggris (Profesional)")
+  published          Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model Message {
   id        String   @id @default(cuid())
+  name      String
   email     String
-  phone     String?
-  location  String?
-  published Boolean  @default(true)
+  subject   String?
+  message   String   @db.Text
+  isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+}
+
+model Certificate {
+  id            String   @id @default(cuid())
+  name          String
+  issuer        String
+  issue_date    DateTime
+  credential_id String?
+  link          String?
+  file_url      String?
+  published     Boolean  @default(true)
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 model PageView {

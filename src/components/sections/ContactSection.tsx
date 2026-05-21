@@ -137,10 +137,12 @@ export function ContactSection({
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
                   <div style={{
                     width: 40, height: 40,
-                    background: 'var(--accent-light)',
-                    borderRadius: 10,
+                    background: ['var(--accent-4)', 'var(--accent-2)', 'var(--accent-light)'][i % 3],
+                    border: '2px solid var(--border)',
+                    borderRadius: 'var(--radius-sm)',
+                    boxShadow: '2px 2px 0px 0px var(--border)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    color: 'var(--accent)',
+                    color: '#000000',
                     flexShrink: 0,
                   }}>
                     <item.icon size={16} />
@@ -178,20 +180,21 @@ export function ContactSection({
                           width: 40, height: 40,
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
                           background: 'var(--surface)',
-                          border: '1px solid var(--border)',
-                          borderRadius: 10,
-                          color: 'var(--text-muted)',
+                          border: '2px solid var(--border)',
+                          borderRadius: 'var(--radius-sm)',
+                          boxShadow: '2px 2px 0px 0px var(--border)',
+                          color: 'var(--text-primary)',
                           textDecoration: 'none',
                           transition: 'var(--transition)',
                         }}
                         onMouseEnter={e => {
-                          (e.currentTarget).style.borderColor = 'var(--accent)'
-                          ;(e.currentTarget).style.color = 'var(--accent)'
-                          ;(e.currentTarget).style.background = 'var(--accent-light)'
+                          (e.currentTarget).style.transform = 'translate(-2px, -2px)'
+                          ;(e.currentTarget).style.boxShadow = '4px 4px 0px 0px var(--border)'
+                          ;(e.currentTarget).style.background = 'var(--surface-2)'
                         }}
                         onMouseLeave={e => {
-                          (e.currentTarget).style.borderColor = 'var(--border)'
-                          ;(e.currentTarget).style.color = 'var(--text-muted)'
+                          (e.currentTarget).style.transform = 'none'
+                          ;(e.currentTarget).style.boxShadow = '2px 2px 0px 0px var(--border)'
                           ;(e.currentTarget).style.background = 'var(--surface)'
                         }}
                       >
@@ -214,8 +217,9 @@ export function ContactSection({
               onSubmit={handleSubmit}
               style={{
                 background: 'var(--surface)',
-                border: '1px solid var(--border)',
-                borderRadius: 'var(--radius-lg)',
+                border: '3px solid var(--border)',
+                borderRadius: 'var(--radius)',
+                boxShadow: 'var(--shadow-md)',
                 padding: '32px',
                 display: 'flex',
                 flexDirection: 'column',
@@ -224,7 +228,7 @@ export function ContactSection({
             >
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>
+                  <label style={{ display: 'block', fontSize: 13, fontWeight: 800, fontFamily: 'Space Grotesk, sans-serif', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-primary)', marginBottom: 8 }}>
                     {lang === 'en' ? 'Name' : 'Nama'}
                   </label>
                   <input
@@ -237,7 +241,7 @@ export function ContactSection({
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>
+                  <label style={{ display: 'block', fontSize: 13, fontWeight: 800, fontFamily: 'Space Grotesk, sans-serif', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-primary)', marginBottom: 8 }}>
                     Email
                   </label>
                   <input
@@ -252,7 +256,7 @@ export function ContactSection({
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 800, fontFamily: 'Space Grotesk, sans-serif', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-primary)', marginBottom: 8 }}>
                   {lang === 'en' ? 'Message' : 'Pesan'}
                 </label>
                 <textarea

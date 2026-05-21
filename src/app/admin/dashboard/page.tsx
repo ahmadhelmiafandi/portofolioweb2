@@ -10,12 +10,13 @@ import {
   TrendingUp,
   ArrowUpRight,
   ExternalLink,
-  Clock
+  Clock,
+  Award
 } from 'lucide-react'
 
 export default function DashboardPage() {
   const [data, setData] = useState<{
-    stats: { projects: number; skills: number; experiences: number; messages: number }
+    stats: { projects: number; skills: number; experiences: number; certificates: number; messages: number }
     recentProjects: any[]
   } | null>(null)
   const [loading, setLoading] = useState(true)
@@ -37,8 +38,9 @@ export default function DashboardPage() {
 
   const statCards = [
     { label: 'Total Projects', value: data?.stats.projects || 0, icon: Briefcase, color: 'var(--accent)' },
-    { label: 'Skills Added', value: data?.stats.skills || 0, icon: TrendingUp, color: '#10b981' },
-    { label: 'Experience Items', value: data?.stats.experiences || 0, icon: Clock, color: '#f59e0b' },
+    { label: 'Skills Added', value: data?.stats.skills || 0, icon: TrendingUp, color: 'var(--accent-3)' },
+    { label: 'Experiences', value: data?.stats.experiences || 0, icon: Clock, color: 'var(--accent-4)' },
+    { label: 'Certificates', value: data?.stats.certificates || 0, icon: Award, color: 'var(--accent-2)' },
     { label: 'Messages', value: data?.stats.messages || 0, icon: MessageSquare, color: '#ef4444' },
   ]
 

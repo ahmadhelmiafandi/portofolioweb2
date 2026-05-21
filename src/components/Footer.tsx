@@ -15,7 +15,7 @@ export function Footer({ contact }: { contact?: any }) {
   return (
     <footer style={{
       background: 'var(--surface)',
-      borderTop: '1px solid var(--border)',
+      borderTop: '3px solid var(--border)',
       padding: '40px 0',
     }}>
       <div className="container" style={{
@@ -29,11 +29,13 @@ export function Footer({ contact }: { contact?: any }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{
             width: 32, height: 32,
-            background: 'linear-gradient(135deg, var(--gradient-start), var(--gradient-end))',
-            borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: 'white', fontWeight: 800, fontSize: 14,
+            background: 'var(--accent-4)',
+            border: '3px solid var(--border)',
+            boxShadow: '2px 2px 0px 0px var(--border)',
+            borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            color: '#000000', fontWeight: 800, fontSize: 14,
           }}>H</div>
-          <span style={{ fontFamily: 'Syne, sans-serif', fontWeight: 700, fontSize: 15, color: 'var(--text-primary)' }}>
+          <span style={{ fontFamily: 'Space Grotesk, sans-serif', fontWeight: 800, fontSize: 16, color: 'var(--text-primary)' }}>
             helmi<span style={{ color: 'var(--accent)' }}>.</span>dev
           </span>
         </div>
@@ -46,14 +48,11 @@ export function Footer({ contact }: { contact?: any }) {
         {/* Back to top */}
         <a
           href="#"
+          className="btn-secondary"
           style={{
-            fontSize: 13,
-            color: 'var(--text-muted)',
-            textDecoration: 'none',
-            transition: 'var(--transition)',
+            padding: '6px 12px',
+            fontSize: 12,
           }}
-          onMouseEnter={e => (e.target as HTMLElement).style.color = 'var(--accent)'}
-          onMouseLeave={e => (e.target as HTMLElement).style.color = 'var(--text-muted)'}
         >
           {lang === 'en' ? '↑ Back to top' : '↑ Kembali ke atas'}
         </a>

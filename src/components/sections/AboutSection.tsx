@@ -52,9 +52,12 @@ export function AboutSection({ data }: { data?: AboutData | null }) {
               {/* Background decoration */}
               <div style={{
                 position: 'absolute',
-                inset: '-20px',
-                background: 'linear-gradient(135deg, var(--accent-light), transparent)',
-                borderRadius: 32,
+                inset: '-12px',
+                right: '-24px',
+                bottom: '-24px',
+                background: 'var(--accent-3)',
+                border: '3px solid var(--border)',
+                borderRadius: 'var(--radius)',
                 zIndex: 0,
               }} />
 
@@ -63,9 +66,10 @@ export function AboutSection({ data }: { data?: AboutData | null }) {
                 position: 'relative',
                 zIndex: 1,
                 background: 'var(--surface)',
-                borderRadius: 24,
+                borderRadius: 'var(--radius)',
                 overflow: 'hidden',
-                border: '1px solid var(--border)',
+                border: '3px solid var(--border)',
+                boxShadow: 'var(--shadow-md)',
                 aspectRatio: '4/5',
               }}>
                 {about.image ? (
@@ -79,7 +83,7 @@ export function AboutSection({ data }: { data?: AboutData | null }) {
                   <div style={{
                     width: '100%',
                     height: '100%',
-                    background: 'linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%)',
+                    background: 'var(--accent-4)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -89,7 +93,7 @@ export function AboutSection({ data }: { data?: AboutData | null }) {
                       fontSize: 120,
                       fontFamily: 'Syne, sans-serif',
                       fontWeight: 800,
-                      color: 'rgba(255,255,255,0.15)',
+                      color: '#000000',
                     }}>H</span>
                   </div>
                 )}
@@ -139,18 +143,20 @@ export function AboutSection({ data }: { data?: AboutData | null }) {
                     gap: 16,
                     padding: '16px 20px',
                     background: 'var(--surface)',
-                    border: '1px solid var(--border)',
-                    borderRadius: 12,
+                    border: '3px solid var(--border)',
+                    borderRadius: 'var(--radius-sm)',
+                    boxShadow: 'var(--shadow-sm)',
                     transition: 'var(--transition)',
                   }}
-                  whileHover={{ borderColor: 'var(--accent)', x: 4 }}
+                  whileHover={{ x: -2, y: -2, boxShadow: 'var(--shadow-md)', borderColor: 'var(--border)' }}
                 >
                   <div style={{
                     width: 40, height: 40,
-                    background: 'var(--accent-light)',
-                    borderRadius: 10,
+                    background: i % 2 === 0 ? 'var(--accent-4)' : 'var(--accent-2)',
+                    border: '2px solid var(--border)',
+                    borderRadius: 'var(--radius-sm)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    color: 'var(--accent)',
+                    color: '#000000',
                     flexShrink: 0,
                   }}>
                     <item.icon size={18} />

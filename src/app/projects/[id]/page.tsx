@@ -16,7 +16,7 @@ export default function ProjectDetailPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch(`/api/projects/${id}`)
+    fetch(`/api/projects/${id}`, { cache: 'no-store' })
       .then(res => res.json())
       .then(json => {
         setProject(json)

@@ -134,6 +134,20 @@ model Message {
   createdAt DateTime @default(now())
 }
 
+model Certificate {
+  id            String   @id @default(cuid())
+  name          String
+  issuer        String
+  issue_date    DateTime
+  credential_id String?
+  link          String?
+  file_url      String?
+  published     Boolean  @default(true)
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
 model PageView {
   id        String   @id @default(cuid())
   path      String

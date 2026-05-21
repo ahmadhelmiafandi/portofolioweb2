@@ -243,6 +243,20 @@ exports.Prisma.MessageScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.CertificateScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  issuer: 'issuer',
+  issue_date: 'issue_date',
+  credential_id: 'credential_id',
+  link: 'link',
+  file_url: 'file_url',
+  published: 'published',
+  order: 'order',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.PageViewScalarFieldEnum = {
   id: 'id',
   path: 'path',
@@ -280,6 +294,7 @@ exports.Prisma.ModelName = {
   Social: 'Social',
   Contact: 'Contact',
   Message: 'Message',
+  Certificate: 'Certificate',
   PageView: 'PageView'
 };
 

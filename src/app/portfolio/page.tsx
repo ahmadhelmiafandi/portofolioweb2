@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import { Globe, Mail, Phone, MapPin, ExternalLink, Github } from 'lucide-react'
+import { Globe, Mail, Phone, MapPin, ExternalLink, GitBranch } from 'lucide-react'
 import { PrintButton } from '@/components/PrintButton'
 
 export const dynamic = 'force-dynamic'
@@ -44,178 +44,186 @@ export default async function PortfolioPage() {
       <style>{`
         /* CV Professional Print Styles */
         :root {
-          --cv-text: #1f2937;
-          --cv-light: #4b5563;
-          --cv-lighter: #6b7280;
+          --cv-text: #000000;
+          --cv-light: #000000;
+          --cv-lighter: #222222;
           --cv-accent: #000000;
-          --cv-border: #d1d5db;
+          --cv-border: #000000;
         }
 
         body { 
           background: #f3f4f6; 
           margin: 0;
+          -webkit-print-color-adjust: exact;
         }
 
         .cv-container {
           background: white;
-          max-width: 210mm; /* A4 width */
-          min-height: 297mm; /* A4 height */
+          max-width: 210mm;
+          min-height: 297mm;
           margin: 40px auto;
           box-shadow: 0 10px 30px rgba(0,0,0,0.1);
           padding: 15mm 20mm;
           font-family: 'Inter', -apple-system, sans-serif;
           color: var(--cv-text);
-          line-height: 1.5;
+          line-height: 1.4;
         }
 
         .cv-header {
-          border-bottom: 2px solid var(--cv-accent);
-          padding-bottom: 12px;
+          border-bottom: 2px solid #000;
+          padding-bottom: 15px;
           margin-bottom: 20px;
         }
 
         .cv-name {
-          font-size: 28px;
+          font-size: 32px;
           font-weight: 800;
           text-transform: uppercase;
           letter-spacing: 1px;
           margin: 0 0 4px 0;
-          color: var(--cv-accent);
+          color: #000;
         }
 
         .cv-title {
-          font-size: 14px;
-          font-weight: 600;
-          color: var(--cv-light);
+          font-size: 16px;
+          font-weight: 700;
+          color: #222;
           text-transform: uppercase;
-          letter-spacing: 0.5px;
-          margin: 0 0 12px 0;
+          letter-spacing: 1px;
+          margin: 0 0 15px 0;
         }
 
         .cv-contact {
           display: flex;
           flex-wrap: wrap;
-          gap: 12px;
+          gap: 15px;
           font-size: 11px;
-          color: var(--cv-light);
+          font-weight: 500;
+          color: #000;
         }
 
         .cv-contact-item {
           display: flex;
           align-items: center;
-          gap: 4px;
+          gap: 5px;
         }
         
         .cv-contact-item a {
-          color: inherit;
+          color: #000;
           text-decoration: none;
         }
 
         .cv-section {
-          margin-bottom: 24px;
+          margin-bottom: 25px;
         }
 
         .cv-section-title {
-          font-size: 13px;
-          font-weight: 700;
+          font-size: 14px;
+          font-weight: 800;
           text-transform: uppercase;
-          color: var(--cv-accent);
-          border-bottom: 1px solid var(--cv-border);
-          padding-bottom: 4px;
+          color: #000;
+          border-bottom: 1.5px solid #000;
+          padding-bottom: 3px;
           margin-bottom: 12px;
-          letter-spacing: 0.5px;
+          letter-spacing: 1px;
         }
 
         .cv-about {
           font-size: 11.5px;
-          color: var(--cv-text);
+          color: #000;
           text-align: justify;
         }
 
-        /* Two columns layout for main content */
         .cv-grid {
           display: grid;
           grid-template-columns: 2fr 1fr;
-          gap: 24px;
+          gap: 30px;
         }
 
         .cv-exp-item, .cv-proj-item {
-          margin-bottom: 16px;
+          margin-bottom: 18px;
         }
 
         .cv-exp-header, .cv-proj-header {
           display: flex;
           justify-content: space-between;
           align-items: baseline;
-          margin-bottom: 4px;
+          margin-bottom: 2px;
         }
 
         .cv-item-title {
           font-weight: 700;
           font-size: 13px;
-          color: var(--cv-accent);
+          color: #000;
         }
 
         .cv-item-date {
           font-size: 11px;
-          font-weight: 600;
-          color: var(--cv-light);
+          font-weight: 700;
+          color: #000;
         }
 
         .cv-item-subtitle {
           font-size: 12px;
           font-weight: 600;
-          color: var(--cv-text);
-          margin-bottom: 4px;
+          color: #000;
+          margin-bottom: 5px;
         }
 
         .cv-item-desc {
           font-size: 11.5px;
-          color: var(--cv-light);
+          color: #000;
           margin: 0;
-          padding-left: 12px;
+          padding-left: 15px;
         }
 
         .cv-item-desc li {
-          margin-bottom: 4px;
+          margin-bottom: 3px;
         }
 
         .cv-skills-group {
-          margin-bottom: 12px;
+          margin-bottom: 15px;
         }
 
         .cv-skills-title {
           font-size: 11px;
-          font-weight: 700;
-          color: var(--cv-light);
-          margin-bottom: 4px;
+          font-weight: 800;
+          color: #000;
+          margin-bottom: 5px;
           text-transform: uppercase;
         }
 
         .cv-skills-list {
           font-size: 11.5px;
-          color: var(--cv-text);
+          color: #000;
           line-height: 1.6;
         }
 
         .cv-tech-stack {
           font-size: 10px;
-          color: var(--cv-lighter);
-          margin-top: 4px;
+          color: #333;
+          margin-top: 5px;
           font-style: italic;
         }
 
         @media print {
           .no-print { display: none !important; opacity: 0 !important; visibility: hidden !important; }
-          body { background: white !important; margin: 0; }
+          body { background: white !important; margin: 0; color: black !important; }
           .cv-container { 
             box-shadow: none !important; 
             margin: 0 !important; 
             padding: 0 !important; 
             width: 100% !important;
             max-width: none !important;
+            color: black !important;
           }
+          /* Hide all links (Lihat Proyek, etc) explicitly */
+          a { text-decoration: none !important; color: black !important; }
+          .btn-primary, .btn-secondary, button, [role="button"] { display: none !important; }
           @page { margin: 15mm 20mm; size: A4; }
+          
+          /* Force black text for all elements */
+          * { color: black !important; border-color: black !important; }
         }
       `}</style>
 
@@ -238,7 +246,7 @@ export default async function PortfolioPage() {
             <div className="cv-contact">
               {contact?.email && (
                 <span className="cv-contact-item">
-                  <Mail size={12} /> <a href={\`mailto:\${contact.email}\`}>{contact.email}</a>
+                  <Mail size={12} /> <a href={`mailto:${contact.email}`}>{contact.email}</a>
                 </span>
               )}
               {contact?.phone && (
@@ -253,16 +261,16 @@ export default async function PortfolioPage() {
               )}
               {socials.filter(s => s.name.toLowerCase() === 'linkedin').map(s => (
                 <span key={s.id} className="cv-contact-item">
-                  <strong>in</strong> <a href={s.link} target="_blank" rel="noreferrer">{s.link.replace(/^https?:\\/\\/(www\\.)?/, '')}</a>
+                  <strong>in</strong> <a href={s.link} target="_blank" rel="noreferrer">{s.link.replace(/^https?:\/\/(www\.)?/, '')}</a>
                 </span>
               ))}
               {socials.filter(s => s.name.toLowerCase() === 'github').map(s => (
                 <span key={s.id} className="cv-contact-item">
-                  <Github size={12} /> <a href={s.link} target="_blank" rel="noreferrer">{s.link.replace(/^https?:\\/\\/(www\\.)?/, '')}</a>
+                  <GitBranch size={12} /> <a href={s.link} target="_blank" rel="noreferrer">{s.link.replace(/^https?:\/\/(www\.)?/, '')}</a>
                 </span>
               ))}
               <span className="cv-contact-item">
-                <Globe size={12} /> <a href="https://portohelmi-ten.vercel.app">portohelmi-ten.vercel.app</a>
+                <Globe size={12} /> <a href="https://porto-helmiafandi.vercel.app">porto-helmiafandi.vercel.app</a>
               </span>
             </div>
           </div>
@@ -301,12 +309,12 @@ export default async function PortfolioPage() {
                       <span className="cv-item-title">{exp.title_en || exp.title_id}</span>
                       <span className="cv-item-date">{formatDate(exp.start_date)} – {formatDate(exp.end_date)}</span>
                     </div>
-                    <div className="cv-item-subtitle">{exp.company}{exp.location ? \`, \${exp.location}\` : ''}</div>
+                    <div className="cv-item-subtitle">{exp.company}{exp.location ? `, ${exp.location}` : ''}</div>
                     
                     {/* Render description line by line as bullet points if it contains line breaks, else just a paragraph */}
-                    {(exp.description_en || exp.description_id).includes('\\n') ? (
+                    {(exp.description_en || exp.description_id).includes('\n') ? (
                       <ul className="cv-item-desc">
-                        {(exp.description_en || exp.description_id).split('\\n').filter(Boolean).map((line, i) => (
+                        {(exp.description_en || exp.description_id).split('\n').filter(Boolean).map((line, i) => (
                           <li key={i}>{line.replace(/^- /, '')}</li>
                         ))}
                       </ul>

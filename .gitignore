@@ -43,3 +43,8 @@ next-env.d.ts
 /src/generated/prisma
 
 .vercel
+
+# scratch and local tests
+/scratch
+/test_local.js
+/src/app/portfolio/Untitled-1.txt

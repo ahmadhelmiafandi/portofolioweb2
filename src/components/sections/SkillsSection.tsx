@@ -24,33 +24,58 @@ const DEFAULT_SKILLS: Skill[] = [
   { id: '9', name: 'Figma', level: 72, category: 'Design' },
 ]
 
-function SkillBar({ name, level, delay }: { name: string; level: number; delay: number }) {
+function SkillCard({ name, level, delay, index }: { name: string; level: number; delay: number; index: number }) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true })
+  
+  const bgColors = ['var(--accent)', 'var(--accent-2)', 'var(--accent-3)', 'var(--accent-4)', 'var(--accent-light)', 'var(--surface-2)']
+  const bgColor = bgColors[index % bgColors.length]
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: 15 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ delay, duration: 0.5 }}
-      style={{ marginBottom: 20 }}
+      whileHover={{ y: -4, boxShadow: 'var(--shadow-md)' }}
+      style={{
+        background: bgColor,
+        border: '3px solid var(--border)',
+        borderRadius: 'var(--radius-sm)',
+        padding: '16px 20px',
+        boxShadow: 'var(--shadow-sm)',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '12px',
+        transition: 'var(--transition)',
+      }}
     >
       <div style={{
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 8,
       }}>
-        <span style={{ fontWeight: 600, fontSize: 14, color: 'var(--text-primary)' }}>{name}</span>
-        <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--accent)' }}>{level}%</span>
+        <span style={{ fontWeight: 800, fontFamily: 'Space Grotesk, sans-serif', fontSize: 16, color: '#000000' }}>{name}</span>
+        <span style={{ 
+          fontSize: 12, 
+          fontWeight: 800, 
+          color: '#000000',
+          background: 'var(--surface)',
+          border: '2px solid var(--border)',
+          padding: '2px 8px',
+          borderRadius: 'var(--radius-sm)',
+          boxShadow: '2px 2px 0px 0px var(--border)'
+        }}>
+          {level}%
+        </span>
       </div>
-      <div className="skill-bar-bg">
+      
+      <div style={{ width: '100%', height: '12px', border: '2px solid var(--border)', borderRadius: 'var(--radius-sm)', background: 'var(--surface)', overflow: 'hidden' }}>
         <motion.div
-          className="skill-bar-fill"
           initial={{ width: 0 }}
           animate={isInView ? { width: `${level}%` } : { width: 0 }}
           transition={{ duration: 1.2, delay: delay + 0.2, ease: [0.4, 0, 0.2, 1] }}
+          style={{ height: '100%', background: '#000000' }}
         />
       </div>
     </motion.div>
@@ -88,16 +113,30 @@ export function SkillsSection({ data }: { data?: Skill[] | null }) {
               onClick={() => setActiveCategory(cat)}
               style={{
                 padding: '8px 20px',
-                borderRadius: 100,
+                borderRadius: 'var(--radius-sm)',
                 fontSize: 13,
-                fontWeight: 600,
-                fontFamily: 'Inter, sans-serif',
+                fontWeight: 800,
+                fontFamily: 'Space Grotesk, sans-serif',
                 cursor: 'pointer',
-                border: '1px solid',
+                border: '2px solid var(--border)',
+                boxShadow: '2px 2px 0px 0px var(--border)',
                 transition: 'var(--transition)',
-                background: activeCategory === cat ? 'var(--accent)' : 'transparent',
-                color: activeCategory === cat ? 'white' : 'var(--text-secondary)',
-                borderColor: activeCategory === cat ? 'var(--accent)' : 'var(--border)',
+                background: activeCategory === cat ? 'var(--accent-4)' : 'var(--surface)',
+                color: '#000000',
+              }}
+              onMouseEnter={e => {
+                if (activeCategory !== cat) {
+                  e.currentTarget.style.transform = 'translate(-2px, -2px)'
+                  e.currentTarget.style.boxShadow = '4px 4px 0px 0px var(--border)'
+                  e.currentTarget.style.background = 'var(--surface-2)'
+                }
+              }}
+              onMouseLeave={e => {
+                if (activeCategory !== cat) {
+                  e.currentTarget.style.transform = 'none'
+                  e.currentTarget.style.boxShadow = '2px 2px 0px 0px var(--border)'
+                  e.currentTarget.style.background = 'var(--surface)'
+                }
               }}
             >
               {cat}
@@ -112,11 +151,12 @@ export function SkillsSection({ data }: { data?: Skill[] | null }) {
           gap: 32,
         }}>
           {filtered.map((skill, i) => (
-            <SkillBar
+            <SkillCard
               key={skill.id}
               name={skill.name}
               level={skill.level}
               delay={i * 0.05}
+              index={i}
             />
           ))}
         </div>

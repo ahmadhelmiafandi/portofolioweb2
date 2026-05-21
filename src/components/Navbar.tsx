@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { href: '#about', key: 'about' },
   { href: '#skills', key: 'skills' },
   { href: '#projects', key: 'projects' },
+  { href: '#certificates', key: 'certificates' },
   { href: '#experience', key: 'experience' },
   { href: '#contact', key: 'contact' },
 ] as const
@@ -41,7 +42,7 @@ export function Navbar() {
     transition: 'all 0.3s ease',
     ...(scrolled ? {
       background: 'var(--surface)',
-      borderBottom: '1px solid var(--border)',
+      borderBottom: '3px solid var(--border)',
       backdropFilter: 'blur(20px)',
     } : {
       background: 'transparent',
@@ -56,9 +57,11 @@ export function Navbar() {
           <a href="#" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{
               width: 36, height: 36,
-              background: 'linear-gradient(135deg, var(--gradient-start), var(--gradient-end))',
-              borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: 'white', fontWeight: 800, fontSize: 16, fontFamily: 'Syne, sans-serif'
+              background: 'var(--accent-4)',
+              border: '3px solid #000000',
+              boxShadow: '3px 3px 0px 0px #000000',
+              borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: '#000000', fontWeight: 800, fontSize: 16, fontFamily: 'Syne, sans-serif'
             }}>H</div>
             <span style={{ fontFamily: 'Syne, sans-serif', fontWeight: 700, fontSize: 18, color: 'var(--text-primary)' }}>
               helmi<span style={{ color: 'var(--accent)' }}>.</span>dev
@@ -76,17 +79,23 @@ export function Navbar() {
                   color: 'var(--text-secondary)',
                   textDecoration: 'none',
                   fontSize: 14,
-                  fontWeight: 500,
-                  borderRadius: 8,
+                  fontWeight: 700,
+                  fontFamily: 'Space Grotesk, sans-serif',
+                  border: '2px solid transparent',
+                  borderRadius: 'var(--radius-sm)',
                   transition: 'var(--transition)',
                 }}
                 onMouseEnter={e => {
                   (e.target as HTMLElement).style.color = 'var(--text-primary)'
                   ;(e.target as HTMLElement).style.background = 'var(--surface-2)'
+                  ;(e.target as HTMLElement).style.borderColor = 'var(--border)'
+                  ;(e.target as HTMLElement).style.boxShadow = '2px 2px 0px 0px var(--border)'
                 }}
                 onMouseLeave={e => {
                   (e.target as HTMLElement).style.color = 'var(--text-secondary)'
                   ;(e.target as HTMLElement).style.background = 'transparent'
+                  ;(e.target as HTMLElement).style.borderColor = 'transparent'
+                  ;(e.target as HTMLElement).style.boxShadow = 'none'
                 }}
               >
                 {t.nav[item.key as keyof typeof t.nav]}
@@ -104,8 +113,9 @@ export function Navbar() {
                 display: 'flex', alignItems: 'center', gap: 6,
                 padding: '6px 12px',
                 background: 'var(--surface-2)',
-                border: '1px solid var(--border)',
-                borderRadius: 8,
+                border: '2px solid var(--border)',
+                borderRadius: 'var(--radius-sm)',
+                boxShadow: '2px 2px 0px 0px var(--border)',
                 color: 'var(--text-secondary)',
                 fontSize: 13, fontWeight: 600,
                 cursor: 'pointer', transition: 'var(--transition)',
@@ -133,8 +143,9 @@ export function Navbar() {
                   width: 36, height: 36,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   background: 'var(--surface-2)',
-                  border: '1px solid var(--border)',
-                  borderRadius: 8,
+                  border: '2px solid var(--border)',
+                  borderRadius: 'var(--radius-sm)',
+                  boxShadow: '2px 2px 0px 0px var(--border)',
                   color: 'var(--text-secondary)',
                   cursor: 'pointer', transition: 'var(--transition)',
                 }}
@@ -159,8 +170,9 @@ export function Navbar() {
                 width: 36, height: 36,
                 display: 'none', alignItems: 'center', justifyContent: 'center',
                 background: 'var(--surface-2)',
-                border: '1px solid var(--border)',
-                borderRadius: 8,
+                border: '2px solid var(--border)',
+                borderRadius: 'var(--radius-sm)',
+                boxShadow: '2px 2px 0px 0px var(--border)',
                 color: 'var(--text-primary)',
                 cursor: 'pointer',
               }}
@@ -184,7 +196,7 @@ export function Navbar() {
               top: 'var(--navbar-height)',
               left: 0, right: 0,
               background: 'var(--surface)',
-              borderBottom: '1px solid var(--border)',
+              borderBottom: '3px solid var(--border)',
               padding: '12px 24px 20px',
               zIndex: 98,
             }}
@@ -200,8 +212,9 @@ export function Navbar() {
                   color: 'var(--text-primary)',
                   textDecoration: 'none',
                   fontSize: 16,
-                  fontWeight: 500,
-                  borderBottom: '1px solid var(--border)',
+                  fontWeight: 700,
+                  fontFamily: 'Space Grotesk, sans-serif',
+                  borderBottom: '2px solid var(--border)',
                 }}
               >
                 {t.nav[item.key as keyof typeof t.nav]}

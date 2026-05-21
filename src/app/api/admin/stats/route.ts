@@ -7,10 +7,12 @@ export async function GET() {
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   try {
-    const [projectsCount, skillsCount, experiencesCount, recentProjects] = await Promise.all([
+    const [projectsCount, skillsCount, experiencesCount, certificatesCount, messagesCount, recentProjects] = await Promise.all([
       prisma.project.count(),
       prisma.skill.count(),
       prisma.experience.count(),
+      prisma.certificate.count(),
+      prisma.message.count(),
       prisma.project.findMany({
         take: 5,
         orderBy: { createdAt: 'desc' },
@@ -29,7 +31,8 @@ export async function GET() {
         projects: projectsCount,
         skills: skillsCount,
         experiences: experiencesCount,
-        messages: 0 // Placeholder for now
+        certificates: certificatesCount,
+        messages: messagesCount
       },
       recentProjects
     })

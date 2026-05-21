@@ -92,8 +92,8 @@ export function ExperienceSection({ data }: { data?: Experience[] | null }) {
               >
                 {/* Timeline */}
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: 20 }}>
-                  <div className="timeline-dot" />
-                  {i < experiences.length - 1 && <div className="timeline-line" />}
+                  <div style={{ width: 16, height: 16, background: 'var(--accent-4)', border: '3px solid var(--border)', borderRadius: 0, boxShadow: '2px 2px 0px 0px var(--border)' }} />
+                  {i < experiences.length - 1 && <div style={{ width: 3, flex: 1, background: 'var(--border)', minHeight: 40, marginTop: 4, marginBottom: 4 }} />}
                 </div>
 
                 {/* Content */}
@@ -101,19 +101,20 @@ export function ExperienceSection({ data }: { data?: Experience[] | null }) {
                   style={{
                     flex: 1,
                     background: 'var(--surface)',
-                    border: '1px solid var(--border)',
+                    border: '3px solid var(--border)',
                     borderRadius: 'var(--radius)',
+                    boxShadow: 'var(--shadow-sm)',
                     padding: '24px 28px',
                     marginBottom: 8,
                     transition: 'var(--transition)',
                   }}
                   onMouseEnter={e => {
-                    (e.currentTarget as HTMLElement).style.borderColor = 'var(--accent-light)'
-                    ;(e.currentTarget as HTMLElement).style.transform = 'translateX(4px)'
+                    (e.currentTarget as HTMLElement).style.transform = 'translate(-3px, -3px)'
+                    ;(e.currentTarget as HTMLElement).style.boxShadow = 'var(--shadow-md)'
                   }}
                   onMouseLeave={e => {
-                    (e.currentTarget as HTMLElement).style.borderColor = 'var(--border)'
-                    ;(e.currentTarget as HTMLElement).style.transform = 'translateX(0)'
+                    (e.currentTarget as HTMLElement).style.transform = 'none'
+                    ;(e.currentTarget as HTMLElement).style.boxShadow = 'var(--shadow-sm)'
                   }}
                 >
                   {/* Header */}
@@ -125,28 +126,31 @@ export function ExperienceSection({ data }: { data?: Experience[] | null }) {
                       <div style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: 4,
+                        gap: 6,
                         fontSize: 12,
-                        color: 'var(--accent)',
-                        fontWeight: 600,
-                        background: 'var(--accent-light)',
+                        color: '#000000',
+                        fontWeight: 800,
+                        fontFamily: 'Space Grotesk, sans-serif',
+                        background: 'var(--accent-4)',
+                        border: '2px solid var(--border)',
+                        boxShadow: '2px 2px 0px 0px var(--border)',
                         padding: '4px 10px',
-                        borderRadius: 100,
+                        borderRadius: 'var(--radius-sm)',
                         whiteSpace: 'nowrap',
                       }}>
-                        <Calendar size={11} />
+                        <Calendar size={13} />
                         {start} — {end}
                       </div>
                     </div>
 
                     <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)' }}>
-                        <Briefcase size={13} />
+                      <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>
+                        <Briefcase size={14} />
                         {exp.company}
                       </span>
                       {exp.location && (
-                        <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 13, color: 'var(--text-muted)' }}>
-                          <MapPin size={13} />
+                        <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>
+                          <MapPin size={14} />
                           {exp.location}
                         </span>
                       )}

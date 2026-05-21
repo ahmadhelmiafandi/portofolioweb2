@@ -73,26 +73,25 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       transition={{ delay: index * 0.1, duration: 0.6 }}
       style={{
         background: 'var(--surface)',
-        border: '1px solid var(--border)',
-        borderRadius: 'var(--radius-lg)',
+        border: '3px solid var(--border)',
+        borderRadius: 'var(--radius)',
         overflow: 'hidden',
         transition: 'var(--transition)',
         display: 'flex',
         flexDirection: 'column',
+        boxShadow: 'var(--shadow-md)',
       }}
-      whileHover={{ y: -6, boxShadow: 'var(--shadow-lg)' }}
+      whileHover={{ x: -4, y: -4, boxShadow: 'var(--shadow-lg)' }}
     >
       {/* Image */}
-      <div className="project-img-wrapper" style={{ borderRadius: 0 }}>
+      <div className="project-img-wrapper" style={{ borderRadius: 0, borderBottom: '3px solid var(--border)' }}>
         {project.image ? (
           <Image src={project.image} alt={title} fill style={{ objectFit: 'cover' }} />
         ) : (
           <div style={{
             width: '100%',
             paddingBottom: '62.5%',
-            background: `linear-gradient(135deg, 
-              hsl(${(index * 60 + 240) % 360}, 60%, ${30 + index * 5}%), 
-              hsl(${(index * 60 + 300) % 360}, 60%, ${20 + index * 5}%))`,
+            background: ['var(--accent-3)', 'var(--accent-2)', 'var(--accent-4)', 'var(--accent)'][index % 4],
             position: 'relative',
           }}>
             <div style={{
@@ -103,33 +102,15 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               justifyContent: 'center',
               fontSize: 48,
               opacity: 0.3,
+              color: '#000000',
+              fontWeight: 800,
             }}>
               {'{ }'}
             </div>
           </div>
         )}
 
-        {/* Featured badge */}
-        {project.featured && (
-          <div style={{
-            position: 'absolute',
-            top: 12,
-            right: 12,
-            background: 'rgba(0,0,0,0.8)',
-            backdropFilter: 'blur(8px)',
-            color: '#fbbf24',
-            padding: '4px 10px',
-            borderRadius: 100,
-            fontSize: 11,
-            fontWeight: 700,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 4,
-          }}>
-            <Star size={10} fill="currentColor" />
-            {t.projects.featured}
-          </div>
-        )}
+
       </div>
 
       {/* Content */}
@@ -175,7 +156,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         </div>
 
         {/* Links */}
-        <div style={{ display: 'flex', gap: 10, marginTop: 8, paddingTop: 16, borderTop: '1px solid var(--border)' }}>
+        <div style={{ display: 'flex', gap: 10, marginTop: 8, paddingTop: 16, borderTop: '3px solid var(--border)' }}>
           {project.link && (
             <a
               href={formatLink(project.link)}
@@ -248,16 +229,30 @@ export function ProjectsSection({ data }: { data?: Project[] | null }) {
               onClick={() => setActiveCategory(cat)}
               style={{
                 padding: '8px 20px',
-                borderRadius: 100,
+                borderRadius: 'var(--radius-sm)',
                 fontSize: 13,
-                fontWeight: 600,
-                fontFamily: 'Inter, sans-serif',
+                fontWeight: 800,
+                fontFamily: 'Space Grotesk, sans-serif',
                 cursor: 'pointer',
-                border: '1px solid',
+                border: '2px solid var(--border)',
+                boxShadow: '2px 2px 0px 0px var(--border)',
                 transition: 'var(--transition)',
-                background: activeCategory === cat ? 'var(--accent)' : 'transparent',
-                color: activeCategory === cat ? 'white' : 'var(--text-secondary)',
-                borderColor: activeCategory === cat ? 'var(--accent)' : 'var(--border)',
+                background: activeCategory === cat ? 'var(--accent-4)' : 'var(--surface)',
+                color: '#000000',
+              }}
+              onMouseEnter={e => {
+                if (activeCategory !== cat) {
+                  e.currentTarget.style.transform = 'translate(-2px, -2px)'
+                  e.currentTarget.style.boxShadow = '4px 4px 0px 0px var(--border)'
+                  e.currentTarget.style.background = 'var(--surface-2)'
+                }
+              }}
+              onMouseLeave={e => {
+                if (activeCategory !== cat) {
+                  e.currentTarget.style.transform = 'none'
+                  e.currentTarget.style.boxShadow = '2px 2px 0px 0px var(--border)'
+                  e.currentTarget.style.background = 'var(--surface)'
+                }
               }}
             >
               {cat}

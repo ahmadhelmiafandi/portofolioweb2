@@ -63,13 +63,14 @@ export function HeroSection({ data }: { data?: HeroData | null }) {
           margin: 0 auto;
         }
         .hero-title {
-          font-size: clamp(40px, 5.5vw, 76px);
-          line-height: 1.08;
+          font-size: clamp(40px, 5.5vw, 72px);
+          line-height: 1.05;
           font-weight: 800;
           color: var(--text-primary);
           margin-bottom: 24px;
-          font-family: 'Syne', sans-serif;
+          font-family: 'Space Grotesk', sans-serif;
           letter-spacing: -0.02em;
+          text-transform: uppercase;
         }
         .hero-subtitle {
           font-size: 17px;
@@ -77,10 +78,11 @@ export function HeroSection({ data }: { data?: HeroData | null }) {
           max-width: 520px;
           margin-bottom: 40px;
           line-height: 1.75;
+          font-weight: 600;
         }
         .hero-btns {
           display: flex;
-          gap: 14px;
+          gap: 16px;
           flex-wrap: wrap;
         }
         .hero-stats {
@@ -97,26 +99,25 @@ export function HeroSection({ data }: { data?: HeroData | null }) {
         }
         .hero-image-ring {
           position: relative;
-          width: 380px;
-          height: 380px;
+          width: 340px;
+          height: 340px;
+          background: var(--accent-3); /* Vibrant Hot Pink backdrop box */
+          border: 4px solid #000000;
+          box-shadow: 10px 10px 0px 0px #000000;
+          border-radius: var(--radius);
+          transition: var(--transition);
         }
-        .hero-image-ring::before {
-          content: '';
-          position: absolute;
-          inset: -3px;
-          border-radius: 40% 60% 55% 45% / 50% 45% 55% 50%;
-          background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-          animation: blob 8s ease-in-out infinite;
-          z-index: 0;
+        .hero-image-ring:hover {
+          transform: translate(-4px, -4px);
+          box-shadow: 14px 14px 0px 0px #000000;
         }
         .hero-image-inner {
           position: absolute;
-          inset: 6px;
-          border-radius: 38% 60% 53% 47% / 48% 43% 57% 52%;
+          inset: 0px;
           overflow: hidden;
           z-index: 1;
-          animation: blob 8s ease-in-out infinite;
           background: var(--surface-2);
+          border-radius: 0px;
         }
         .hero-image-inner img {
           width: 100%;
@@ -124,8 +125,8 @@ export function HeroSection({ data }: { data?: HeroData | null }) {
           object-fit: cover;
         }
         .hero-no-image {
-          width: 380px;
-          height: 380px;
+          width: 340px;
+          height: 340px;
           position: relative;
           display: flex;
           align-items: center;
@@ -134,26 +135,26 @@ export function HeroSection({ data }: { data?: HeroData | null }) {
         .hero-no-image-circle {
           width: 300px;
           height: 300px;
-          border-radius: 50%;
-          background: linear-gradient(135deg, rgba(108,71,255,0.15), rgba(56,189,248,0.1));
-          border: 1px solid rgba(108,71,255,0.2);
+          border-radius: var(--radius);
+          background: var(--accent-4); /* Bright Yellow */
+          border: 4px solid #000000;
+          box-shadow: 8px 8px 0px 0px #000000;
           display: flex;
           align-items: center;
           justify-content: center;
-          font-family: 'Syne', sans-serif;
+          font-family: 'Space Grotesk', sans-serif;
           font-size: 80px;
           font-weight: 900;
-          background-clip: text;
-          -webkit-background-clip: text;
+          color: #000000;
         }
         .hero-deco-dot {
           position: absolute;
-          border-radius: 50%;
-          background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-          opacity: 0.7;
-          filter: blur(1px);
+          border-radius: var(--radius-sm);
+          background: #000000;
+          border: 2px solid #000000;
+          box-shadow: 2px 2px 0px 0px #000000;
         }
-
+ 
         @media (max-width: 900px) {
           .hero-inner {
             grid-template-columns: 1fr;
@@ -185,23 +186,23 @@ export function HeroSection({ data }: { data?: HeroData | null }) {
             margin-top: 36px;
           }
           .hero-image-ring {
-            width: 220px;
-            height: 220px;
+            width: 260px;
+            height: 260px;
           }
           .hero-no-image {
-            width: 200px;
-            height: 200px;
+            width: 240px;
+            height: 240px;
           }
           .hero-no-image-circle {
-            width: 180px;
-            height: 180px;
+            width: 220px;
+            height: 220px;
             font-size: 52px;
           }
           .badge {
             margin: 0 auto 20px !important;
           }
         }
-
+ 
         @media (max-width: 480px) {
           .hero-title {
             font-size: 30px;

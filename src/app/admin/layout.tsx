@@ -16,7 +16,10 @@ import {
   Sun,
   Moon,
   MessageSquare,
-  Settings
+  Settings,
+  FileText,
+  Award,
+  Terminal
 } from 'lucide-react'
 import { useTheme } from 'next-themes'
 
@@ -26,9 +29,12 @@ const SIDEBAR_ITEMS = [
   { label: 'About Me', icon: User, href: '/admin/about' },
   { label: 'Skills', icon: Code2, href: '/admin/skills' },
   { label: 'Projects', icon: Briefcase, href: '/admin/projects' },
+  { label: 'Certificates', icon: Award, href: '/admin/certificates' },
   { label: 'Experience', icon: Clock, href: '/admin/experience' },
+  { label: 'SQL Editor', icon: Terminal, href: '/admin/sql' },
   { label: 'Socials', icon: Globe, href: '/admin/socials' },
   { label: 'Messages', icon: MessageSquare, href: '/admin/messages' },
+  { label: 'Manage CV', icon: FileText, href: '/admin/cv' },
   { label: 'Contact & Settings', icon: Settings, href: '/admin/settings' },
 ]
 

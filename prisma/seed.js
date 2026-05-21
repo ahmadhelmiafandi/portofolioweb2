@@ -20,6 +20,14 @@ async function main() {
 
   console.log('Admin user created:', admin.email)
 
+  // Clean existing portfolio data
+  await prisma.certificate.deleteMany()
+  await prisma.project.deleteMany()
+  await prisma.skill.deleteMany()
+  await prisma.experience.deleteMany()
+  await prisma.about.deleteMany()
+  await prisma.hero.deleteMany()
+
   // Create Hero
   const hero = await prisma.hero.create({
     data: {
@@ -66,6 +74,46 @@ async function main() {
       published: true,
     }
   })
+
+  // Create Experiences
+  await prisma.experience.create({
+    data: {
+      title_en: 'Senior Frontend Developer',
+      title_id: 'Senior Frontend Developer',
+      company: 'TechCorp Solutions',
+      location: 'Jakarta, Indonesia',
+      start_date: new Date('2024-01-01'),
+      description_en: 'Leading frontend development for enterprise clients, designing Neo-Brutalist design systems, and improving load speeds by 40%.',
+      description_id: 'Memimpin pengembangan frontend untuk klien enterprise, merancang sistem desain Neo-Brutalist, dan meningkatkan kecepatan pemuatan hingga 40%.',
+      published: true,
+      order: 1
+    }
+  })
+
+  // Create Certificates
+  const certificates = [
+    {
+      name: 'Advanced React & Next.js Masterclass',
+      issuer: 'Vercel',
+      issue_date: new Date('2025-08-15'),
+      credential_id: 'VRC-8932749',
+      link: 'https://vercel.com',
+      published: true,
+      order: 1
+    },
+    {
+      name: 'Professional Frontend UI/UX Architect',
+      issuer: 'Google',
+      issue_date: new Date('2026-02-10'),
+      credential_id: 'GGL-UX-774921',
+      link: 'https://grow.google',
+      published: true,
+      order: 2
+    }
+  ]
+  for (const c of certificates) {
+    await prisma.certificate.create({ data: c })
+  }
 
   console.log('Database seeded successfully!')
 }
