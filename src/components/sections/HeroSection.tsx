@@ -161,7 +161,7 @@ export function HeroSection({ data }: { data?: HeroData | null }) {
           .hero-inner {
             grid-template-columns: 1fr;
             text-align: center;
-            padding: 60px 20px 40px;
+            padding: 60px 20px 100px;
             gap: 32px;
           }
           .hero-content-col {
@@ -184,7 +184,7 @@ export function HeroSection({ data }: { data?: HeroData | null }) {
           }
           .hero-stats {
             justify-content: center;
-            gap: 28px;
+            gap: 24px;
             margin-top: 36px;
           }
           .hero-image-ring {
@@ -219,7 +219,10 @@ export function HeroSection({ data }: { data?: HeroData | null }) {
             justify-content: center;
           }
           .hero-stats {
-            gap: 20px;
+            gap: 16px;
+          }
+          .scroll-indicator {
+            display: none !important;
           }
         }
       `}</style>
@@ -344,6 +347,7 @@ export function HeroSection({ data }: { data?: HeroData | null }) {
 
         {/* Scroll indicator */}
         <motion.div
+          className="scroll-indicator"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2 }}
