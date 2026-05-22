@@ -269,6 +269,14 @@ h1, h2, h3, h4, h5, h6 {
   border-bottom: 3px solid var(--border);
 }
 
+/* ===== PROJECT IMAGE ===== */
+.project-img-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+
 /* ===== TECH TAG ===== */
 .tech-tag {
   padding: 4px 12px;
