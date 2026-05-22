@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Plus, Edit2, Trash2, Award, Calendar, ExternalLink, ShieldCheck, X, ToggleLeft, ToggleRight } from 'lucide-react'
 import { useToast } from '@/components/admin/Toast'
+import { FileUpload } from '@/components/admin/FileUpload'
 
 interface Certificate {
   id: string
@@ -402,19 +403,14 @@ export default function CertificatesCMS() {
                     />
                   </div>
 
-                  {/* Upload Image/PDF Path */}
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '800', marginBottom: '6px', fontFamily: 'Space Grotesk' }}>
-                      Upload File Path / PDF URL (Optional)
-                    </label>
-                    <input
-                      type="text"
-                      className="input"
-                      value={formData.file_url || ''}
-                      onChange={e => setFormData({ ...formData, file_url: e.target.value })}
-                      placeholder="/uploads/my-certificate.pdf"
-                    />
-                  </div>
+                  {/* Upload Image/PDF File */}
+                  <FileUpload
+                    value={formData.file_url || ''}
+                    onChange={url => setFormData({ ...formData, file_url: url })}
+                    label="Upload Certificate File (PDF or Image)"
+                    accept=".pdf,image/*"
+                    helperText="PDF or Images (PNG, JPG) up to 10MB"
+                  />
 
                   {/* Published state checkbox */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
