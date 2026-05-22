@@ -84,34 +84,11 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       whileHover={{ x: -4, y: -4, boxShadow: 'var(--shadow-lg)' }}
     >
       {/* Image */}
-      <div className="project-img-wrapper" style={{ position: 'relative', width: '100%', aspectRatio: '16/10', overflow: 'hidden', borderRadius: 0, borderBottom: '3px solid var(--border)' }}>
-        {project.image ? (
+      {project.image && (
+        <div className="project-img-wrapper" style={{ position: 'relative', width: '100%', aspectRatio: '16/10', overflow: 'hidden', borderRadius: 0, borderBottom: '3px solid var(--border)' }}>
           <Image src={project.image} alt={title} fill style={{ objectFit: 'cover' }} />
-        ) : (
-          <div style={{
-            width: '100%',
-            paddingBottom: '62.5%',
-            background: ['var(--accent-3)', 'var(--accent-2)', 'var(--accent-4)', 'var(--accent)'][index % 4],
-            position: 'relative',
-          }}>
-            <div style={{
-              position: 'absolute',
-              inset: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 48,
-              opacity: 0.3,
-              color: '#000000',
-              fontWeight: 800,
-            }}>
-              {'{ }'}
-            </div>
-          </div>
-        )}
-
-
-      </div>
+        </div>
+      )}
 
       {/* Content */}
       <div style={{ padding: '24px', flex: 1, display: 'flex', flexDirection: 'column', gap: 12 }}>
