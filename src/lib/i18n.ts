@@ -102,7 +102,7 @@ export const translations = {
       issuer: 'Diterbitkan oleh',
       date: 'Tanggal Terbit',
       id: 'ID Kredensial',
-      view_pdf: 'Lihat PDF / Sertifikat',
+      view_pdf: 'Lihat Sertifikat',
     },
     experience: {
       title: 'Pengalaman',
