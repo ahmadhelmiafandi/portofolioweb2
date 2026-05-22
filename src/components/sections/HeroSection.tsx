@@ -71,6 +71,8 @@ export function HeroSection({ data }: { data?: HeroData | null }) {
           font-family: 'Space Grotesk', sans-serif;
           letter-spacing: -0.02em;
           text-transform: uppercase;
+          overflow-wrap: break-word;
+          word-break: break-word;
         }
         .hero-subtitle {
           font-size: 17px;

@@ -84,7 +84,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       whileHover={{ x: -4, y: -4, boxShadow: 'var(--shadow-lg)' }}
     >
       {/* Image */}
-      <div className="project-img-wrapper" style={{ borderRadius: 0, borderBottom: '3px solid var(--border)' }}>
+      <div className="project-img-wrapper" style={{ position: 'relative', width: '100%', aspectRatio: '16/10', overflow: 'hidden', borderRadius: 0, borderBottom: '3px solid var(--border)' }}>
         {project.image ? (
           <Image src={project.image} alt={title} fill style={{ objectFit: 'cover' }} />
         ) : (
