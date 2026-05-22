@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import { Save, Loader2, FileText, User, MessageSquare, Info, Image as ImageIcon } from 'lucide-react'
+import { useToast } from '@/components/admin/Toast'
 
 export default function AdminCVPage() {
+  const { toast } = useToast()
   const [data, setData] = useState({
     hero: { title_en: '', subtitle_en: '', title_id: '', subtitle_id: '' },
     about: { image: '', description_en: '', description_id: '' },
@@ -63,12 +65,12 @@ export default function AdminCVPage() {
       ])
 
       if (results.every(res => res.ok)) {
-        alert('CV Data updated successfully!')
+        toast('CV Data updated successfully!', 'success')
       } else {
-        alert('Some updates failed. Please check the console.')
+        toast('Some updates failed. Please check the console.', 'error')
       }
     } catch (err) {
-      alert('Error saving CV data')
+      toast('Error saving CV data', 'error')
     } finally {
       setSaving(false)
     }
@@ -91,7 +93,7 @@ export default function AdminCVPage() {
         setData({ ...data, about: { ...data.about, image: json.url } })
       }
     } catch (err) {
-      alert('Upload failed')
+      toast('Upload failed', 'error')
     }
   }
 
@@ -111,17 +113,9 @@ export default function AdminCVPage() {
           <h3 style={{ fontSize: '18px', fontWeight: '700', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-primary)' }}>
             <FileText size={20} color="var(--accent)" /> CV Header & Title
           </h3>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div>
-              <label className="label">Full Name (English)</label>
-              <input 
-                className="input" 
-                value={data.hero.title_en || ''} 
-                onChange={(e) => setData({ ...data, hero: { ...data.hero, title_en: e.target.value } })} 
-              />
-            </div>
-            <div>
-              <label className="label">Full Name (Indonesian)</label>
+              <label className="label">Full Name (Nama Lengkap)</label>
               <input 
                 className="input" 
                 value={data.hero.title_id || ''} 
@@ -129,15 +123,7 @@ export default function AdminCVPage() {
               />
             </div>
             <div>
-              <label className="label">Job Title / Subtitle (English)</label>
-              <input 
-                className="input" 
-                value={data.hero.subtitle_en || ''} 
-                onChange={(e) => setData({ ...data, hero: { ...data.hero, subtitle_en: e.target.value } })} 
-              />
-            </div>
-            <div>
-              <label className="label">Job Title / Subtitle (Indonesian)</label>
+              <label className="label">Job Title / Subtitle (Pekerjaan / Subtitel)</label>
               <input 
                 className="input" 
                 value={data.hero.subtitle_id || ''} 
@@ -181,19 +167,10 @@ export default function AdminCVPage() {
           </h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div>
-              <label className="label">Summary (English)</label>
-              <textarea 
-                className="input" 
-                style={{ height: '100px' }}
-                value={data.about.description_en || ''} 
-                onChange={(e) => setData({ ...data, about: { ...data.about, description_en: e.target.value } })} 
-              />
-            </div>
-            <div>
               <label className="label">Summary (Indonesian)</label>
               <textarea 
                 className="input" 
-                style={{ height: '100px' }}
+                style={{ height: '120px' }}
                 value={data.about.description_id || ''} 
                 onChange={(e) => setData({ ...data, about: { ...data.about, description_id: e.target.value } })} 
               />
@@ -207,16 +184,7 @@ export default function AdminCVPage() {
             <Info size={20} color="var(--accent)" /> Additional Information (CV Sidebar)
           </h3>
           <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '16px' }}>Format: "Key: Value" (e.g. "Languages: English, Indonesian"). One item per line.</p>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-            <div>
-              <label className="label">Info (English)</label>
-              <textarea 
-                className="input" 
-                style={{ height: '120px' }}
-                value={data.contact.portfolio_extra_en || ''} 
-                onChange={(e) => setData({ ...data, contact: { ...data.contact, portfolio_extra_en: e.target.value } })} 
-              />
-            </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div>
               <label className="label">Info (Indonesian)</label>
               <textarea 

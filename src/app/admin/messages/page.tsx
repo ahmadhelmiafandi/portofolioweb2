@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Mail, Loader2, MessageSquare, Trash2, Calendar, User } from 'lucide-react'
+import { useToast } from '@/components/admin/Toast'
 
 interface Message {
   id: string
@@ -14,6 +15,7 @@ interface Message {
 }
 
 export default function AdminMessagesPage() {
+  const { toast } = useToast()
   const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null)
@@ -43,7 +45,7 @@ export default function AdminMessagesPage() {
         if (selectedMessage?.id === id) setSelectedMessage(null)
       }
     } catch (err) {
-      alert('Error deleting message')
+      toast('Error deleting message', 'error')
     }
   }
 

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Plus, Edit2, Trash2, Loader2, Calendar } from 'lucide-react'
+import { useToast } from '@/components/admin/Toast'
 
 interface Experience {
   id: string
@@ -16,6 +17,7 @@ interface Experience {
 }
 
 export default function AdminExperiencePage() {
+  const { toast } = useToast()
   const [data, setData] = useState<Experience[]>([])
   const [loading, setLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -53,10 +55,10 @@ export default function AdminExperiencePage() {
         setIsModalOpen(false)
         fetchItems()
       } else {
-        alert('Error: ' + (json.message || json.error || 'Failed to save'))
+        toast('Error: ' + (json.message || json.error || 'Failed to save'), 'error')
       }
     } catch (err: any) {
-      alert('Network Error: ' + err.message)
+      toast('Network Error: ' + err.message, 'error')
     } finally {
       setSaving(false)
     }

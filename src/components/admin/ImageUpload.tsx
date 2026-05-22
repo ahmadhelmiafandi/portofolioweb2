@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { Upload, X, Loader2, Image as ImageIcon } from 'lucide-react'
+import { useToast } from '@/components/admin/Toast'
 
 interface ImageUploadProps {
   value?: string
@@ -10,6 +11,7 @@ interface ImageUploadProps {
 }
 
 export function ImageUpload({ value, onChange, label = 'Upload Image' }: ImageUploadProps) {
+  const { toast } = useToast()
   const [uploading, setUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -30,10 +32,10 @@ export function ImageUpload({ value, onChange, label = 'Upload Image' }: ImageUp
       if (data.url) {
         onChange(data.url)
       } else {
-        alert('Upload Error: ' + (data.error || 'Unknown error'))
+        toast('Upload Error: ' + (data.error || 'Unknown error'), 'error')
       }
     } catch (err: any) {
-      alert('Upload failed: ' + err.message)
+      toast('Upload failed: ' + err.message, 'error')
     } finally {
       setUploading(false)
     }

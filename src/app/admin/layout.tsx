@@ -22,6 +22,7 @@ import {
   Terminal
 } from 'lucide-react'
 import { useTheme } from 'next-themes'
+import { ToastProvider } from '@/components/admin/Toast'
 
 const SIDEBAR_ITEMS = [
   { label: 'Dashboard', icon: LayoutDashboard, href: '/admin/dashboard' },
@@ -51,81 +52,85 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     router.push('/admin/login')
   }
 
-  if (pathname === '/admin/login') return <>{children}</>
-
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex' }}>
-      {/* Sidebar */}
-      <aside className="sidebar">
-        <div style={{ padding: '0 24px 32px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <div style={{
-            width: '32px',
-            height: '32px',
-            background: 'linear-gradient(135deg, var(--gradient-start), var(--gradient-end))',
-            borderRadius: '8px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'white',
-            fontWeight: '800'
-          }}>H</div>
-          <span style={{ fontWeight: '700', fontSize: '18px', color: 'var(--text-primary)', fontFamily: 'Syne' }}>PortoCMS</span>
-        </div>
+    <ToastProvider>
+      {pathname === '/admin/login' ? (
+        children
+      ) : (
+        <div style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex' }}>
+          {/* Sidebar */}
+          <aside className="sidebar">
+            <div style={{ padding: '0 24px 32px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{
+                width: '32px',
+                height: '32px',
+                background: 'linear-gradient(135deg, var(--gradient-start), var(--gradient-end))',
+                borderRadius: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'white',
+                fontWeight: '800'
+              }}>H</div>
+              <span style={{ fontWeight: '700', fontSize: '18px', color: 'var(--text-primary)', fontFamily: 'Syne' }}>PortoCMS</span>
+            </div>
 
-        <nav style={{ flex: 1 }}>
-          {SIDEBAR_ITEMS.map((item) => {
-            const active = pathname === item.href
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`sidebar-item ${active ? 'active' : ''}`}
-                style={{ textDecoration: 'none' }}
+            <nav style={{ flex: 1 }}>
+              {SIDEBAR_ITEMS.map((item) => {
+                const active = pathname === item.href
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`sidebar-item ${active ? 'active' : ''}`}
+                    style={{ textDecoration: 'none' }}
+                  >
+                    <item.icon size={18} />
+                    {item.label}
+                    {active && <ChevronRight size={14} style={{ marginLeft: 'auto' }} />}
+                  </Link>
+                )
+              })}
+            </nav>
+
+            <div style={{ padding: '24px 12px', borderTop: '1px solid var(--border)', marginTop: 'auto' }}>
+              {mounted && (
+                <button
+                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                  className="sidebar-item"
+                  style={{ width: '100%', marginBottom: '8px' }}
+                >
+                  {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+                  {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+                </button>
+              )}
+              <button
+                onClick={handleLogout}
+                className="sidebar-item"
+                style={{ width: '100%', color: '#ef4444' }}
               >
-                <item.icon size={18} />
-                {item.label}
-                {active && <ChevronRight size={14} style={{ marginLeft: 'auto' }} />}
-              </Link>
-            )
-          })}
-        </nav>
+                <LogOut size={18} />
+                Logout
+              </button>
+            </div>
+          </aside>
 
-        <div style={{ padding: '24px 12px', borderTop: '1px solid var(--border)', marginTop: 'auto' }}>
-          {mounted && (
-            <button
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              className="sidebar-item"
-              style={{ width: '100%', marginBottom: '8px' }}
-            >
-              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-              {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
-            </button>
-          )}
-          <button
-            onClick={handleLogout}
-            className="sidebar-item"
-            style={{ width: '100%', color: '#ef4444' }}
-          >
-            <LogOut size={18} />
-            Logout
-          </button>
+          {/* Main Content */}
+          <main style={{ flex: 1, marginLeft: '260px', padding: '40px' }}>
+            <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+              {children}
+            </div>
+          </main>
+
+          <style>{`
+            @media (max-width: 1024px) {
+              .sidebar { width: 80px; }
+              .sidebar span, .sidebar .ChevronRight { display: none; }
+              main { margin-left: 80px !important; }
+            }
+          `}</style>
         </div>
-      </aside>
-
-      {/* Main Content */}
-      <main style={{ flex: 1, marginLeft: '260px', padding: '40px' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          {children}
-        </div>
-      </main>
-
-      <style>{`
-        @media (max-width: 1024px) {
-          .sidebar { width: 80px; }
-          .sidebar span, .sidebar .ChevronRight { display: none; }
-          main { margin-left: 80px !important; }
-        }
-      `}</style>
-    </div>
+      )}
+    </ToastProvider>
   )
 }

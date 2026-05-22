@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import { Save, Loader2, Mail, Phone, MapPin, Copyright, Heart, MessageSquare } from 'lucide-react'
+import { useToast } from '@/components/admin/Toast'
 
 export default function AdminSettingsPage() {
+  const { toast } = useToast()
   const [data, setData] = useState({
     email: '',
     phone: '',
@@ -43,10 +45,10 @@ export default function AdminSettingsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       })
-      if (res.ok) alert('Settings saved successfully!')
-      else alert('Failed to save settings')
+      if (res.ok) toast('Settings saved successfully!', 'success')
+      else toast('Failed to save settings', 'error')
     } catch (err) {
-      alert('Error saving settings')
+      toast('Error saving settings', 'error')
     } finally {
       setSaving(false)
     }

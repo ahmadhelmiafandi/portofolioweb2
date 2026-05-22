@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Plus, Edit2, Trash2, Award, Calendar, ExternalLink, ShieldCheck, X, ToggleLeft, ToggleRight } from 'lucide-react'
+import { useToast } from '@/components/admin/Toast'
 
 interface Certificate {
   id: string
@@ -17,6 +18,7 @@ interface Certificate {
 }
 
 export default function CertificatesCMS() {
+  const { toast } = useToast()
   const [certificates, setCertificates] = useState<Certificate[]>([])
   const [loading, setLoading] = useState(true)
   const [modalOpen, setModalOpen] = useState(false)
@@ -101,15 +103,16 @@ export default function CertificatesCMS() {
       })
 
       if (res.ok) {
+        toast('Certificate saved successfully!', 'success')
         await fetchCertificates()
         setModalOpen(false)
       } else {
         const errData = await res.json()
-        alert(errData.error || 'Something went wrong while saving.')
+        toast(errData.error || 'Something went wrong while saving.', 'error')
       }
     } catch (error) {
       console.error('Failed to save certificate:', error)
-      alert('Network error occurred.')
+      toast('Network error occurred.', 'error')
     } finally {
       setSaving(false)
     }
@@ -124,12 +127,14 @@ export default function CertificatesCMS() {
         method: 'DELETE'
       })
       if (res.ok) {
+        toast('Certificate deleted successfully.', 'success')
         setCertificates(prev => prev.filter(c => c.id !== id))
       } else {
-        alert('Failed to delete certificate.')
+        toast('Failed to delete certificate.', 'error')
       }
     } catch (error) {
       console.error('Failed to delete certificate:', error)
+      toast('Network error occurred.', 'error')
     }
   }
 
