@@ -2,7 +2,8 @@
 
 import { motion } from 'framer-motion'
 import { useLang } from '@/contexts/LangContext'
-import { Mail, MapPin, Phone, Link2, Send, Globe } from 'lucide-react'
+import { Mail, MapPin, Phone, Link2, Send, Globe, MessageCircle } from 'lucide-react'
+import { Github, Linkedin, Instagram, Twitter, Facebook, Youtube, Twitch, Whatsapp } from '@/components/icons/BrandIcons'
 import { useState } from 'react'
 
 interface ContactData {
@@ -35,16 +36,21 @@ const DEFAULT_CONTACT: ContactData = {
 }
 
 const ICON_MAP: Record<string, React.ElementType> = {
-  github: Globe,
-  linkedin: Link2,
-  instagram: Link2,
-  twitter: Globe,
-  x: Globe,
-  facebook: Globe,
-  youtube: Globe,
+  github: Github,
+  linkedin: Linkedin,
+  instagram: Instagram,
+  twitter: Twitter,
+  x: Twitter,
+  facebook: Facebook,
+  youtube: Youtube,
+  whatsapp: Whatsapp,
+  twitch: Twitch,
+  mail: Mail,
+  phone: Phone,
+  globe: Globe,
+  link: Link2,
   dribbble: Globe,
   behance: Globe,
-  link: Link2,
 }
 
 export function ContactSection({
@@ -169,7 +175,7 @@ export function ContactSection({
                 </p>
                 <div style={{ display: 'flex', gap: 10 }}>
                   {socials.map(s => {
-                    const IconComp = ICON_MAP[s.name.toLowerCase()] || Link2
+                    const IconComp = (s.icon ? ICON_MAP[s.icon.toLowerCase()] : null) || ICON_MAP[s.name.toLowerCase()] || Link2
                     return (
                       <a
                         key={s.id}
