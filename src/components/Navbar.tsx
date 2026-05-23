@@ -64,7 +64,7 @@ export function Navbar() {
               color: '#000000', fontWeight: 800, fontSize: 16, fontFamily: 'Syne, sans-serif'
             }}>H</div>
             <span style={{ fontFamily: 'Syne, sans-serif', fontWeight: 700, fontSize: 18, color: 'var(--text-primary)' }}>
-              helmi<span style={{ color: 'var(--accent)' }}>.</span>dev
+              porto<span style={{ color: 'var(--accent)' }}>helmi</span>
             </span>
           </a>
 

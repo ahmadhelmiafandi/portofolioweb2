@@ -36,7 +36,7 @@ export function Footer({ contact }: { contact?: any }) {
             color: '#000000', fontWeight: 800, fontSize: 14,
           }}>H</div>
           <span style={{ fontFamily: 'Space Grotesk, sans-serif', fontWeight: 800, fontSize: 16, color: 'var(--text-primary)' }}>
-            helmi<span style={{ color: 'var(--accent)' }}>.</span>dev
+            porto<span style={{ color: 'var(--accent)' }}>helmi</span>
           </span>
         </div>
 
