@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Save, Loader2, CheckCircle2 } from 'lucide-react'
 import { ImageUpload } from '@/components/admin/ImageUpload'
+import { FileUpload } from '@/components/admin/FileUpload'
 
 export default function AdminHeroPage() {
   const [data, setData] = useState({
@@ -99,6 +100,16 @@ export default function AdminHeroPage() {
             value={data.cv_url || ''}
             onChange={(e) => setData({ ...data, cv_url: e.target.value })}
           />
+          <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '6px' }}>Atau upload file PDF langsung:</p>
+          <div style={{ marginTop: '8px' }}>
+            <FileUpload
+              label=""
+              accept=".pdf"
+              helperText="PDF (max 10MB)"
+              value={data.cv_url || ''}
+              onChange={(url) => setData({ ...data, cv_url: url })}
+            />
+          </div>
         </div>
 
         <div>

@@ -205,26 +205,7 @@ export function HeroSection({ data }: { data?: HeroData | null }) {
           }
         }
  
-        @media (max-width: 480px) {
-          .hero-title {
-            font-size: 30px;
-          }
-          .hero-btns {
-            flex-direction: column;
-            align-items: center;
-          }
-          .hero-btns a, .hero-btns button {
-            width: 100%;
-            max-width: 280px;
-            justify-content: center;
-          }
-          .hero-stats {
-            gap: 16px;
-          }
-          .scroll-indicator {
-            display: none !important;
-          }
-        }
+
       `}</style>
 
       <section id="home" className="hero-section">
@@ -279,15 +260,21 @@ export function HeroSection({ data }: { data?: HeroData | null }) {
                 {lang === 'en' ? 'View My Work' : 'Lihat Karya Saya'}
                 <ArrowRight size={16} />
               </a>
-              <a
-                href={hero.cv_url || '#'}
-                target={hero.cv_url ? '_blank' : undefined}
-                rel={hero.cv_url ? 'noopener noreferrer' : undefined}
-                className="btn-secondary"
-              >
-                <Download size={16} />
-                {lang === 'en' ? 'Download CV' : 'Unduh CV'}
-              </a>
+              {hero.cv_url ? (
+                <a
+                  href="/api/cv/download"
+                  download
+                  className="btn-secondary"
+                >
+                  <Download size={16} />
+                  {lang === 'en' ? 'Download CV' : 'Unduh CV'}
+                </a>
+              ) : (
+                <span className="btn-secondary" style={{ opacity: 0.5, cursor: 'not-allowed' }}>
+                  <Download size={16} />
+                  {lang === 'en' ? 'Download CV' : 'Unduh CV'}
+                </span>
+              )}
             </motion.div>
 
             {/* Stats */}
@@ -303,7 +290,7 @@ export function HeroSection({ data }: { data?: HeroData | null }) {
                 { value: '15+', label: lang === 'en' ? 'Happy Clients' : 'Klien Puas' },
               ].map((stat, i) => (
                 <div key={i}>
-                  <div style={{ fontSize: 32, fontWeight: 800, fontFamily: 'Syne, sans-serif', background: 'linear-gradient(135deg, var(--gradient-start), var(--gradient-end))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                  <div style={{ fontSize: 32, fontWeight: 800, fontFamily: 'Syne, sans-serif', color: 'var(--text-primary)' }}>
                     {stat.value}
                   </div>
                   <div style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 500, marginTop: 2, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
@@ -345,22 +332,7 @@ export function HeroSection({ data }: { data?: HeroData | null }) {
           </motion.div>
         </div>
 
-        {/* Scroll indicator */}
-        <motion.div
-          className="scroll-indicator"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.2 }}
-          style={{ position: 'absolute', bottom: 32, left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, zIndex: 1 }}
-        >
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
-            style={{ width: 22, height: 36, border: '2px solid var(--border-hover)', borderRadius: 12, display: 'flex', justifyContent: 'center', paddingTop: 6 }}
-          >
-            <div style={{ width: 4, height: 8, background: 'var(--accent)', borderRadius: 2 }} />
-          </motion.div>
-        </motion.div>
+
       </section>
     </>
   )

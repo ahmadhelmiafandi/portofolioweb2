@@ -77,6 +77,7 @@ export function AboutSection({ data }: { data?: AboutData | null }) {
                     src={about.image}
                     alt="Profile"
                     fill
+                    sizes="(max-width: 768px) 100vw, 440px"
                     style={{ objectFit: 'cover' }}
                   />
                 ) : (

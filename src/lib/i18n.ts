@@ -40,6 +40,7 @@ export const translations = {
       date: 'Date of Issue',
       id: 'Credential ID',
       view_pdf: 'View PDF / Certificate',
+      view_online: 'View on Coursera',
     },
     experience: {
       title: 'Experience',
@@ -103,6 +104,7 @@ export const translations = {
       date: 'Tanggal Terbit',
       id: 'ID Kredensial',
       view_pdf: 'Lihat Sertifikat',
+      view_online: 'Lihat di Coursera',
     },
     experience: {
       title: 'Pengalaman',

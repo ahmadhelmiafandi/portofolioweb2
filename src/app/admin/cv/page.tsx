@@ -1,13 +1,14 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Save, Loader2, FileText, User, MessageSquare, Info, Image as ImageIcon } from 'lucide-react'
+import { Save, Loader2, FileText, User, MessageSquare, Info, Image as ImageIcon, Download } from 'lucide-react'
 import { useToast } from '@/components/admin/Toast'
+import { FileUpload } from '@/components/admin/FileUpload'
 
 export default function AdminCVPage() {
   const { toast } = useToast()
   const [data, setData] = useState({
-    hero: { title_en: '', subtitle_en: '', title_id: '', subtitle_id: '' },
+    hero: { title_en: '', subtitle_en: '', title_id: '', subtitle_id: '', cv_url: '' },
     about: { image: '', description_en: '', description_id: '' },
     contact: { portfolio_extra_en: '', portfolio_extra_id: '' }
   })
@@ -28,9 +29,22 @@ export default function AdminCVPage() {
         const contact = await contactRes.json()
 
         setData({
-          hero: hero || { title_en: '', subtitle_en: '', title_id: '', subtitle_id: '' },
-          about: about || { image: '', description_en: '', description_id: '' },
-          contact: contact || { portfolio_extra_en: '', portfolio_extra_id: '' }
+          hero: {
+            title_en:   hero?.title_en    ?? '',
+            subtitle_en: hero?.subtitle_en ?? '',
+            title_id:   hero?.title_id    ?? '',
+            subtitle_id: hero?.subtitle_id ?? '',
+            cv_url:     hero?.cv_url      ?? '',
+          },
+          about: {
+            image:          about?.image          ?? '',
+            description_en: about?.description_en ?? '',
+            description_id: about?.description_id ?? '',
+          },
+          contact: {
+            portfolio_extra_en: contact?.portfolio_extra_en ?? '',
+            portfolio_extra_id: contact?.portfolio_extra_id ?? '',
+          },
         })
       } catch (err) {
         console.error('Failed to fetch data', err)
@@ -108,6 +122,31 @@ export default function AdminCVPage() {
 
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
         
+        {/* CV File Upload */}
+        <div className="card" style={{ padding: '32px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)' }}>
+          <h3 style={{ fontSize: '18px', fontWeight: '700', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-primary)' }}>
+            <Download size={20} color="var(--accent)" /> File CV (Tombol "Unduh CV")
+          </h3>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '20px' }}>
+            Upload file PDF CV kamu. File ini akan terhubung langsung ke tombol <strong>"Unduh CV"</strong> di halaman utama.
+          </p>
+          <FileUpload
+            label="Upload CV (PDF)"
+            accept=".pdf"
+            helperText="Format PDF, maksimal 10MB"
+            value={data.hero.cv_url || ''}
+            onChange={(url) => setData({ ...data, hero: { ...data.hero, cv_url: url } })}
+          />
+          {data.hero.cv_url && (
+            <div style={{ marginTop: '12px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: 'var(--text-secondary)' }}>
+              <span>URL saat ini:</span>
+              <a href={data.hero.cv_url} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', textDecoration: 'underline', wordBreak: 'break-all' }}>
+                {data.hero.cv_url}
+              </a>
+            </div>
+          )}
+        </div>
+
         {/* Header Section */}
         <div className="card" style={{ padding: '32px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)' }}>
           <h3 style={{ fontSize: '18px', fontWeight: '700', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-primary)' }}>

@@ -1,7 +1,7 @@
 'use client'
 
 import { motion, useInView } from 'framer-motion'
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { useLang } from '@/contexts/LangContext'
 
 interface Skill {
@@ -87,6 +87,9 @@ export function SkillsSection({ data }: { data?: Skill[] | null }) {
   const skills = (data && data.length > 0) ? data : DEFAULT_SKILLS
   const categories = ['All', ...Array.from(new Set(skills.map(s => s.category)))]
   const [activeCategory, setActiveCategory] = useState('All')
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => { setMounted(true) }, [])
 
   const filtered = (activeCategory === 'All' ? skills : skills.filter(s => s.category === activeCategory))
     .sort((a, b) => b.level - a.level)
@@ -107,7 +110,7 @@ export function SkillsSection({ data }: { data?: Skill[] | null }) {
 
         {/* Category Filter */}
         <div style={{ display: 'flex', gap: 8, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 48 }}>
-          {categories.map(cat => (
+          {mounted && categories.map(cat => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}

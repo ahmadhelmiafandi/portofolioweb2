@@ -2,7 +2,8 @@
 
 import { motion } from 'framer-motion'
 import { useLang } from '@/contexts/LangContext'
-import { Award, Calendar, ExternalLink, ShieldCheck } from 'lucide-react'
+import { Award, Calendar, ExternalLink, ShieldCheck, ChevronDown, ChevronUp } from 'lucide-react'
+import { useState } from 'react'
 
 interface Certificate {
   id: string
@@ -17,13 +18,16 @@ interface Certificate {
 }
 
 export function CertificatesSection({ data }: { data?: Certificate[] | null }) {
-  const { t } = useLang()
+  const { t, lang } = useLang()
+  const [showAll, setShowAll] = useState(false)
 
   if (!data || data.length === 0) return null
 
   // Filter only published certificates
   const publishedCerts = data.filter((c) => c.published)
   if (publishedCerts.length === 0) return null
+
+  const visibleCerts = showAll ? publishedCerts : publishedCerts.slice(0, 3)
 
   return (
     <>
@@ -103,7 +107,7 @@ export function CertificatesSection({ data }: { data?: Certificate[] | null }) {
 
           {/* Grid Layout */}
           <div className="certs-grid">
-            {publishedCerts.map((cert, index) => {
+            {visibleCerts.map((cert, index) => {
               const formattedDate = cert.issue_date
                 ? new Date(cert.issue_date).toLocaleDateString('en-US', {
                     year: 'numeric',
@@ -181,32 +185,81 @@ export function CertificatesSection({ data }: { data?: Certificate[] | null }) {
                     </div>
                   </div>
 
-                  {/* Actions / View Link */}
+                  {/* Actions */}
                   {(cert.link || cert.file_url) && (
-                    <div style={{ marginTop: 'auto' }}>
-                      <a
-                        href={cert.link || cert.file_url || '#'}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn-primary"
-                        style={{
-                          width: '100%',
-                          justifyContent: 'center',
-                          fontSize: '13px',
-                          padding: '10px 16px',
-                          background: 'var(--accent-4)', /* Bright Yellow */
-                          color: '#000000'
-                        }}
-                      >
-                        <span>{t.certificates.view_pdf}</span>
-                        <ExternalLink size={14} />
-                      </a>
+                    <div style={{ marginTop: 'auto', display: 'flex', gap: '8px', flexDirection: 'column' }}>
+                      {cert.link && (
+                        <a
+                          href={cert.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn-secondary"
+                          style={{
+                            width: '100%',
+                            justifyContent: 'center',
+                            fontSize: '13px',
+                            padding: '10px 16px',
+                          }}
+                        >
+                          <ExternalLink size={14} />
+                          {lang === 'en' ? `View on ${cert.issuer}` : `Lihat di ${cert.issuer}`}
+                        </a>
+                      )}
+                      {cert.file_url && (
+                        <a
+                          href={cert.file_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn-primary"
+                          style={{
+                            width: '100%',
+                            justifyContent: 'center',
+                            fontSize: '13px',
+                            padding: '10px 16px',
+                            background: 'var(--accent-4)',
+                            color: '#000000',
+                          }}
+                        >
+                          <span>{t.certificates.view_pdf}</span>
+                          <ExternalLink size={14} />
+                        </a>
+                      )}
                     </div>
                   )}
                 </motion.div>
               )
             })}
           </div>
+
+          {/* Show All / Collapse Button */}
+          {publishedCerts.length > 3 && (
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              style={{ display: 'flex', justifyContent: 'center', marginTop: 48 }}
+            >
+              <button
+                onClick={() => setShowAll(!showAll)}
+                className="btn-secondary"
+                style={{ gap: 10, padding: '12px 32px', fontSize: 14 }}
+              >
+                {showAll ? (
+                  <>
+                    <ChevronUp size={16} />
+                    {lang === 'en' ? 'Show Less' : 'Sembunyikan'}
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown size={16} />
+                    {lang === 'en'
+                      ? `View All Certificates (${publishedCerts.length})`
+                      : `Lihat Semua Sertifikat (${publishedCerts.length})`}
+                  </>
+                )}
+              </button>
+            </motion.div>
+          )}
         </div>
       </section>
     </>

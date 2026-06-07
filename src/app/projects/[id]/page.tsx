@@ -93,7 +93,7 @@ export default function ProjectDetailPage() {
 
             {project.image && (
               <div style={{ borderRadius: 'var(--radius-lg)', overflow: 'hidden', marginBottom: 40, aspectRatio: '16/9', position: 'relative', border: '1px solid var(--border)' }}>
-                <Image src={project.image} alt={title} fill style={{ objectFit: 'cover' }} />
+                <Image src={project.image} alt={title} fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 960px" style={{ objectFit: 'cover' }} />
               </div>
             )}
 

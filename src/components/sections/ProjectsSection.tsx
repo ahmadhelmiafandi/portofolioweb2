@@ -86,7 +86,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       {/* Image */}
       {project.image && (
         <div className="project-img-wrapper" style={{ position: 'relative', width: '100%', aspectRatio: '16/10', overflow: 'hidden', borderRadius: 0, borderBottom: '3px solid var(--border)' }}>
-          <Image src={project.image} alt={title} fill style={{ objectFit: 'cover' }} />
+          <Image src={project.image} alt={title} fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px" style={{ objectFit: 'cover' }} />
         </div>
       )}
 
