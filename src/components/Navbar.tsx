@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useTheme } from 'next-themes'
 import { useLang } from '@/contexts/LangContext'
-import { Moon, Sun, Globe, Menu, X } from 'lucide-react'
+import { Moon, Sun, Globe, Menu, X, MessageCircle } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const NAV_ITEMS = [
@@ -14,6 +14,14 @@ const NAV_ITEMS = [
   { href: '#experience', key: 'experience' },
   { href: '#contact', key: 'contact' },
 ] as const
+
+const WA_NUMBER = '6282323609362'
+const getWaLink = (lang: 'en' | 'id') => {
+  const msg = lang === 'en'
+    ? `Hi Helmi! I visited your portfolio and I'm interested in discussing a project collaboration with you. Could we connect?`
+    : `Halo Helmi! Saya sudah melihat portofolio kamu dan tertarik untuk mendiskusikan kerja sama proyek. Apakah kita bisa ngobrol lebih lanjut?`
+  return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`
+}
 
 export function Navbar() {
   const { theme, setTheme } = useTheme()
@@ -105,6 +113,38 @@ export function Navbar() {
 
           {/* Controls */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            {/* WhatsApp Button */}
+            <a
+              href={getWaLink(lang)}
+              target="_blank"
+              rel="noopener noreferrer"
+              title={lang === 'en' ? 'Chat on WhatsApp' : 'Chat di WhatsApp'}
+              className="hidden-mobile"
+              style={{
+                display: 'flex', alignItems: 'center', gap: 6,
+                padding: '6px 14px',
+                background: '#25D366',
+                border: '2px solid #000000',
+                borderRadius: 'var(--radius-sm)',
+                boxShadow: '2px 2px 0px 0px #000000',
+                color: '#000000',
+                fontSize: 13, fontWeight: 800,
+                cursor: 'pointer', transition: 'var(--transition)',
+                fontFamily: 'Space Grotesk, sans-serif',
+                textDecoration: 'none',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.transform = 'translate(-2px, -2px)'
+                e.currentTarget.style.boxShadow = '4px 4px 0px 0px #000000'
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.transform = 'none'
+                e.currentTarget.style.boxShadow = '2px 2px 0px 0px #000000'
+              }}
+            >
+              <MessageCircle size={14} />
+              {lang === 'en' ? 'Hire Me' : 'Hubungi Saya'}
+            </a>
             {/* Lang Toggle */}
             <button
               onClick={toggleLang}
@@ -220,6 +260,25 @@ export function Navbar() {
                 {t.nav[item.key as keyof typeof t.nav]}
               </a>
             ))}
+            {/* WhatsApp in mobile menu */}
+            <a
+              href={getWaLink(lang)}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMobileOpen(false)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 8,
+                padding: '14px 0',
+                color: '#25D366',
+                textDecoration: 'none',
+                fontSize: 16,
+                fontWeight: 800,
+                fontFamily: 'Space Grotesk, sans-serif',
+              }}
+            >
+              <MessageCircle size={18} />
+              {lang === 'en' ? 'Hire Me via WhatsApp' : 'Hubungi via WhatsApp'}
+            </a>
           </motion.div>
         )}
       </AnimatePresence>

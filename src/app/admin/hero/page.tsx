@@ -85,11 +85,29 @@ export default function AdminHeroPage() {
         </div>
 
         <div>
+          <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Badge (EN)</label>
+          <input 
+            type="text" className="input" 
+            value={data.badge_en}
+            onChange={(e) => setData({ ...data, badge_en: e.target.value })}
+          />
+        </div>
+
+        <div>
           <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>CTA Label (ID)</label>
           <input 
             type="text" className="input" 
             value={data.cta_id}
             onChange={(e) => setData({ ...data, cta_id: e.target.value })}
+          />
+        </div>
+
+        <div>
+          <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>CTA Label (EN)</label>
+          <input 
+            type="text" className="input" 
+            value={data.cta_en}
+            onChange={(e) => setData({ ...data, cta_en: e.target.value })}
           />
         </div>
 
