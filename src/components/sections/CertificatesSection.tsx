@@ -6,15 +6,11 @@ import { Award, Calendar, ExternalLink, ShieldCheck, ChevronDown, ChevronUp } fr
 import { useState } from 'react'
 
 interface Certificate {
-  id: string
-  name: string
-  issuer: string
+  id: string; name: string; issuer: string
   issue_date: string | Date
   credential_id?: string | null
-  link?: string | null
-  file_url?: string | null
-  published: boolean
-  order: number
+  link?: string | null; file_url?: string | null
+  published: boolean; order: number
 }
 
 export function CertificatesSection({ data }: { data?: Certificate[] | null }) {
@@ -22,246 +18,143 @@ export function CertificatesSection({ data }: { data?: Certificate[] | null }) {
   const [showAll, setShowAll] = useState(false)
 
   if (!data || data.length === 0) return null
-
-  // Filter only published certificates
-  const publishedCerts = data.filter((c) => c.published)
+  const publishedCerts = data.filter(c => c.published)
   if (publishedCerts.length === 0) return null
 
   const visibleCerts = showAll ? publishedCerts : publishedCerts.slice(0, 3)
 
+  const accentPairs = [
+    { bg: 'var(--accent-light)',   color: 'var(--accent)' },
+    { bg: 'var(--accent-2-light)', color: 'var(--accent-2)' },
+    { bg: 'rgba(99,102,241,0.1)',  color: '#818cf8' },
+    { bg: 'rgba(234,179,8,0.1)',   color: '#eab308' },
+  ]
+
   return (
-    <>
-      <style>{`
-        .certs-section {
-          background-color: var(--bg-secondary);
-          position: relative;
-          overflow: hidden;
-        }
-        .certs-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-          gap: 28px;
-          margin-top: 40px;
-        }
-        .cert-card {
-          background: var(--surface);
-          border: 3px solid #000000;
-          border-radius: var(--radius);
-          padding: 28px;
-          box-shadow: 6px 6px 0px 0px #000000;
-          transition: var(--transition);
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          position: relative;
-        }
-        .cert-card:hover {
-          transform: translate(-4px, -4px);
-          box-shadow: 10px 10px 0px 0px #000000;
-        }
-        .cert-icon-wrapper {
-          position: absolute;
-          top: -16px;
-          right: 20px;
-          background: var(--accent-3); /* Vibrant Hot Pink */
-          color: #000000;
-          border: 2px solid #000000;
-          border-radius: var(--radius-sm);
-          padding: 6px;
-          box-shadow: 2px 2px 0px 0px #000000;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        .cert-meta-item {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          font-size: 13px;
-          font-weight: 700;
-          color: var(--text-secondary);
-          margin-top: 8px;
-        }
-        @media (max-width: 480px) {
-          .certs-grid {
-            grid-template-columns: 1fr;
-            gap: 20px;
-          }
-          .cert-card {
-            padding: 20px;
-          }
-        }
-      `}</style>
+    <section id="certificates" className="section" style={{ background: 'var(--bg-secondary)', position: 'relative', overflow: 'hidden' }}>
+      <div className="grid-pattern" style={{ position: 'absolute', inset: 0, opacity: 1, zIndex: 0 }} />
 
-      <section id="certificates" className="section certs-section">
-        {/* Background Grid Pattern */}
-        <div className="grid-pattern" style={{ position: 'absolute', inset: 0, opacity: 0.25, zIndex: 0 }} />
+      <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+        <motion.div className="section-header"
+          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+        >
+          <span className="section-subtitle">{t.certificates.subtitle}</span>
+          <h2 className="section-title">{t.certificates.title}</h2>
+        </motion.div>
 
-        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          {/* Section Header */}
-          <div className="section-header">
-            <span className="section-subtitle">{t.certificates.subtitle}</span>
-            <h2 className="section-title">{t.certificates.title}</h2>
-            <div style={{ width: 80, height: 6, background: 'var(--accent-3)', border: '2px solid #000000', margin: '16px auto 0', boxShadow: '2px 2px 0px 0px #000000' }} />
-          </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 20 }}>
+          {visibleCerts.map((cert, index) => {
+            const pair = accentPairs[index % accentPairs.length]
+            const formattedDate = cert.issue_date
+              ? new Date(cert.issue_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })
+              : ''
 
-          {/* Grid Layout */}
-          <div className="certs-grid">
-            {visibleCerts.map((cert, index) => {
-              const formattedDate = cert.issue_date
-                ? new Date(cert.issue_date).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                  })
-                : ''
-
-              // Alternating decorative colored headers for each card
-              const bgColors = ['var(--surface-2)', 'var(--accent-light)', '#FFF2CC', '#FFE5F1']
-              const cardBg = bgColors[index % bgColors.length]
-
-              return (
-                <motion.div
-                  key={cert.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-100px' }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="cert-card"
-                >
-                  {/* Floating Icon badge */}
-                  <div className="cert-icon-wrapper">
-                    <Award size={20} />
-                  </div>
-
-                  <div>
-                    {/* Organization Banner */}
-                    <div style={{
-                      backgroundColor: cardBg,
-                      border: '2px solid #000000',
-                      padding: '4px 10px',
-                      borderRadius: '4px',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                      fontSize: '12px',
-                      fontWeight: '800',
-                      color: '#000000',
-                      boxShadow: '1.5px 1.5px 0px 0px #000000',
-                      marginBottom: '16px',
-                      textTransform: 'uppercase',
-                      fontFamily: 'Space Grotesk, sans-serif'
-                    }}>
-                      <ShieldCheck size={14} />
-                      {cert.issuer}
-                    </div>
-
-                    {/* Certificate Name */}
-                    <h3 style={{
-                      fontSize: '20px',
-                      fontWeight: '800',
-                      fontFamily: 'Space Grotesk',
-                      lineHeight: '1.2',
-                      marginBottom: '16px',
-                      color: 'var(--text-primary)'
-                    }}>
-                      {cert.name}
-                    </h3>
-
-                    {/* Metadata Panel */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', borderTop: '2px dashed #000000', paddingTop: '12px', marginBottom: '24px' }}>
-                      {formattedDate && (
-                        <div className="cert-meta-item">
-                          <Calendar size={14} />
-                          <span>{t.certificates.date}: <span style={{ fontWeight: '800' }}>{formattedDate}</span></span>
-                        </div>
-                      )}
-                      {cert.credential_id && (
-                        <div className="cert-meta-item">
-                          <span style={{ fontSize: '11px', background: 'var(--bg-secondary)', padding: '2px 6px', border: '1.5px solid #000000', borderRadius: '3px', fontWeight: '800', fontFamily: 'monospace' }}>
-                            {t.certificates.id}: {cert.credential_id}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Actions */}
-                  {(cert.link || cert.file_url) && (
-                    <div style={{ marginTop: 'auto', display: 'flex', gap: '8px', flexDirection: 'column' }}>
-                      {cert.link && (
-                        <a
-                          href={cert.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn-secondary"
-                          style={{
-                            width: '100%',
-                            justifyContent: 'center',
-                            fontSize: '13px',
-                            padding: '10px 16px',
-                          }}
-                        >
-                          <ExternalLink size={14} />
-                          {lang === 'en' ? `View on ${cert.issuer}` : `Lihat di ${cert.issuer}`}
-                        </a>
-                      )}
-                      {cert.file_url && (
-                        <a
-                          href={cert.file_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn-primary"
-                          style={{
-                            width: '100%',
-                            justifyContent: 'center',
-                            fontSize: '13px',
-                            padding: '10px 16px',
-                            background: 'var(--accent-4)',
-                            color: '#000000',
-                          }}
-                        >
-                          <span>{t.certificates.view_pdf}</span>
-                          <ExternalLink size={14} />
-                        </a>
-                      )}
-                    </div>
-                  )}
-                </motion.div>
-              )
-            })}
-          </div>
-
-          {/* Show All / Collapse Button */}
-          {publishedCerts.length > 3 && (
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              style={{ display: 'flex', justifyContent: 'center', marginTop: 48 }}
-            >
-              <button
-                onClick={() => setShowAll(!showAll)}
-                className="btn-secondary"
-                style={{ gap: 10, padding: '12px 32px', fontSize: 14 }}
+            return (
+              <motion.article
+                key={cert.id}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-80px' }}
+                transition={{ duration: 0.45, delay: index * 0.08 }}
+                style={{
+                  background: 'var(--surface)',
+                  border: '1px solid var(--border)',
+                  borderRadius: '16px',
+                  padding: '24px',
+                  display: 'flex', flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  position: 'relative',
+                  transition: 'var(--transition)',
+                }}
+                whileHover={{ borderColor: pair.color, y: -3, boxShadow: 'var(--shadow-md)' }}
               >
-                {showAll ? (
-                  <>
-                    <ChevronUp size={16} />
-                    {lang === 'en' ? 'Show Less' : 'Sembunyikan'}
-                  </>
-                ) : (
-                  <>
-                    <ChevronDown size={16} />
-                    {lang === 'en'
-                      ? `View All Certificates (${publishedCerts.length})`
-                      : `Lihat Semua Sertifikat (${publishedCerts.length})`}
-                  </>
+                {/* Accent icon top-right */}
+                <div style={{
+                  position: 'absolute', top: 16, right: 16,
+                  width: 36, height: 36, borderRadius: '10px',
+                  background: pair.bg, color: pair.color,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                  <Award size={17} />
+                </div>
+
+                <div>
+                  {/* Issuer badge */}
+                  <div style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 5,
+                    fontSize: 11, fontWeight: 600, color: pair.color,
+                    background: pair.bg,
+                    padding: '3px 10px', borderRadius: '9999px',
+                    marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.08em',
+                  }}>
+                    <ShieldCheck size={12} />
+                    {cert.issuer}
+                  </div>
+
+                  <h3 style={{ fontSize: 17, fontWeight: 700, lineHeight: 1.3, marginBottom: 16, color: 'var(--text-primary)', paddingRight: 28 }}>
+                    {cert.name}
+                  </h3>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6, paddingTop: 12, borderTop: '1px solid var(--border)', marginBottom: 20 }}>
+                    {formattedDate && (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 13, color: 'var(--text-muted)' }}>
+                        <Calendar size={13} />
+                        <span>{t.certificates.date}: <strong style={{ color: 'var(--text-secondary)' }}>{formattedDate}</strong></span>
+                      </div>
+                    )}
+                    {cert.credential_id && (
+                      <div style={{ fontSize: 11, color: 'var(--text-muted)', fontFamily: 'monospace', background: 'var(--surface-2)', padding: '3px 8px', borderRadius: '6px', display: 'inline-block' }}>
+                        ID: {cert.credential_id}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Action buttons */}
+                {(cert.link || cert.file_url) && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    {cert.link && (
+                      <a href={cert.link} target="_blank" rel="noopener noreferrer"
+                        className="btn-secondary"
+                        style={{ justifyContent: 'center', fontSize: 13, padding: '9px 14px' }}
+                      >
+                        <ExternalLink size={13} />
+                        {lang === 'en' ? `View on ${cert.issuer}` : `Lihat di ${cert.issuer}`}
+                      </a>
+                    )}
+                    {cert.file_url && (
+                      <a href={cert.file_url} target="_blank" rel="noopener noreferrer"
+                        className="btn-primary"
+                        style={{ justifyContent: 'center', fontSize: 13, padding: '9px 14px' }}
+                      >
+                        {t.certificates.view_pdf}
+                        <ExternalLink size={13} />
+                      </a>
+                    )}
+                  </div>
                 )}
-              </button>
-            </motion.div>
-          )}
+              </motion.article>
+            )
+          })}
         </div>
-      </section>
-    </>
+
+        {publishedCerts.length > 3 && (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            style={{ display: 'flex', justifyContent: 'center', marginTop: 40 }}
+          >
+            <button onClick={() => setShowAll(!showAll)} className="btn-secondary"
+              style={{ gap: 8, padding: '11px 28px', fontSize: 14 }}
+            >
+              {showAll ? (
+                <><ChevronUp size={15} />{lang === 'en' ? 'Show Less' : 'Sembunyikan'}</>
+              ) : (
+                <><ChevronDown size={15} />{lang === 'en' ? `View All Certificates (${publishedCerts.length})` : `Lihat Semua Sertifikat (${publishedCerts.length})`}</>
+              )}
+            </button>
+          </motion.div>
+        )}
+      </div>
+    </section>
   )
 }

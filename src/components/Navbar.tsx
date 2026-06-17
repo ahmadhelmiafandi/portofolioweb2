@@ -7,12 +7,12 @@ import { Moon, Sun, Globe, Menu, X, MessageCircle } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const NAV_ITEMS = [
-  { href: '#about', key: 'about' },
-  { href: '#skills', key: 'skills' },
-  { href: '#projects', key: 'projects' },
+  { href: '#about',        key: 'about' },
+  { href: '#skills',       key: 'skills' },
+  { href: '#projects',     key: 'projects' },
   { href: '#certificates', key: 'certificates' },
-  { href: '#experience', key: 'experience' },
-  { href: '#contact', key: 'contact' },
+  { href: '#experience',   key: 'experience' },
+  { href: '#contact',      key: 'contact' },
 ] as const
 
 const WA_NUMBER = '6282323609362'
@@ -26,9 +26,9 @@ const getWaLink = (lang: 'en' | 'id') => {
 export function Navbar() {
   const { theme, setTheme } = useTheme()
   const { lang, setLang, t } = useLang()
-  const [scrolled, setScrolled] = useState(false)
+  const [scrolled, setScrolled]   = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [mounted, setMounted] = useState(false)
+  const [mounted, setMounted]     = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -38,72 +38,63 @@ export function Navbar() {
   }, [])
 
   const toggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark')
-  const toggleLang = () => setLang(lang === 'en' ? 'id' : 'en')
-
-  const navStyle: React.CSSProperties = {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 'var(--navbar-height)',
-    zIndex: 99,
-    transition: 'all 0.3s ease',
-    ...(scrolled ? {
-      background: 'var(--surface)',
-      borderBottom: '3px solid var(--border)',
-      backdropFilter: 'blur(20px)',
-    } : {
-      background: 'transparent',
-    }),
-  }
+  const toggleLang  = () => setLang(lang === 'en' ? 'id' : 'en')
 
   return (
     <>
-      <nav style={navStyle}>
+      <nav
+        aria-label="Main navigation"
+        style={{
+          position: 'fixed', top: 0, left: 0, right: 0,
+          height: 'var(--navbar-height)',
+          zIndex: 99,
+          transition: 'all 0.3s ease',
+          background: scrolled ? 'rgba(0,0,0,0.85)' : 'transparent',
+          backdropFilter: scrolled ? 'blur(20px)' : 'none',
+          borderBottom: scrolled ? '1px solid var(--border)' : '1px solid transparent',
+        }}
+      >
         <div className="container" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+
           {/* Logo */}
-          <a href="#" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
+          <a href="#" aria-label="portohelmi home" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{
               width: 36, height: 36,
-              background: 'var(--accent-4)',
-              border: '3px solid #000000',
-              boxShadow: '3px 3px 0px 0px #000000',
-              borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: '#000000', fontWeight: 800, fontSize: 16, fontFamily: 'Syne, sans-serif'
+              background: 'linear-gradient(135deg, #14b8a6, #f43f5e)',
+              borderRadius: '10px',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: '#fff', fontWeight: 800, fontSize: 16,
+              fontFamily: 'Outfit, sans-serif',
+              flexShrink: 0,
             }}>H</div>
-            <span style={{ fontFamily: 'Syne, sans-serif', fontWeight: 700, fontSize: 18, color: 'var(--text-primary)' }}>
+            <span style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 700, fontSize: 18, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
               porto<span style={{ color: 'var(--accent)' }}>helmi</span>
             </span>
           </a>
 
-          {/* Desktop Nav */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4 }} className="hidden-mobile">
+          {/* Desktop nav links */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 2 }} className="hidden-mobile">
             {NAV_ITEMS.map(item => (
               <a
                 key={item.key}
                 href={item.href}
                 style={{
-                  padding: '8px 16px',
+                  padding: '8px 14px',
                   color: 'var(--text-secondary)',
                   textDecoration: 'none',
                   fontSize: 14,
-                  fontWeight: 700,
-                  fontFamily: 'Space Grotesk, sans-serif',
-                  border: '2px solid transparent',
-                  borderRadius: 'var(--radius-sm)',
+                  fontWeight: 500,
+                  fontFamily: 'Outfit, sans-serif',
+                  borderRadius: '9999px',
                   transition: 'var(--transition)',
                 }}
                 onMouseEnter={e => {
-                  (e.target as HTMLElement).style.color = 'var(--text-primary)'
-                  ;(e.target as HTMLElement).style.background = 'var(--surface-2)'
-                  ;(e.target as HTMLElement).style.borderColor = 'var(--border)'
-                  ;(e.target as HTMLElement).style.boxShadow = '2px 2px 0px 0px var(--border)'
+                  (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)'
+                  ;(e.currentTarget as HTMLElement).style.background = 'var(--surface-2)'
                 }}
                 onMouseLeave={e => {
-                  (e.target as HTMLElement).style.color = 'var(--text-secondary)'
-                  ;(e.target as HTMLElement).style.background = 'transparent'
-                  ;(e.target as HTMLElement).style.borderColor = 'transparent'
-                  ;(e.target as HTMLElement).style.boxShadow = 'none'
+                  (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)'
+                  ;(e.currentTarget as HTMLElement).style.background = 'transparent'
                 }}
               >
                 {t.nav[item.key as keyof typeof t.nav]}
@@ -113,106 +104,94 @@ export function Navbar() {
 
           {/* Controls */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            {/* WhatsApp Button */}
+            {/* WhatsApp */}
             <a
               href={getWaLink(lang)}
               target="_blank"
               rel="noopener noreferrer"
-              title={lang === 'en' ? 'Chat on WhatsApp' : 'Chat di WhatsApp'}
+              aria-label={lang === 'en' ? 'Chat on WhatsApp' : 'Chat di WhatsApp'}
               className="hidden-mobile"
               style={{
                 display: 'flex', alignItems: 'center', gap: 6,
-                padding: '6px 14px',
-                background: '#25D366',
-                border: '2px solid #000000',
-                borderRadius: 'var(--radius-sm)',
-                boxShadow: '2px 2px 0px 0px #000000',
-                color: '#000000',
-                fontSize: 13, fontWeight: 800,
-                cursor: 'pointer', transition: 'var(--transition)',
-                fontFamily: 'Space Grotesk, sans-serif',
+                padding: '8px 18px',
+                background: 'var(--accent)',
+                borderRadius: '9999px',
+                color: '#000',
+                fontSize: 13, fontWeight: 600,
+                fontFamily: 'Outfit, sans-serif',
                 textDecoration: 'none',
+                transition: 'var(--transition)',
               }}
               onMouseEnter={e => {
-                e.currentTarget.style.transform = 'translate(-2px, -2px)'
-                e.currentTarget.style.boxShadow = '4px 4px 0px 0px #000000'
+                e.currentTarget.style.background = 'var(--accent-hover)'
+                e.currentTarget.style.transform = 'translateY(-1px)'
+                e.currentTarget.style.boxShadow = '0 6px 20px rgba(20,184,166,0.35)'
               }}
               onMouseLeave={e => {
+                e.currentTarget.style.background = 'var(--accent)'
                 e.currentTarget.style.transform = 'none'
-                e.currentTarget.style.boxShadow = '2px 2px 0px 0px #000000'
+                e.currentTarget.style.boxShadow = 'none'
               }}
             >
               <MessageCircle size={14} />
               {lang === 'en' ? 'Hire Me' : 'Hubungi Saya'}
             </a>
-            {/* Lang Toggle */}
+
+            {/* Lang toggle */}
             <button
               onClick={toggleLang}
-              title="Toggle language"
+              aria-label="Toggle language"
               style={{
-                display: 'flex', alignItems: 'center', gap: 6,
-                padding: '6px 12px',
+                display: 'flex', alignItems: 'center', gap: 5,
+                padding: '7px 12px',
                 background: 'var(--surface-2)',
-                border: '2px solid var(--border)',
-                borderRadius: 'var(--radius-sm)',
-                boxShadow: '2px 2px 0px 0px var(--border)',
+                border: '1px solid var(--border)',
+                borderRadius: '9999px',
                 color: 'var(--text-secondary)',
-                fontSize: 13, fontWeight: 600,
+                fontSize: 12, fontWeight: 600,
                 cursor: 'pointer', transition: 'var(--transition)',
-                fontFamily: 'Inter, sans-serif',
+                fontFamily: 'Outfit, sans-serif',
               }}
-              onMouseEnter={e => {
-                (e.currentTarget).style.borderColor = 'var(--accent)'
-                ;(e.currentTarget).style.color = 'var(--accent)'
-              }}
-              onMouseLeave={e => {
-                (e.currentTarget).style.borderColor = 'var(--border)'
-                ;(e.currentTarget).style.color = 'var(--text-secondary)'
-              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)' }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-secondary)' }}
             >
-              <Globe size={14} />
+              <Globe size={13} />
               {lang.toUpperCase()}
             </button>
 
-            {/* Theme Toggle */}
+            {/* Theme toggle */}
             {mounted && (
               <button
                 onClick={toggleTheme}
-                title="Toggle theme"
+                aria-label="Toggle theme"
                 style={{
                   width: 36, height: 36,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   background: 'var(--surface-2)',
-                  border: '2px solid var(--border)',
-                  borderRadius: 'var(--radius-sm)',
-                  boxShadow: '2px 2px 0px 0px var(--border)',
+                  border: '1px solid var(--border)',
+                  borderRadius: '9999px',
                   color: 'var(--text-secondary)',
                   cursor: 'pointer', transition: 'var(--transition)',
                 }}
-                onMouseEnter={e => {
-                  (e.currentTarget).style.borderColor = 'var(--accent)'
-                  ;(e.currentTarget).style.color = 'var(--accent)'
-                }}
-                onMouseLeave={e => {
-                  (e.currentTarget).style.borderColor = 'var(--border)'
-                  ;(e.currentTarget).style.color = 'var(--text-secondary)'
-                }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)' }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-secondary)' }}
               >
-                {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+                {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
               </button>
             )}
 
-            {/* Mobile Menu Button */}
+            {/* Mobile hamburger */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={mobileOpen}
               className="show-mobile"
               style={{
                 width: 36, height: 36,
                 display: 'none', alignItems: 'center', justifyContent: 'center',
                 background: 'var(--surface-2)',
-                border: '2px solid var(--border)',
-                borderRadius: 'var(--radius-sm)',
-                boxShadow: '2px 2px 0px 0px var(--border)',
+                border: '1px solid var(--border)',
+                borderRadius: '9999px',
                 color: 'var(--text-primary)',
                 cursor: 'pointer',
               }}
@@ -223,21 +202,24 @@ export function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile Menu */}
+      {/* Mobile drawer */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
+            role="dialog"
+            aria-label="Mobile navigation"
+            initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.18 }}
             style={{
               position: 'fixed',
               top: 'var(--navbar-height)',
               left: 0, right: 0,
-              background: 'var(--surface)',
-              borderBottom: '3px solid var(--border)',
-              padding: '12px 24px 20px',
+              background: 'rgba(10,10,10,0.97)',
+              backdropFilter: 'blur(20px)',
+              borderBottom: '1px solid var(--border)',
+              padding: '16px 24px 24px',
               zIndex: 98,
             }}
           >
@@ -248,19 +230,18 @@ export function Navbar() {
                 onClick={() => setMobileOpen(false)}
                 style={{
                   display: 'block',
-                  padding: '12px 0',
+                  padding: '14px 0',
                   color: 'var(--text-primary)',
                   textDecoration: 'none',
                   fontSize: 16,
-                  fontWeight: 700,
-                  fontFamily: 'Space Grotesk, sans-serif',
-                  borderBottom: '2px solid var(--border)',
+                  fontWeight: 500,
+                  fontFamily: 'Outfit, sans-serif',
+                  borderBottom: '1px solid var(--border)',
                 }}
               >
                 {t.nav[item.key as keyof typeof t.nav]}
               </a>
             ))}
-            {/* WhatsApp in mobile menu */}
             <a
               href={getWaLink(lang)}
               target="_blank"
@@ -268,12 +249,12 @@ export function Navbar() {
               onClick={() => setMobileOpen(false)}
               style={{
                 display: 'flex', alignItems: 'center', gap: 8,
-                padding: '14px 0',
-                color: '#25D366',
+                padding: '16px 0 0',
+                color: 'var(--accent)',
                 textDecoration: 'none',
                 fontSize: 16,
-                fontWeight: 800,
-                fontFamily: 'Space Grotesk, sans-serif',
+                fontWeight: 600,
+                fontFamily: 'Outfit, sans-serif',
               }}
             >
               <MessageCircle size={18} />
@@ -286,7 +267,7 @@ export function Navbar() {
       <style>{`
         @media (max-width: 768px) {
           .hidden-mobile { display: none !important; }
-          .show-mobile { display: flex !important; }
+          .show-mobile   { display: flex !important; }
         }
       `}</style>
     </>

@@ -2,26 +2,16 @@
 
 import { motion } from 'framer-motion'
 import { useLang } from '@/contexts/LangContext'
-import { Mail, MapPin, Phone, Link2, Send, Globe, MessageCircle } from 'lucide-react'
+import { Mail, MapPin, Phone, Link2, Send, Globe } from 'lucide-react'
 import { Github, Linkedin, Instagram, Twitter, Facebook, Youtube, Twitch, Whatsapp } from '@/components/icons/BrandIcons'
 import { useState } from 'react'
 
 interface ContactData {
-  email: string
-  phone?: string | null
-  location?: string | null
-  title_en?: string | null
-  title_id?: string | null
-  desc_en?: string | null
-  desc_id?: string | null
+  email: string; phone?: string | null; location?: string | null
+  title_en?: string | null; title_id?: string | null
+  desc_en?: string | null; desc_id?: string | null
 }
-
-interface Social {
-  id: string
-  name: string
-  link: string
-  icon?: string | null
-}
+interface Social { id: string; name: string; link: string; icon?: string | null }
 
 const formatLink = (url: string | null | undefined) => {
   if (!url) return ''
@@ -29,39 +19,18 @@ const formatLink = (url: string | null | undefined) => {
   return `https://${url}`
 }
 
-const DEFAULT_CONTACT: ContactData = {
-  email: 'helmi@example.com',
-  phone: '+62 812 3456 7890',
-  location: 'Jakarta, Indonesia',
-}
+const DEFAULT_CONTACT: ContactData = { email: 'helmi@example.com', phone: '+62 812 3456 7890', location: 'Jakarta, Indonesia' }
 
 const ICON_MAP: Record<string, React.ElementType> = {
-  github: Github,
-  linkedin: Linkedin,
-  instagram: Instagram,
-  twitter: Twitter,
-  x: Twitter,
-  facebook: Facebook,
-  youtube: Youtube,
-  whatsapp: Whatsapp,
-  twitch: Twitch,
-  mail: Mail,
-  phone: Phone,
-  globe: Globe,
-  link: Link2,
-  dribbble: Globe,
-  behance: Globe,
+  github: Github, linkedin: Linkedin, instagram: Instagram, twitter: Twitter,
+  x: Twitter, facebook: Facebook, youtube: Youtube, whatsapp: Whatsapp,
+  twitch: Twitch, mail: Mail, phone: Phone, globe: Globe, link: Link2,
+  dribbble: Globe, behance: Globe,
 }
 
-export function ContactSection({
-  contact,
-  socials,
-}: {
-  contact?: ContactData | null
-  socials?: Social[] | null
-}) {
+export function ContactSection({ contact, socials }: { contact?: ContactData | null; socials?: Social[] | null }) {
   const { lang, t } = useLang()
-  const contactData = contact || DEFAULT_CONTACT
+  const cd = contact || DEFAULT_CONTACT
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
   const [form, setForm] = useState({ name: '', email: '', message: '' })
 
@@ -70,141 +39,95 @@ export function ContactSection({
     setStatus('sending')
     try {
       const res = await fetch('/api/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form)
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
       })
-      if (res.ok) {
-        setStatus('sent')
-        setForm({ name: '', email: '', message: '' })
-      } else {
-        setStatus('error')
-      }
-    } catch (err) {
-      setStatus('error')
-    }
+      if (res.ok) { setStatus('sent'); setForm({ name: '', email: '', message: '' }) }
+      else setStatus('error')
+    } catch { setStatus('error') }
     setTimeout(() => setStatus('idle'), 4000)
   }
 
-  const contactTitle = lang === 'en' 
-    ? (contactData.title_en || "Let's Talk") 
-    : (contactData.title_id || "Mari Bicara")
-  
-  const contactDesc = lang === 'en'
-    ? (contactData.desc_en || "I'm always open to new opportunities and collaborations. Whether you have a project, a question, or just want to say hi — my inbox is always open.")
-    : (contactData.desc_id || "Saya selalu terbuka untuk peluang dan kolaborasi baru. Apapun yang ingin Anda diskusikan, jangan ragu untuk menghubungi saya.")
+  const contactTitle = lang === 'en' ? (cd.title_en || "Let's Talk") : (cd.title_id || "Mari Bicara")
+  const contactDesc  = lang === 'en'
+    ? (cd.desc_en || "I'm always open to new opportunities and collaborations.")
+    : (cd.desc_id || "Saya selalu terbuka untuk peluang dan kolaborasi baru.")
+
+  const contactItems = [
+    { icon: Mail,  value: cd.email,    href: `mailto:${cd.email}` },
+    ...(cd.phone    ? [{ icon: Phone,  value: cd.phone,    href: `tel:${cd.phone}` }]   : []),
+    ...(cd.location ? [{ icon: MapPin, value: cd.location, href: undefined }]            : []),
+  ]
 
   return (
-    <section id="contact" className="section">
+    <section id="contact" className="section" style={{ background: 'var(--bg-secondary)' }}>
       <div className="container">
-        <motion.div
-          className="section-header"
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+        <motion.div className="section-header"
+          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
         >
-          <p className="section-subtitle">{t.contact.subtitle}</p>
+          <span className="section-subtitle">{t.contact.subtitle}</span>
           <h2 className="section-title">{t.contact.title}</h2>
           <p className="section-desc">
-            {lang === 'en'
-              ? "Have a project in mind? Let's build something amazing together."
-              : 'Punya proyek? Mari kita bangun sesuatu yang luar biasa bersama.'}
+            {lang === 'en' ? "Have a project in mind? Let's build something amazing together." : 'Punya proyek? Mari kita bangun sesuatu yang luar biasa bersama.'}
           </p>
         </motion.div>
 
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          gap: 48,
-          maxWidth: 960,
-          margin: '0 auto',
-        }}>
-          {/* Left: Info */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 40, maxWidth: 960, margin: '0 auto' }}>
+
+          {/* Info */}
+          <motion.div initial={{ opacity: 0, x: -24 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             style={{ display: 'flex', flexDirection: 'column', gap: 24 }}
           >
-            <h3 style={{ fontFamily: 'Syne, sans-serif', fontSize: 24, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8 }}>
-              {contactTitle}
-            </h3>
-            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7 }}>
-              {contactDesc}
-            </p>
+            <div>
+              <h3 style={{ fontSize: 22, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 10, letterSpacing: '-0.02em' }}>
+                {contactTitle}
+              </h3>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7, fontSize: 15 }}>{contactDesc}</p>
+            </div>
 
-            {/* Contact info */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              {[
-                { icon: Mail, value: contactData.email, href: `mailto:${contactData.email}` },
-                ...(contactData.phone ? [{ icon: Phone, value: contactData.phone, href: `tel:${contactData.phone}` }] : []),
-                ...(contactData.location ? [{ icon: MapPin, value: contactData.location, href: undefined }] : []),
-              ].map((item, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              {contactItems.map((item, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                   <div style={{
-                    width: 40, height: 40,
-                    background: ['var(--accent-4)', 'var(--accent-2)', 'var(--accent-light)'][i % 3],
-                    border: '2px solid var(--border)',
-                    borderRadius: 'var(--radius-sm)',
-                    boxShadow: '2px 2px 0px 0px var(--border)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    color: '#000000',
-                    flexShrink: 0,
+                    width: 38, height: 38, borderRadius: '10px',
+                    background: i === 0 ? 'var(--accent-light)' : i === 1 ? 'var(--accent-2-light)' : 'rgba(99,102,241,0.1)',
+                    color: i === 0 ? 'var(--accent)' : i === 1 ? 'var(--accent-2)' : '#818cf8',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                   }}>
-                    <item.icon size={16} />
+                    <item.icon size={15} />
                   </div>
                   {item.href ? (
-                    <a href={item.href} style={{ color: 'var(--text-primary)', fontSize: 15, textDecoration: 'none' }}
-                      onMouseEnter={e => (e.target as HTMLElement).style.color = 'var(--accent)'}
-                      onMouseLeave={e => (e.target as HTMLElement).style.color = 'var(--text-primary)'}
-                    >
-                      {item.value}
-                    </a>
+                    <a href={item.href} style={{ color: 'var(--text-primary)', fontSize: 14, textDecoration: 'none', transition: 'color 0.2s' }}
+                      onMouseEnter={e => (e.currentTarget.style.color = 'var(--accent)')}
+                      onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-primary)')}
+                    >{item.value}</a>
                   ) : (
-                    <span style={{ color: 'var(--text-primary)', fontSize: 15 }}>{item.value}</span>
+                    <span style={{ color: 'var(--text-secondary)', fontSize: 14 }}>{item.value}</span>
                   )}
                 </div>
               ))}
             </div>
 
-            {/* Socials */}
             {socials && socials.length > 0 && (
               <div>
-                <p style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 14 }}>
+                <p style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>
                   {lang === 'en' ? 'Follow Me' : 'Ikuti Saya'}
                 </p>
-                <div style={{ display: 'flex', gap: 10 }}>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                   {socials.map(s => {
-                    const IconComp = (s.icon ? ICON_MAP[s.icon.toLowerCase()] : null) || ICON_MAP[s.name.toLowerCase()] || Link2
+                    const Icon = (s.icon ? ICON_MAP[s.icon.toLowerCase()] : null) || ICON_MAP[s.name.toLowerCase()] || Link2
                     return (
-                      <a
-                        key={s.id}
-                        href={formatLink(s.link)}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <a key={s.id} href={formatLink(s.link)} target="_blank" rel="noopener noreferrer"
+                        aria-label={s.name}
                         style={{
-                          width: 40, height: 40,
-                          display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          background: 'var(--surface)',
-                          border: '2px solid var(--border)',
-                          borderRadius: 'var(--radius-sm)',
-                          boxShadow: '2px 2px 0px 0px var(--border)',
-                          color: 'var(--text-primary)',
-                          textDecoration: 'none',
-                          transition: 'var(--transition)',
+                          width: 38, height: 38, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '10px',
+                          color: 'var(--text-secondary)', textDecoration: 'none', transition: 'var(--transition)',
                         }}
-                        onMouseEnter={e => {
-                          (e.currentTarget).style.transform = 'translate(-2px, -2px)'
-                          ;(e.currentTarget).style.boxShadow = '4px 4px 0px 0px var(--border)'
-                          ;(e.currentTarget).style.background = 'var(--surface-2)'
-                        }}
-                        onMouseLeave={e => {
-                          (e.currentTarget).style.transform = 'none'
-                          ;(e.currentTarget).style.boxShadow = '2px 2px 0px 0px var(--border)'
-                          ;(e.currentTarget).style.background = 'var(--surface)'
-                        }}
+                        onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; e.currentTarget.style.background = 'var(--accent-light)' }}
+                        onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-secondary)'; e.currentTarget.style.background = 'var(--surface)' }}
                       >
-                        <IconComp size={16} />
+                        <Icon size={15} />
                       </a>
                     )
                   })}
@@ -213,62 +136,37 @@ export function ContactSection({
             )}
           </motion.div>
 
-          {/* Right: Form */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-          >
-            <form
-              onSubmit={handleSubmit}
+          {/* Form */}
+          <motion.div initial={{ opacity: 0, x: 24 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
+            <form onSubmit={handleSubmit}
               style={{
-                background: 'var(--surface)',
-                border: '3px solid var(--border)',
-                borderRadius: 'var(--radius)',
-                boxShadow: 'var(--shadow-md)',
-                padding: '32px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 20,
+                background: 'var(--surface)', border: '1px solid var(--border)',
+                borderRadius: '16px', padding: '28px',
+                display: 'flex', flexDirection: 'column', gap: 18,
               }}
             >
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                <div>
-                  <label style={{ display: 'block', fontSize: 13, fontWeight: 800, fontFamily: 'Space Grotesk, sans-serif', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-primary)', marginBottom: 8 }}>
-                    {lang === 'en' ? 'Name' : 'Nama'}
-                  </label>
-                  <input
-                    className="input"
-                    type="text"
-                    required
-                    placeholder={lang === 'en' ? 'Your name' : 'Nama Anda'}
-                    value={form.name}
-                    onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                  />
-                </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: 13, fontWeight: 800, fontFamily: 'Space Grotesk, sans-serif', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-primary)', marginBottom: 8 }}>
-                    Email
-                  </label>
-                  <input
-                    className="input"
-                    type="email"
-                    required
-                    placeholder="email@example.com"
-                    value={form.email}
-                    onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                  />
-                </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+                {[
+                  { label: lang === 'en' ? 'Name' : 'Nama', type: 'text', key: 'name', placeholder: lang === 'en' ? 'Your name' : 'Nama Anda' },
+                  { label: 'Email', type: 'email', key: 'email', placeholder: 'email@example.com' },
+                ].map(f => (
+                  <div key={f.key}>
+                    <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: 'var(--text-secondary)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                      {f.label}
+                    </label>
+                    <input className="input" type={f.type} required placeholder={f.placeholder}
+                      value={(form as any)[f.key]}
+                      onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
+                    />
+                  </div>
+                ))}
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 800, fontFamily: 'Space Grotesk, sans-serif', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-primary)', marginBottom: 8 }}>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: 'var(--text-secondary)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                   {lang === 'en' ? 'Message' : 'Pesan'}
                 </label>
-                <textarea
-                  className="input"
-                  required
-                  rows={5}
+                <textarea className="input" required rows={5}
                   placeholder={t.contact.message_placeholder}
                   value={form.message}
                   onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
@@ -276,20 +174,14 @@ export function ContactSection({
                 />
               </div>
 
-              <button
-                type="submit"
-                disabled={status === 'sending'}
-                className="btn-primary"
+              <button type="submit" disabled={status === 'sending'} className="btn-primary"
                 style={{ justifyContent: 'center' }}
               >
-                <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <Send size={15} />
-                  {status === 'sending'
-                    ? (lang === 'en' ? 'Sending...' : 'Mengirim...')
-                    : status === 'sent'
-                    ? (lang === 'en' ? '✓ Sent!' : '✓ Terkirim!')
-                    : t.contact.send}
-                </span>
+                <Send size={14} />
+                {status === 'sending' ? (lang === 'en' ? 'Sending...' : 'Mengirim...')
+                  : status === 'sent'    ? (lang === 'en' ? '✓ Message Sent!' : '✓ Pesan Terkirim!')
+                  : status === 'error'   ? (lang === 'en' ? 'Error, try again' : 'Error, coba lagi')
+                  : t.contact.send}
               </button>
             </form>
           </motion.div>
