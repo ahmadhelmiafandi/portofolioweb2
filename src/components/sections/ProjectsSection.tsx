@@ -46,7 +46,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         display: 'flex', flexDirection: 'column',
         transition: 'var(--transition)',
       }}
-      whileHover={{ borderColor: 'var(--border-hover)', y: -4, boxShadow: 'var(--shadow-md)' }}
+      whileHover={{ y: -3, boxShadow: 'var(--shadow-md)' }}
     >
       {/* Image */}
       {project.image && (

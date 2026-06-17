@@ -32,10 +32,10 @@ function SkillCard({ skill, index }: { skill: Skill; index: number }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.05, duration: 0.4 }}
-      whileHover={{ y: -4, borderColor: 'var(--accent)', boxShadow: '0 8px 24px rgba(20,184,166,0.12)' }}
+      whileHover={{ y: -4, boxShadow: '0 8px 24px rgba(20,184,166,0.15), 0 4px 12px rgba(0,0,0,0.1)' }}
       style={{
         background: 'var(--surface)',
-        border: '1px solid var(--border)',
+        border: 'none',
         borderRadius: '14px',
         padding: '20px',
         display: 'flex',
@@ -45,7 +45,9 @@ function SkillCard({ skill, index }: { skill: Skill; index: number }) {
         transition: 'var(--transition)',
         cursor: 'default',
         textAlign: 'center',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06)',
       }}
+      suppressHydrationWarning
     >
       {/* Icon */}
       <div style={{
@@ -89,14 +91,7 @@ function SkillCard({ skill, index }: { skill: Skill; index: number }) {
         {skill.name}
       </span>
 
-      {/* Level badge */}
-      <span style={{
-        fontSize: 11, fontWeight: 600, color: 'var(--accent)',
-        background: 'var(--accent-light)',
-        padding: '2px 10px', borderRadius: '9999px',
-      }}>
-        {skill.level}%
-      </span>
+      {/* Level badge — hidden, cukup icon yang bicara */}
     </motion.div>
   )
 }

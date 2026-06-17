@@ -66,7 +66,7 @@ export function CertificatesSection({ data }: { data?: Certificate[] | null }) {
                   position: 'relative',
                   transition: 'var(--transition)',
                 }}
-                whileHover={{ borderColor: pair.color, y: -3, boxShadow: 'var(--shadow-md)' }}
+                whileHover={{ borderColor: 'var(--accent)' }}
               >
                 {/* Accent icon top-right */}
                 <div style={{

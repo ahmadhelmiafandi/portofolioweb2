@@ -103,7 +103,6 @@ export default function AdminSkillsPage() {
                 <th>Icon</th>
                 <th>Name</th>
                 <th>Category</th>
-                <th>Level</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
@@ -120,14 +119,6 @@ export default function AdminSkillsPage() {
                   </td>
                   <td style={{ fontWeight: 600 }}>{skill.name}</td>
                   <td><span className="tech-tag">{skill.category}</span></td>
-                  <td>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      <div style={{ width: 80, height: 5, background: 'var(--surface-3)', borderRadius: 9999 }}>
-                        <div style={{ width: `${skill.level}%`, height: '100%', background: 'var(--accent)', borderRadius: 9999 }} />
-                      </div>
-                      <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)' }}>{skill.level}%</span>
-                    </div>
-                  </td>
                   <td style={{ fontSize: 13, color: skill.published ? '#10b981' : 'var(--text-muted)' }}>
                     {skill.published ? 'Published' : 'Draft'}
                   </td>
@@ -208,19 +199,12 @@ export default function AdminSkillsPage() {
                 </p>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16 }}>
                 <div>
                   <label style={{ display: 'block', marginBottom: 8, fontSize: 14, fontWeight: 600 }}>Category</label>
                   <input type="text" className="input" required
                     value={current?.category || ''}
                     onChange={e => setCurrent({ ...current, category: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <label style={{ display: 'block', marginBottom: 8, fontSize: 14, fontWeight: 600 }}>Level (%)</label>
-                  <input type="number" className="input" min="0" max="100" required
-                    value={current?.level ?? 80}
-                    onChange={e => setCurrent({ ...current, level: parseInt(e.target.value) })}
                   />
                 </div>
               </div>

@@ -49,10 +49,12 @@ export function Navbar() {
           height: 'var(--navbar-height)',
           zIndex: 99,
           transition: 'all 0.3s ease',
-          background: scrolled ? 'rgba(0,0,0,0.85)' : 'transparent',
-          backdropFilter: scrolled ? 'blur(20px)' : 'none',
-          borderBottom: scrolled ? '1px solid var(--border)' : '1px solid transparent',
-        }}
+          background: scrolled
+            ? 'color-mix(in srgb, var(--bg) 92%, transparent)'
+            : 'color-mix(in srgb, var(--bg) 70%, transparent)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          borderBottom: '1px solid var(--border)',        }}
       >
         <div className="container" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
 
@@ -66,8 +68,7 @@ export function Navbar() {
               color: '#fff', fontWeight: 800, fontSize: 16,
               fontFamily: 'Outfit, sans-serif',
               flexShrink: 0,
-            }}>H</div>
-            <span style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 700, fontSize: 18, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+            }}>H</div>            <span style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 700, fontSize: 18, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
               porto<span style={{ color: 'var(--accent)' }}>helmi</span>
             </span>
           </a>

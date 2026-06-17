@@ -77,7 +77,7 @@ export function ExperienceSection({ data }: { data?: Experience[] | null }) {
                     marginBottom: 8,
                     transition: 'var(--transition)',
                   }}
-                  whileHover={{ borderColor: 'var(--border-hover)', y: -2, boxShadow: 'var(--shadow-sm)' }}
+                  whileHover={{ borderColor: 'var(--accent)' }}
                 >
                   <div style={{ marginBottom: 10 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap', marginBottom: 8 }}>
