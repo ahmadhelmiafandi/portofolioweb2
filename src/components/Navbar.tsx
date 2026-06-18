@@ -15,6 +15,21 @@ const NAV_ITEMS = [
   { href: '#contact',      key: 'contact' },
 ] as const
 
+interface HeroData {
+  title_id?: string | null
+  title_en?: string | null
+}
+
+// Ambil nama pertama dari title hero (misal "Helmi Afandi" → "Helmi")
+function getSiteName(hero?: HeroData | null): { first: string; last: string } {
+  const raw = hero?.title_id || hero?.title_en || 'Helmi Afandi'
+  const parts = raw.trim().split(/\s+/)
+  if (parts.length === 1) return { first: parts[0], last: '' }
+  const last  = parts[parts.length - 1]
+  const first = parts.slice(0, -1).join(' ')
+  return { first, last }
+}
+
 const WA_NUMBER = '6282323609362'
 const getWaLink = (lang: 'en' | 'id') => {
   const msg = lang === 'en'
@@ -23,7 +38,7 @@ const getWaLink = (lang: 'en' | 'id') => {
   return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`
 }
 
-export function Navbar() {
+export function Navbar({ hero }: { hero?: HeroData | null }) {
   const { theme, setTheme } = useTheme()
   const { lang, setLang, t } = useLang()
   const [scrolled, setScrolled]   = useState(false)
@@ -39,6 +54,7 @@ export function Navbar() {
 
   const toggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark')
   const toggleLang  = () => setLang(lang === 'en' ? 'id' : 'en')
+  const { first, last } = getSiteName(hero)
 
   return (
     <>
@@ -68,8 +84,9 @@ export function Navbar() {
               color: '#fff', fontWeight: 800, fontSize: 16,
               fontFamily: 'Outfit, sans-serif',
               flexShrink: 0,
-            }}>H</div>            <span style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 700, fontSize: 18, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
-              porto<span style={{ color: 'var(--accent)' }}>helmi</span>
+            }}>{(first.charAt(0) || 'H').toUpperCase()}</div>
+            <span style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 700, fontSize: 18, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+              {first.toLowerCase()}<span style={{ color: 'var(--accent)' }}>{last ? last.toLowerCase() : ''}</span>
             </span>
           </a>
 

@@ -2,12 +2,23 @@
 
 import { useLang } from '@/contexts/LangContext'
 
-export function Footer({ contact }: { contact?: any }) {
+interface FooterProps {
+  contact?: any
+  hero?: { title_id?: string | null; title_en?: string | null } | null
+}
+
+export function Footer({ contact, hero }: FooterProps) {
   const { lang } = useLang()
   const year = new Date().getFullYear()
   const copyText = lang === 'id'
     ? (contact?.footer_copy || `© ${year} Helmi. Hak cipta dilindungi.`)
     : (contact?.footer_made || `© ${year} Helmi. All rights reserved.`)
+
+  const raw   = hero?.title_id || hero?.title_en || 'Helmi Afandi'
+  const parts = raw.trim().split(/\s+/)
+  const first = parts.length > 1 ? parts.slice(0, -1).join(' ') : parts[0]
+  const last  = parts.length > 1 ? parts[parts.length - 1] : ''
+  const initial = (first.charAt(0) || 'H').toUpperCase()
 
   return (
     <footer style={{
@@ -26,9 +37,9 @@ export function Footer({ contact }: { contact?: any }) {
             borderRadius: '8px',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             color: '#fff', fontWeight: 800, fontSize: 13, fontFamily: 'Outfit, sans-serif',
-          }}>H</div>
+          }}>{initial}</div>
           <span style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 700, fontSize: 15, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
-            porto<span style={{ color: 'var(--accent)' }}>helmi</span>
+            {first.toLowerCase()}<span style={{ color: 'var(--accent)' }}>{last ? last.toLowerCase() : ''}</span>
           </span>
         </div>
 
