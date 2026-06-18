@@ -19,24 +19,27 @@ import {
   Settings,
   FileText,
   Award,
-  Terminal
+  Terminal,
+  PanelTop,
+  PanelBottom
 } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { ToastProvider } from '@/components/admin/Toast'
 
 const SIDEBAR_ITEMS = [
-  { label: 'Dashboard', icon: LayoutDashboard, href: '/admin/dashboard' },
-  { label: 'Hero Section', icon: Star, href: '/admin/hero' },
-  { label: 'About Me', icon: User, href: '/admin/about' },
-  { label: 'Skills', icon: Code2, href: '/admin/skills' },
-  { label: 'Projects', icon: Briefcase, href: '/admin/projects' },
-  { label: 'Certificates', icon: Award, href: '/admin/certificates' },
-  { label: 'Experience', icon: Clock, href: '/admin/experience' },
-  { label: 'SQL Editor', icon: Terminal, href: '/admin/sql' },
-  { label: 'Socials', icon: Globe, href: '/admin/socials' },
-  { label: 'Messages', icon: MessageSquare, href: '/admin/messages' },
-  { label: 'Manage CV', icon: FileText, href: '/admin/cv' },
-  { label: 'Contact & Settings', icon: Settings, href: '/admin/settings' },
+  { label: 'Dashboard',          icon: LayoutDashboard, href: '/admin/dashboard' },
+  { label: 'Hero Section',       icon: Star,            href: '/admin/hero' },
+  { label: 'About Me',           icon: User,            href: '/admin/about' },
+  { label: 'Skills',             icon: Code2,           href: '/admin/skills' },
+  { label: 'Projects',           icon: Briefcase,       href: '/admin/projects' },
+  { label: 'Certificates',       icon: Award,           href: '/admin/certificates' },
+  { label: 'Experience',         icon: Clock,           href: '/admin/experience' },
+  { label: 'Socials',            icon: Globe,           href: '/admin/socials' },
+  { label: 'Messages',           icon: MessageSquare,   href: '/admin/messages' },
+  { label: 'Manage CV',          icon: FileText,        href: '/admin/cv' },
+  { label: 'Contact & Header',   icon: PanelTop,        href: '/admin/settings' },
+  { label: 'Footer',             icon: PanelBottom,     href: '/admin/footer' },
+  { label: 'SQL Editor',         icon: Terminal,        href: '/admin/sql' },
 ]
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
