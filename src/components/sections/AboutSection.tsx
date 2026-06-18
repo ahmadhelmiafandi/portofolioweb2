@@ -22,8 +22,8 @@ function LanyardCard({ image, name }: { image?: string | null; name: string }) {
 
   const x = useMotionValue(0)
   const y = useMotionValue(0)
-  const springX = useSpring(x, { stiffness: 200, damping: 22 })
-  const springY = useSpring(y, { stiffness: 200, damping: 22 })
+  const springX = useSpring(x, { stiffness: 150, damping: 18 })
+  const springY = useSpring(y, { stiffness: 150, damping: 18 })
   const rotateZ  = useTransform(springX, [-80, 80], [8, -8])
 
   const stringD = useTransform(
@@ -43,9 +43,9 @@ function LanyardCard({ image, name }: { image?: string | null; name: string }) {
         flexDirection: 'column',
         alignItems: 'center',
         userSelect: 'none',
-        // Cegah overflow agar card tidak tumpang tindih elemen lain
         overflow: 'visible',
         isolation: 'isolate',
+        zIndex: 10,
       }}
     >
       {/* Pin */}
@@ -73,11 +73,11 @@ function LanyardCard({ image, name }: { image?: string | null; name: string }) {
       <motion.div
         drag
         dragMomentum={false}
-        dragElastic={0.15}
-        dragConstraints={{ left: -80, right: 80, top: -20, bottom: 60 }}
+        dragElastic={0.3}
         onDrag={(_, info) => { x.set(info.offset.x); y.set(info.offset.y) }}
         onDragEnd={() => { x.set(0); y.set(0) }}
-        style={{ x: springX, y: springY, rotateZ, marginTop: 4, cursor: 'grab', zIndex: 5 }}
+        style={{ x: springX, y: springY, rotateZ, marginTop: 4, cursor: 'grab', zIndex: 5, touchAction: 'none' }}
+        whileDrag={{ scale: 1.03 }}
         whileTap={{ cursor: 'grabbing' }}
       >
         {/* D-ring konektor */}
