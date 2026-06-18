@@ -13,7 +13,7 @@
 
   --text-primary:   #ffffff;
   --text-secondary: #a1a1aa;
-  --text-muted:     #52525b;
+  --text-muted:     #71717a;  /* ditingkatkan dari #52525b → kontras ~4.6:1 */
 
   --accent:        #14b8a6;
   --accent-hover:  #0d9488;
@@ -44,8 +44,8 @@
   --surface-2:     #f4f4f5;
   --surface-3:     #e4e4e7;
   --text-primary:   #09090b;
-  --text-secondary: #52525b;
-  --text-muted:     #a1a1aa;
+  --text-secondary: #3f3f46;  /* ditingkatkan dari #52525b → kontras ~8:1 di light */
+  --text-muted:     #71717a;  /* kontras ~4.5:1 di light */
   --border:        rgba(0,0,0,0.08);
   --border-hover:  rgba(0,0,0,0.15);
   --shadow-lg: 0 8px 40px rgba(0,0,0,0.1);

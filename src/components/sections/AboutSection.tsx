@@ -141,7 +141,7 @@ export function AboutSection({ data }: { data?: AboutData | null }) {
             borderRadius: '20px',
             padding: 'clamp(28px, 4vw, 48px)',
             position: 'relative',
-            overflow: 'hidden',
+            overflow: 'visible',
           }}
         >
           {/* Subtle gradient glow inside card */}
