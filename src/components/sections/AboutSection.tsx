@@ -17,72 +17,100 @@ const DEFAULT_ABOUT: AboutData = {
   description_id: "Saya adalah full-stack developer yang bersemangat dengan pengalaman lebih dari 3 tahun membangun aplikasi web modern. Saya mengkhususkan diri dalam React, Next.js, dan Node.js, dan saya suka menciptakan solusi elegan untuk masalah yang kompleks.\n\nKetika tidak coding, saya menjelajahi teknologi baru, berkontribusi pada proyek open-source, atau berbagi pengetahuan melalui tulisan.",
 }
 
-// ── Lanyard ID Card ──────────────────────────────────────────
 function LanyardCard({ image, name }: { image?: string | null; name: string }) {
+  const containerRef = useRef<HTMLDivElement>(null)
+
   const x = useMotionValue(0)
   const y = useMotionValue(0)
-  const springX = useSpring(x, { stiffness: 120, damping: 14, mass: 0.8 })
-  const springY = useSpring(y, { stiffness: 120, damping: 14, mass: 0.8 })
-  const rotateX = useTransform(springY, [-120, 120], [12, -12])
-  const rotateZ = useTransform(springX, [-120, 120], [8, -8])
+  const springX = useSpring(x, { stiffness: 200, damping: 22 })
+  const springY = useSpring(y, { stiffness: 200, damping: 22 })
+  const rotateZ  = useTransform(springX, [-80, 80], [8, -8])
+
+  const stringD = useTransform(
+    [springX, springY] as any,
+    ([lx, ly]: number[]) =>
+      `M 0 0 Q ${lx * 0.3} ${Math.max(28, ly * 0.5)} ${lx} ${ly + 52}`
+  )
 
   return (
-    <div style={{ position: 'relative', width: 200, display: 'flex', flexDirection: 'column', alignItems: 'center', userSelect: 'none' }}>
-      {/* Hook */}
-      <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#4b5563', border: '2px solid #6b7280', boxShadow: '0 2px 6px rgba(0,0,0,0.5)', zIndex: 10, flexShrink: 0 }} />
+    <div
+      ref={containerRef}
+      style={{
+        position: 'relative',
+        width: 240,
+        height: 420,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        userSelect: 'none',
+        // Cegah overflow agar card tidak tumpang tindih elemen lain
+        overflow: 'visible',
+        isolation: 'isolate',
+      }}
+    >
+      {/* Pin */}
+      <div style={{
+        width: 10, height: 10, borderRadius: '50%',
+        background: '#a1a1aa',
+        boxShadow: '0 1px 4px rgba(0,0,0,0.8)',
+        flexShrink: 0, zIndex: 4,
+      }} />
 
-      {/* SVG string */}
-      <svg style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', overflow: 'visible', pointerEvents: 'none', zIndex: 5, width: 4, height: 1 }}>
+      {/* Tali */}
+      <svg style={{
+        position: 'absolute', top: 5, left: '50%',
+        transform: 'translateX(-50%)',
+        overflow: 'visible', pointerEvents: 'none',
+        zIndex: 3, width: 2, height: 2,
+      }}>
         <motion.path
-          style={{
-            d: useTransform([springX, springY] as any, ([lx, ly]: number[]) =>
-              `M 0 6 C ${lx * 0.2} ${Math.max(ly * 0.4, 24)}, ${lx * 0.8} ${ly * 0.7}, ${lx} ${ly + 64}`)
-          }}
-          fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round"
+          style={{ d: stringD }}
+          fill="none" stroke="#18181b" strokeWidth="5" strokeLinecap="round"
         />
       </svg>
 
-      {/* Card */}
+      {/* Card draggable */}
       <motion.div
-        drag dragElastic={0.18} dragMomentum
+        drag
+        dragMomentum={false}
+        dragElastic={0.15}
+        dragConstraints={{ left: -80, right: 80, top: -20, bottom: 60 }}
         onDrag={(_, info) => { x.set(info.offset.x); y.set(info.offset.y) }}
         onDragEnd={() => { x.set(0); y.set(0) }}
-        style={{ x: springX, y: springY, rotateX, rotateZ, marginTop: 6, cursor: 'grab', zIndex: 6 }}
-        whileTap={{ cursor: 'grabbing', scale: 1.02 }}
+        style={{ x: springX, y: springY, rotateZ, marginTop: 4, cursor: 'grab', zIndex: 5 }}
+        whileTap={{ cursor: 'grabbing' }}
       >
-        <div style={{ width: 180, background: 'linear-gradient(160deg, #1f2937 0%, #111827 100%)', borderRadius: '14px', border: '1px solid #374151', boxShadow: '0 16px 48px rgba(0,0,0,0.6)', overflow: 'hidden', transformStyle: 'preserve-3d' }}>
-          <div style={{ height: 6, background: 'linear-gradient(90deg, #14b8a6, #f43f5e)' }} />
-          <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 10 }}>
-            <div style={{ width: 16, height: 16, borderRadius: '50%', background: '#0a0a0a', border: '2px solid #374151' }} />
-          </div>
-          <div style={{ padding: '10px 16px 6px' }}>
-            <div style={{ width: '100%', aspectRatio: '3/4', borderRadius: '10px', overflow: 'hidden', background: 'linear-gradient(135deg, #1f2937, #111827)', border: '1px solid #374151' }}>
-              {image ? (
-                <Image src={image} alt={name} width={148} height={197} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              ) : (
-                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 48, fontWeight: 800, color: 'var(--accent)', fontFamily: 'Outfit, sans-serif', minHeight: 160 }}>H</div>
-              )}
-            </div>
-          </div>
-          <div style={{ padding: '6px 16px 12px', textAlign: 'center' }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: '#f9fafb', marginBottom: 4, fontFamily: 'Outfit, sans-serif' }}>{name}</div>
-            <div style={{ display: 'inline-block', fontSize: 10, fontWeight: 600, color: '#14b8a6', background: 'rgba(20,184,166,0.12)', padding: '2px 8px', borderRadius: 9999, border: '1px solid rgba(20,184,166,0.25)' }}>
-              Full-Stack Dev
-            </div>
-          </div>
-          <div style={{ background: '#0d1117', padding: '6px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: 9, color: '#6b7280', fontFamily: 'monospace' }}>ID: HLM-001</span>
-            <div style={{ display: 'flex', gap: 3 }}>
-              {[...Array(3)].map((_, i) => <div key={i} style={{ width: 5, height: 5, borderRadius: '50%', background: i === 0 ? '#14b8a6' : '#374151' }} />)}
-            </div>
-          </div>
+        {/* D-ring konektor */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: -1, zIndex: 2, position: 'relative' }}>
+          <div style={{
+            width: 22, height: 18,
+            border: '4px solid #27272a',
+            borderRadius: '10px 10px 0 0',
+            borderBottom: 'none',
+          }} />
+        </div>
+
+        {/* Foto */}
+        <div style={{
+          width: 210, aspectRatio: '3/4',
+          borderRadius: '16px', overflow: 'hidden',
+          background: '#18181b',
+          boxShadow: '0 20px 60px rgba(0,0,0,0.8)',
+        }}>
+          {image ? (
+            <Image src={image} alt={name} width={210} height={280}
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          ) : (
+            <div style={{
+              width: '100%', height: '100%', minHeight: 280,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 64, fontWeight: 800, color: 'var(--accent)',
+              fontFamily: 'Outfit, sans-serif',
+              background: 'linear-gradient(160deg, #18181b, #09090b)',
+            }}>H</div>
+          )}
         </div>
       </motion.div>
-
-      {/* Hint */}
-      <p style={{ position: 'absolute', bottom: -24, fontSize: 10, color: '#6b7280', fontFamily: 'Outfit, sans-serif', pointerEvents: 'none', whiteSpace: 'nowrap' }}>
-        ↕ drag me
-      </p>
     </div>
   )
 }

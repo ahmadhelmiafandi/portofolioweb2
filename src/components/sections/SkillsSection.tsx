@@ -22,6 +22,11 @@ const DEFAULT_SKILLS: Skill[] = [
 
 function SkillCard({ skill, index }: { skill: Skill; index: number }) {
   const iconName = skill.icon?.toLowerCase().replace(/[\s/.]/g, '') || ''
+
+  // Icon yang punya versi -original hitam (perlu invert di dark mode)
+  const darkIcons = ['github', 'express', 'nextjs', 'prisma', 'vercel', 'figma', 'flask']
+  const needsInvert = darkIcons.includes(iconName)
+
   const iconUrl = iconName
     ? `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${iconName}/${iconName}-original.svg`
     : null
@@ -32,66 +37,66 @@ function SkillCard({ skill, index }: { skill: Skill; index: number }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.05, duration: 0.4 }}
-      whileHover={{ y: -4, boxShadow: '0 8px 24px rgba(20,184,166,0.15), 0 4px 12px rgba(0,0,0,0.1)' }}
       style={{
         background: 'var(--surface)',
-        border: 'none',
         borderRadius: '14px',
         padding: '20px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         gap: '12px',
-        transition: 'var(--transition)',
         cursor: 'default',
         textAlign: 'center',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06)',
+        boxShadow: 'var(--shadow-sm)',
+        transition: 'var(--transition)',
       }}
+      whileHover={{ y: -4, boxShadow: '0 8px 24px rgba(20,184,166,0.12)' }}
       suppressHydrationWarning
     >
-      {/* Icon */}
+      {/* Icon container */}
       <div style={{
-        width: 56, height: 56,
+        width: 52, height: 52,
         borderRadius: '12px',
         background: 'var(--surface-2)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        overflow: 'hidden',
-        flexShrink: 0,
+        overflow: 'hidden', flexShrink: 0,
       }}>
         {iconUrl ? (
           <img
             src={iconUrl}
             alt={skill.name}
-            width={36}
-            height={36}
-            style={{ objectFit: 'contain' }}
+            width={32} height={32}
+            style={{
+              objectFit: 'contain',
+              // icon hitam tidak terlihat di dark mode → invert jadi putih
+              filter: needsInvert ? 'invert(1)' : 'none',
+            }}
             onError={(e) => {
-              // fallback ke plain icon jika original tidak ada
               const target = e.currentTarget
               if (!target.src.includes('-plain')) {
                 target.src = `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${iconName}/${iconName}-plain.svg`
+              } else if (!target.src.includes('-colored')) {
+                target.src = `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${iconName}/${iconName}-plain-wordmark.svg`
               } else {
                 target.style.display = 'none'
                 const parent = target.parentElement
                 if (parent) {
-                  parent.innerHTML = `<span style="font-size:22px;font-weight:800;color:var(--accent);font-family:Outfit,sans-serif;">${skill.name.charAt(0)}</span>`
+                  parent.innerHTML = `<span style="font-size:20px;font-weight:800;color:var(--accent);font-family:Outfit,sans-serif;">${skill.name.charAt(0)}</span>`
                 }
               }
             }}
           />
         ) : (
-          <span style={{ fontSize: 22, fontWeight: 800, color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
+          <span style={{ fontSize: 20, fontWeight: 800, color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
             {skill.name.charAt(0)}
           </span>
         )}
       </div>
 
       {/* Name */}
-      <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', fontFamily: 'Outfit, sans-serif', lineHeight: 1.3 }}>
+      <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', fontFamily: 'Outfit, sans-serif', lineHeight: 1.3 }}>
         {skill.name}
       </span>
-
-      {/* Level badge — hidden, cukup icon yang bicara */}
     </motion.div>
   )
 }

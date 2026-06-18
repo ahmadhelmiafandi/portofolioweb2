@@ -143,7 +143,16 @@ export function CertificatesSection({ data }: { data?: Certificate[] | null }) {
             initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
             style={{ display: 'flex', justifyContent: 'center', marginTop: 40 }}
           >
-            <button onClick={() => setShowAll(!showAll)} className="btn-secondary"
+            <button
+              onClick={() => {
+                if (showAll) {
+                  document.getElementById('certificates')?.scrollIntoView({ behavior: 'smooth' })
+                  setTimeout(() => setShowAll(false), 350)
+                } else {
+                  setShowAll(true)
+                }
+              }}
+              className="btn-secondary"
               style={{ gap: 8, padding: '11px 28px', fontSize: 14 }}
             >
               {showAll ? (

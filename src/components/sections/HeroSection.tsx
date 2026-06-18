@@ -2,7 +2,8 @@
 
 import { motion } from 'framer-motion'
 import { useLang } from '@/contexts/LangContext'
-import { ArrowRight, Download, GitBranch, Link2, Camera, MessageCircle } from 'lucide-react'
+import { ArrowRight, GitBranch, Link2, Camera, MessageCircle } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 interface HeroData {
   title_en: string; title_id: string
@@ -88,6 +89,47 @@ const getWaLink = (lang: 'en' | 'id') => {
     ? `Hi Helmi! I visited your portfolio and I'm interested in discussing a project collaboration.`
     : `Halo Helmi! Saya sudah melihat portofolio kamu dan tertarik untuk mendiskusikan kerja sama proyek.`
   return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`
+}
+
+// ── Typewriter ───────────────────────────────────────────────
+function TypewriterText({ text, speed = 35, delay = 0 }: { text: string; speed?: number; delay?: number }) {
+  const [displayed, setDisplayed] = useState('')
+  const [started, setStarted] = useState(false)
+  const [done, setDone] = useState(false)
+
+  useEffect(() => {
+    const t = setTimeout(() => setStarted(true), delay)
+    return () => clearTimeout(t)
+  }, [delay])
+
+  useEffect(() => {
+    if (!started) return
+    setDisplayed('')
+    setDone(false)
+    let i = 0
+    const interval = setInterval(() => {
+      i++
+      setDisplayed(text.slice(0, i))
+      if (i >= text.length) {
+        clearInterval(interval)
+        setDone(true)
+      }
+    }, speed)
+    return () => clearInterval(interval)
+  }, [text, speed, started])
+
+  return (
+    <span>
+      {displayed}
+      {!done && (
+        <motion.span
+          animate={{ opacity: [1, 0, 1] }}
+          transition={{ repeat: Infinity, duration: 0.8 }}
+          style={{ display: 'inline-block', width: 2, height: '1em', background: 'var(--accent)', marginLeft: 2, verticalAlign: 'middle', borderRadius: 1 }}
+        />
+      )}
+    </span>
+  )
 }
 
 export function HeroSection({ data }: { data?: HeroData | null }) {
@@ -216,13 +258,6 @@ export function HeroSection({ data }: { data?: HeroData | null }) {
               {name}
             </motion.h1>
 
-            {/* Role */}
-            <motion.p className="hero-role"
-              initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.5 }}>
-              {lang === 'en' ? 'A ' : 'Seorang '}
-              <span style={{ color: 'var(--accent)', fontWeight: 700 }}>{role}</span>
-            </motion.p>
-
             {/* Social icons */}
             <motion.div className="hero-socials"
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
@@ -242,12 +277,16 @@ export function HeroSection({ data }: { data?: HeroData | null }) {
               ))}
             </motion.div>
 
-            {/* Description */}
+            {/* Description — typewriter effect */}
             <motion.p className="hero-desc"
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.25 }}>
-              {lang === 'en'
-                ? 'I help businesses and individuals turn ideas into beautiful, functional digital solutions.'
-                : 'Saya membantu bisnis dan individu mengubah ide menjadi solusi digital yang indah dan berfungsi.'}
+              <TypewriterText
+                text={lang === 'en'
+                  ? 'A Full-Stack Developer focused on building elegant, high-performance web applications with modern technology.'
+                  : 'Seorang Full-Stack Developer yang berfokus pada pembuatan aplikasi web elegan dan berkinerja tinggi dengan teknologi modern.'}
+                speed={30}
+                delay={900}
+              />
             </motion.p>
 
             {/* CTA Buttons */}
@@ -268,35 +307,6 @@ export function HeroSection({ data }: { data?: HeroData | null }) {
             initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.65, delay: 0.1 }}>
 
             <HeroIllustration />
-
-            {/* Status bar */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
-              style={{
-                background: 'rgba(17,24,39,0.85)',
-                backdropFilter: 'blur(12px)',
-                border: '1px solid rgba(55,65,81,0.6)',
-                borderRadius: 9999,
-                padding: '8px 16px',
-                display: 'flex', alignItems: 'center', gap: 10,
-                width: '100%', maxWidth: 340,
-              }}>
-              <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg,#14b8a6,#f43f5e)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: '#fff', flexShrink: 0 }}>H</div>
-              <div>
-                <div style={{ fontWeight: 600, color: '#f9fafb', fontSize: 12, fontFamily: 'Outfit, sans-serif' }}>Helmi Afandi</div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: '#6b7280' }}>
-                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', display: 'inline-block' }} />
-                  Online
-                </div>
-              </div>
-              <a href="#contact"
-                style={{ marginLeft: 'auto', background: 'var(--accent)', color: '#000', padding: '5px 14px', borderRadius: 9999, fontSize: 12, fontWeight: 600, textDecoration: 'none', whiteSpace: 'nowrap', transition: 'var(--transition)' }}
-                onMouseEnter={e => e.currentTarget.style.background = 'var(--accent-hover)'}
-                onMouseLeave={e => e.currentTarget.style.background = 'var(--accent)'}
-              >
-                {lang === 'en' ? 'Contact Me' : 'Hubungi'}
-              </a>
-            </motion.div>
           </motion.div>
 
         </div>

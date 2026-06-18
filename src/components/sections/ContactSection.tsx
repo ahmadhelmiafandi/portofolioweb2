@@ -145,7 +145,7 @@ export function ContactSection({ contact, socials }: { contact?: ContactData | n
                 display: 'flex', flexDirection: 'column', gap: 18,
               }}
             >
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 14 }}>
                 {[
                   { label: lang === 'en' ? 'Name' : 'Nama', type: 'text', key: 'name', placeholder: lang === 'en' ? 'Your name' : 'Nama Anda' },
                   { label: 'Email', type: 'email', key: 'email', placeholder: 'email@example.com' },
