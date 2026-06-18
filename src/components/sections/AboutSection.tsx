@@ -4,7 +4,6 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { useLang } from '@/contexts/LangContext'
 import Image from 'next/image'
 import { Download } from 'lucide-react'
-import { useRef } from 'react'
 
 interface AboutData {
   description_en: string
@@ -18,70 +17,75 @@ const DEFAULT_ABOUT: AboutData = {
 }
 
 function LanyardCard({ image, name }: { image?: string | null; name: string }) {
-  const containerRef = useRef<HTMLDivElement>(null)
-
   const x = useMotionValue(0)
   const y = useMotionValue(0)
-  const springX = useSpring(x, { stiffness: 150, damping: 18 })
-  const springY = useSpring(y, { stiffness: 150, damping: 18 })
-  const rotateZ  = useTransform(springX, [-80, 80], [8, -8])
+  const springX = useSpring(x, { stiffness: 180, damping: 20, mass: 0.8 })
+  const springY = useSpring(y, { stiffness: 180, damping: 20, mass: 0.8 })
+  const rotateZ = useTransform(springX, [-100, 100], [10, -10])
 
   const stringD = useTransform(
     [springX, springY] as any,
     ([lx, ly]: number[]) =>
-      `M 0 0 Q ${lx * 0.3} ${Math.max(28, ly * 0.5)} ${lx} ${ly + 52}`
+      `M 0 0 Q ${lx * 0.3} ${Math.max(24, ly * 0.5)} ${lx} ${ly + 50}`
   )
 
   return (
-    <div
-      ref={containerRef}
-      style={{
-        position: 'relative',
-        width: 240,
-        height: 420,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        userSelect: 'none',
-        overflow: 'visible',
-        isolation: 'isolate',
-        zIndex: 10,
-      }}
-    >
-      {/* Pin */}
+    <div style={{
+      position: 'relative',
+      width: 240,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      userSelect: 'none',
+      overflow: 'visible',
+      zIndex: 10,
+    }}>
+      {/* Pin anchor */}
       <div style={{
         width: 10, height: 10, borderRadius: '50%',
         background: '#a1a1aa',
         boxShadow: '0 1px 4px rgba(0,0,0,0.8)',
-        flexShrink: 0, zIndex: 4,
+        flexShrink: 0, zIndex: 4, position: 'relative',
       }} />
 
-      {/* Tali */}
+      {/* Tali SVG */}
       <svg style={{
         position: 'absolute', top: 5, left: '50%',
         transform: 'translateX(-50%)',
-        overflow: 'visible', pointerEvents: 'none',
-        zIndex: 3, width: 2, height: 2,
+        overflow: 'visible', pointerEvents: 'none', zIndex: 3,
+        width: 2, height: 2,
       }}>
         <motion.path
           style={{ d: stringD }}
-          fill="none" stroke="#18181b" strokeWidth="5" strokeLinecap="round"
+          fill="none" stroke="#27272a" strokeWidth="5" strokeLinecap="round"
         />
       </svg>
 
-      {/* Card draggable */}
+      {/* Card */}
       <motion.div
         drag
         dragMomentum={false}
-        dragElastic={0.3}
-        onDrag={(_, info) => { x.set(info.offset.x); y.set(info.offset.y) }}
-        onDragEnd={() => { x.set(0); y.set(0) }}
-        style={{ x: springX, y: springY, rotateZ, marginTop: 4, cursor: 'grab', zIndex: 5, touchAction: 'none' }}
-        whileDrag={{ scale: 1.03 }}
-        whileTap={{ cursor: 'grabbing' }}
+        dragElastic={0}
+        _dragX={x}
+        _dragY={y}
+        onDragEnd={() => {
+          // Snap balik ke 0,0 via spring
+          x.set(0)
+          y.set(0)
+        }}
+        style={{
+          x: springX,
+          y: springY,
+          rotateZ,
+          marginTop: 4,
+          cursor: 'grab',
+          zIndex: 5,
+          touchAction: 'none',
+        }}
+        whileDrag={{ scale: 1.02, cursor: 'grabbing' }}
       >
-        {/* D-ring konektor */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: -1, zIndex: 2, position: 'relative' }}>
+        {/* D-ring */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: -2, position: 'relative', zIndex: 2 }}>
           <div style={{
             width: 22, height: 18,
             border: '4px solid #27272a',
@@ -90,16 +94,20 @@ function LanyardCard({ image, name }: { image?: string | null; name: string }) {
           }} />
         </div>
 
-        {/* Foto */}
+        {/* Foto — pointer-events: none pada img agar drag tidak terblokir */}
         <div style={{
           width: 210, aspectRatio: '3/4',
           borderRadius: '16px', overflow: 'hidden',
           background: '#18181b',
           boxShadow: '0 20px 60px rgba(0,0,0,0.8)',
+          pointerEvents: 'none',
         }}>
           {image ? (
-            <Image src={image} alt={name} width={210} height={280}
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <Image
+              src={image} alt={name} width={210} height={280}
+              draggable={false}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', pointerEvents: 'none' }}
+            />
           ) : (
             <div style={{
               width: '100%', height: '100%', minHeight: 280,
@@ -107,6 +115,7 @@ function LanyardCard({ image, name }: { image?: string | null; name: string }) {
               fontSize: 64, fontWeight: 800, color: 'var(--accent)',
               fontFamily: 'Outfit, sans-serif',
               background: 'linear-gradient(160deg, #18181b, #09090b)',
+              pointerEvents: 'none',
             }}>H</div>
           )}
         </div>
