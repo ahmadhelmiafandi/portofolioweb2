@@ -24,7 +24,7 @@ function SkillCard({ skill, index }: { skill: Skill; index: number }) {
   const iconName = skill.icon?.toLowerCase().replace(/[\s/.]/g, '') || ''
 
   // Icon yang punya warna hitam/gelap perlu filter di dark mode
-  const darkModeIcons = ['github', 'nextjs', 'express', 'prisma', 'vercel', 'figma', 'flask']
+  const darkModeIcons = ['github', 'nextjs', 'express', 'prisma', 'vercel', 'figma', 'flask', 'dbeaver']
   const needsFilter = darkModeIcons.includes(iconName)
 
   const iconUrl = iconName
