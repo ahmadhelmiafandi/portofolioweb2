@@ -249,7 +249,7 @@ h1,h2,h3,h4,h5,h6 {
   border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  padding: 16px 0;
+  padding: 20px 0;
   position: fixed;
   top: 0;
   left: 0;
@@ -265,16 +265,17 @@ h1,h2,h3,h4,h5,h6 {
   padding-right: 0;
 }
 .sidebar-logo-container {
-  padding: 0 16px 20px;
+  padding: 0 16px 24px;
   display: flex;
   align-items: center;
   gap: 12px;
   overflow: visible;
   transition: var(--transition);
-  min-height: 50px;
+  min-height: 48px;
+  flex-shrink: 0;
 }
 .sidebar.collapsed .sidebar-logo-container {
-  padding: 0 8px 20px;
+  padding: 0 12px 24px;
   justify-content: center;
   gap: 0;
 }
@@ -300,15 +301,16 @@ h1,h2,h3,h4,h5,h6 {
 .sidebar-item {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 12px;
-  padding: 11px 16px;
+  padding: 10px 12px;
   color: var(--text-secondary);
   text-decoration: none;
   font-size: 13px;
   font-weight: 500;
   font-family: 'Outfit', sans-serif;
   border-radius: 8px;
-  margin: 4px 8px;
+  margin: 2px 8px;
   transition: var(--transition);
   cursor: pointer;
   border: 1px solid transparent;
@@ -317,14 +319,15 @@ h1,h2,h3,h4,h5,h6 {
   text-align: left;
   position: relative;
   white-space: nowrap;
-  min-height: 40px;
+  min-height: 36px;
+  flex-shrink: 0;
 }
 .sidebar.collapsed .sidebar-item {
   justify-content: center;
-  padding: 10px 0;
-  margin: 6px auto;
+  padding: 10px;
+  margin: 2px auto;
   gap: 0;
-  width: 50px;
+  width: 52px;
   border-radius: 8px;
 }
 .sidebar-item span {
