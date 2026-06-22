@@ -48,7 +48,7 @@ function LanyardCard({ image, name }: { image?: string | null; name: string }) {
         flexShrink: 0, zIndex: 4, position: 'relative',
       }} />
 
-      {/* Tali SVG */}
+      {/* Tali SVG - Lanyard string */}
       <svg style={{
         position: 'absolute', top: 5, left: '50%',
         transform: 'translateX(-50%)',
@@ -57,7 +57,7 @@ function LanyardCard({ image, name }: { image?: string | null; name: string }) {
       }}>
         <motion.path
           style={{ d: stringD }}
-          fill="none" stroke="#27272a" strokeWidth="5" strokeLinecap="round"
+          fill="none" stroke="#3a3a3a" strokeWidth="8" strokeLinecap="round"
         />
       </svg>
 
