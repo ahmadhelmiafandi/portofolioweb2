@@ -5,13 +5,20 @@ import { useState, useEffect } from 'react'
 
 export function LoadingScreen() {
   const [progress, setProgress] = useState(0)
-  const [phase, setPhase]       = useState(0)  // 0=loading, 1=done, 2=exit
+  const [phase, setPhase]       = useState(0)
   const [visible, setVisible]   = useState(true)
+  const [isMobile, setIsMobile] = useState(false)
 
   const PHASES = ['SYSTEM READY', 'PORTFOLIO', 'UI LOADING']
 
   useEffect(() => {
-    // Progress bar animasi
+    setIsMobile(window.innerWidth < 768)
+    const handleResize = () => setIsMobile(window.innerWidth < 768)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  useEffect(() => {
     const interval = setInterval(() => {
       setProgress(p => {
         if (p >= 100) { clearInterval(interval); return 100 }
@@ -29,7 +36,6 @@ export function LoadingScreen() {
     }
   }, [progress >= 100])
 
-  // Cycle through phase labels
   useEffect(() => {
     const t = setInterval(() => setPhase(p => (p < 2 ? p + 1 : p)), 600)
     return () => clearInterval(t)
@@ -60,16 +66,18 @@ export function LoadingScreen() {
           {/* Main card */}
           <div style={{
             position: 'relative', zIndex: 1,
-            width: '90%', maxWidth: 860,
+            width: '90%', maxWidth: isMobile ? '100%' : 860,
             background: 'rgba(20,10,10,0.7)',
             backdropFilter: 'blur(24px)',
-            borderRadius: '20px',
+            borderRadius: isMobile ? '16px' : '20px',
             border: '1px solid rgba(255,255,255,0.06)',
-            padding: 'clamp(28px, 5vw, 56px)',
+            padding: isMobile ? 'clamp(20px, 4vw, 32px)' : 'clamp(28px, 5vw, 56px)',
             display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: 40,
+            gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: isMobile ? 'clamp(16px, 3vw, 24px)' : 'clamp(24px, 5vw, 40px)',
             alignItems: 'center',
+            maxHeight: isMobile ? '90vh' : 'auto',
+            overflowY: isMobile ? 'auto' : 'visible',
           }}>
 
             {/* LEFT */}
@@ -160,8 +168,9 @@ export function LoadingScreen() {
                 background: 'rgba(255,255,255,0.03)',
                 borderRadius: '16px',
                 border: '1px solid rgba(255,255,255,0.06)',
-                padding: 24,
+                padding: isMobile ? 16 : 24,
                 display: 'flex', flexDirection: 'column',
+                width: isMobile ? '100%' : 'auto',
               }}
             >
               {/* Top bar */}
@@ -172,18 +181,17 @@ export function LoadingScreen() {
 
               {/* Circular progress */}
               <div style={{ display: 'flex', justifyContent: 'center', margin: '8px 0 20px' }}>
-                <div style={{ position: 'relative', width: 140, height: 140 }}>
-                  <svg width="140" height="140" style={{ transform: 'rotate(-90deg)' }}>
-                    {/* Track */}
-                    <circle cx="70" cy="70" r="54" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="8" />
-                    {/* Progress */}
+                <div style={{ position: 'relative', width: isMobile ? 100 : 140, height: isMobile ? 100 : 140 }}>
+                  <svg width={isMobile ? 100 : 140} height={isMobile ? 100 : 140} style={{ transform: 'rotate(-90deg)' }}>
+                    <circle cx={isMobile ? 50 : 70} cy={isMobile ? 50 : 70} r={isMobile ? 38 : 54} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="8" />
                     <motion.circle
-                      cx="70" cy="70" r="54"
+                      cx={isMobile ? 50 : 70} cy={isMobile ? 50 : 70} r={isMobile ? 38 : 54}
                       fill="none"
-                      stroke="url(#loadGrad)"                      strokeWidth="8"
+                      stroke="url(#loadGrad)"
+                      strokeWidth="8"
                       strokeLinecap="round"
-                      strokeDasharray={`${2 * Math.PI * 54}`}
-                      animate={{ strokeDashoffset: 2 * Math.PI * 54 * (1 - Math.min(progress, 100) / 100) }}
+                      strokeDasharray={`${2 * Math.PI * (isMobile ? 38 : 54)}`}
+                      animate={{ strokeDashoffset: 2 * Math.PI * (isMobile ? 38 : 54) * (1 - Math.min(progress, 100) / 100) }}
                       transition={{ ease: 'easeOut' }}
                     />
                     <defs>
@@ -193,19 +201,18 @@ export function LoadingScreen() {
                       </linearGradient>
                     </defs>
                   </svg>
-                  {/* Center text */}
                   <div style={{
                     position: 'absolute', inset: 0,
                     display: 'flex', flexDirection: 'column',
                     alignItems: 'center', justifyContent: 'center',
                   }}>
-                    <span style={{ fontSize: 11, fontWeight: 600, color: '#a1a1aa', letterSpacing: '0.1em', fontFamily: 'monospace' }}>
+                    <span style={{ fontSize: 10, fontWeight: 600, color: '#a1a1aa', letterSpacing: '0.1em', fontFamily: 'monospace' }}>
                       WELCOME
                     </span>
                     <motion.span
                       animate={{ opacity: [0.5, 1, 0.5] }}
                       transition={{ repeat: Infinity, duration: 1.5 }}
-                      style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', marginTop: 6, display: 'inline-block' }}
+                      style={{ width: 5, height: 5, borderRadius: '50%', background: '#22c55e', marginTop: 6, display: 'inline-block' }}
                     />
                   </div>
                 </div>
@@ -219,12 +226,12 @@ export function LoadingScreen() {
                 ].map(s => (
                   <div key={s.label} style={{
                     background: 'rgba(255,255,255,0.04)', borderRadius: 10,
-                    padding: '12px 14px',
+                    padding: isMobile ? '10px 12px' : '12px 14px',
                     border: '1px solid rgba(255,255,255,0.06)',
                   }}>
                     <div style={{ fontSize: 10, fontWeight: 600, color: '#52525b', letterSpacing: '0.08em', marginBottom: 4, fontFamily: 'monospace' }}>{s.label}</div>
-                    <div style={{ fontSize: 22, fontWeight: 800, color: '#f4f4f5', fontFamily: 'Outfit, sans-serif', letterSpacing: '-0.02em' }}>{s.value}</div>
-                    <div style={{ fontSize: 11, color: '#52525b', marginTop: 2 }}>{s.sub}</div>
+                    <div style={{ fontSize: isMobile ? 18 : 22, fontWeight: 800, color: '#f4f4f5', fontFamily: 'Outfit, sans-serif', letterSpacing: '-0.02em' }}>{s.value}</div>
+                    <div style={{ fontSize: 10, color: '#52525b', marginTop: 2 }}>{s.sub}</div>
                   </div>
                 ))}
               </div>

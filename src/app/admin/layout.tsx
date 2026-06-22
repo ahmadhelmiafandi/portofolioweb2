@@ -94,7 +94,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <ToastProvider>
-      <div style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex' }}>
+      <div style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex', flexDirection: 'column', touchAction: 'manipulation' }}>
         
         {/* Mobile Header */}
         <header className="mobile-header" style={{
@@ -109,7 +109,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           top: 0,
           left: 0,
           right: 0,
-          zIndex: 40
+          zIndex: 40,
+          touchAction: 'none'
         }}>
           <button 
             onClick={() => setMobileOpen(true)} 
@@ -121,6 +122,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <span style={{ fontFamily: 'Outfit', fontWeight: 800, color: 'var(--text-primary)', fontSize: '18px' }}>PortoCMS</span>
           <div style={{ width: 24 }} />
         </header>
+
+        <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
 
         {/* Mobile Sidebar Overlay */}
         {mobileOpen && (
@@ -303,7 +306,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <div className="breadcrumbs">
               <Link href="/admin/dashboard">Admin</Link>
               {breadcrumbs.map((bc, idx) => {
-                // Skip the first 'admin' segment in display since we added static root 'Admin'
                 if (bc.label.toLowerCase() === 'admin') return null
                 return (
                   <React.Fragment key={bc.href}>
@@ -321,6 +323,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {children}
           </div>
         </main>
+        </div>
       </div>
     </ToastProvider>
   )
