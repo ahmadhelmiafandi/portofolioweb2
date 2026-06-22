@@ -8,7 +8,7 @@ export function LoadingScreen() {
   const [phase, setPhase]       = useState(0)  // 0=loading, 1=done, 2=exit
   const [visible, setVisible]   = useState(true)
 
-  const PHASES = ['SYSTEM READY', 'PORTFOLIO 2025', 'UI LOADING']
+  const PHASES = ['SYSTEM READY', 'PORTFOLIO', 'UI LOADING']
 
   useEffect(() => {
     // Progress bar animasi

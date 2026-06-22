@@ -59,35 +59,41 @@ export function CertificatesSection({ data }: { data?: Certificate[] | null }) {
                 style={{
                   background: 'var(--surface)',
                   border: '1px solid var(--border)',
-                  borderRadius: '16px',
+                  borderLeft: `4px solid ${pair.color}`,
+                  borderRadius: '14px',
                   padding: '24px',
                   display: 'flex', flexDirection: 'column',
                   justifyContent: 'space-between',
                   position: 'relative',
                   transition: 'var(--transition)',
+                  boxShadow: 'var(--shadow-sm)'
                 }}
-                whileHover={{ borderColor: 'var(--accent)' }}
+                whileHover={{ borderColor: pair.color, y: -4, boxShadow: '0 12px 32px rgba(20,184,166,0.15)' }}
               >
-                {/* Accent icon top-right */}
+                {/* Issuer badge with larger icon */}
                 <div style={{
-                  position: 'absolute', top: 16, right: 16,
-                  width: 36, height: 36, borderRadius: '10px',
-                  background: pair.bg, color: pair.color,
+                  position: 'absolute', top: 20, right: 20,
+                  width: 48, height: 48, borderRadius: '12px',
+                  background: pair.bg, 
+                  border: `2px solid ${pair.color}20`,
+                  color: pair.color,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  boxShadow: `0 4px 12px ${pair.color}25`
                 }}>
-                  <Award size={17} />
+                  <Award size={24} strokeWidth={2.5} />
                 </div>
 
                 <div>
-                  {/* Issuer badge */}
+                  {/* Issuer text badge */}
                   <div style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 5,
-                    fontSize: 11, fontWeight: 600, color: pair.color,
+                    display: 'inline-flex', alignItems: 'center', gap: 6,
+                    fontSize: 11, fontWeight: 700, color: pair.color,
                     background: pair.bg,
-                    padding: '3px 10px', borderRadius: '9999px',
+                    padding: '5px 12px', borderRadius: '9999px',
                     marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.08em',
+                    border: `1px solid ${pair.color}30`
                   }}>
-                    <ShieldCheck size={12} />
+                    <ShieldCheck size={13} />
                     {cert.issuer}
                   </div>
 
@@ -110,28 +116,18 @@ export function CertificatesSection({ data }: { data?: Certificate[] | null }) {
                   </div>
                 </div>
 
-                {/* Action buttons */}
+                {/* Action button - Single primary CTA */}
                 {(cert.link || cert.file_url) && (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                    {cert.link && (
-                      <a href={cert.link} target="_blank" rel="noopener noreferrer"
-                        className="btn-secondary"
-                        style={{ justifyContent: 'center', fontSize: 13, padding: '9px 14px' }}
-                      >
-                        <ExternalLink size={13} />
-                        {lang === 'en' ? `View on ${cert.issuer}` : `Lihat di ${cert.issuer}`}
-                      </a>
-                    )}
-                    {cert.file_url && (
-                      <a href={cert.file_url} target="_blank" rel="noopener noreferrer"
-                        className="btn-primary"
-                        style={{ justifyContent: 'center', fontSize: 13, padding: '9px 14px' }}
-                      >
-                        {t.certificates.view_pdf}
-                        <ExternalLink size={13} />
-                      </a>
-                    )}
-                  </div>
+                  <a 
+                    href={cert.file_url || cert.link || '#'} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="btn-primary"
+                    style={{ justifyContent: 'center', fontSize: 13, padding: '10px 16px', width: '100%' }}
+                  >
+                    <ExternalLink size={14} />
+                    {lang === 'en' ? 'View Certificate' : 'Lihat Sertifikat'}
+                  </a>
                 )}
               </motion.article>
             )

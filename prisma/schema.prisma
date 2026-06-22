@@ -119,6 +119,7 @@ model Contact {
   footer_made String? @default("© 2026 Helmi. All rights reserved.")
   portfolio_extra_en String? @default("Languages: Indonesian (Native), English (Professional)")
   portfolio_extra_id String? @default("Bahasa: Indonesia (Native), Inggris (Profesional)")
+  site_name          String? @default("Ahmad Helmi Afandi")
   published Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

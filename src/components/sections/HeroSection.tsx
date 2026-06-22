@@ -2,7 +2,9 @@
 
 import { motion } from 'framer-motion'
 import { useLang } from '@/contexts/LangContext'
-import { ArrowRight, GitBranch, Link2, Camera, MessageCircle } from 'lucide-react'
+import { ArrowRight, Link2, MessageCircle } from 'lucide-react'
+import { Github, Linkedin, Instagram, Twitter, Facebook, Youtube, Twitch, Whatsapp } from '@/components/icons/BrandIcons'
+import { Mail, Phone, Globe } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 interface HeroData {
@@ -13,6 +15,8 @@ interface HeroData {
   image?: string | null
   cv_url?: string | null
 }
+
+interface Social { id: string; name: string; link: string; icon?: string | null }
 
 const DEFAULT_HERO: HeroData = {
   title_en: 'Helmi Afandi',
@@ -83,14 +87,6 @@ function HeroIllustration() {
   )
 }
 
-const WA_NUMBER = '6282323609362'
-const getWaLink = (lang: 'en' | 'id') => {
-  const msg = lang === 'en'
-    ? `Hi Helmi! I visited your portfolio and I'm interested in discussing a project collaboration.`
-    : `Halo Helmi! Saya sudah melihat portofolio kamu dan tertarik untuk mendiskusikan kerja sama proyek.`
-  return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`
-}
-
 // ── Typewriter ───────────────────────────────────────────────
 function TypewriterText({ text, speed = 35, delay = 0 }: { text: string; speed?: number; delay?: number }) {
   const [displayed, setDisplayed] = useState('')
@@ -132,18 +128,34 @@ function TypewriterText({ text, speed = 35, delay = 0 }: { text: string; speed?:
   )
 }
 
-export function HeroSection({ data }: { data?: HeroData | null }) {
+const HERO_ICON_MAP: Record<string, React.ElementType> = {
+  github: Github, linkedin: Linkedin, instagram: Instagram, twitter: Twitter,
+  x: Twitter, facebook: Facebook, youtube: Youtube, whatsapp: Whatsapp,
+  twitch: Twitch, mail: Mail, phone: Phone, globe: Globe, link: Link2,
+  dribbble: Globe, behance: Globe,
+}
+
+const formatLink = (url: string | null | undefined) => {
+  if (!url) return '#'
+  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('/')) return url
+  return `https://${url}`
+}
+
+export function HeroSection({ data, socials }: { data?: HeroData | null; socials?: Social[] | null }) {
   const { lang } = useLang()
   const hero = data || DEFAULT_HERO
   const name     = lang === 'en' ? hero.title_en    : hero.title_id
   const role     = lang === 'en' ? hero.subtitle_en : hero.subtitle_id
   const badge    = lang === 'en' ? hero.badge_en    : hero.badge_id
 
-  const SOCIALS = [
-    { icon: GitBranch, label: 'GitHub',    href: '#' },
-    { icon: Link2,     label: 'LinkedIn',  href: '#' },
-    { icon: Camera,       label: 'Instagram', href: '#' },
-    { icon: MessageCircle, label: 'WhatsApp', href: getWaLink(lang) },
+  const heroSocials = (socials && socials.length > 0) ? socials.map(s => {
+    const iconKey = (s.icon || s.name || '').toLowerCase()
+    const Icon = HERO_ICON_MAP[iconKey] || Link2
+    return { icon: Icon, label: s.name, href: formatLink(s.link) }
+  }) : [
+    { icon: Github, label: 'GitHub', href: '#' },
+    { icon: Linkedin, label: 'LinkedIn', href: '#' },
+    { icon: Instagram, label: 'Instagram', href: '#' },
   ]
 
   return (
@@ -262,7 +274,7 @@ export function HeroSection({ data }: { data?: HeroData | null }) {
             <motion.div className="hero-socials"
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
               style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
-              {SOCIALS.map((s) => (
+              {heroSocials.map((s) => (
                 <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label}
                   style={{
                     width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center',

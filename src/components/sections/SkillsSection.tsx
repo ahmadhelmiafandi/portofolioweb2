@@ -23,9 +23,9 @@ const DEFAULT_SKILLS: Skill[] = [
 function SkillCard({ skill, index }: { skill: Skill; index: number }) {
   const iconName = skill.icon?.toLowerCase().replace(/[\s/.]/g, '') || ''
 
-  // Icon yang punya versi -original hitam (perlu invert di dark mode)
-  const darkIcons = ['github', 'express', 'nextjs', 'prisma', 'vercel', 'figma', 'flask']
-  const needsInvert = darkIcons.includes(iconName)
+  // Icon yang punya warna hitam/gelap perlu filter di dark mode
+  const darkModeIcons = ['github', 'nextjs', 'express', 'prisma', 'vercel', 'figma', 'flask']
+  const needsFilter = darkModeIcons.includes(iconName)
 
   const iconUrl = iconName
     ? `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${iconName}/${iconName}-original.svg`
@@ -55,21 +55,22 @@ function SkillCard({ skill, index }: { skill: Skill; index: number }) {
     >
       {/* Icon container */}
       <div style={{
-        width: 52, height: 52,
-        borderRadius: '12px',
+        width: 64, height: 64,
+        borderRadius: '14px',
         background: 'var(--surface-2)',
+        border: '1px solid var(--border)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         overflow: 'hidden', flexShrink: 0,
+        transition: 'var(--transition)'
       }}>
         {iconUrl ? (
           <img
             src={iconUrl}
             alt={skill.name}
-            width={32} height={32}
+            width={36} height={36}
             style={{
               objectFit: 'contain',
-              // icon hitam tidak terlihat di dark mode → invert jadi putih
-              filter: needsInvert ? 'invert(1)' : 'none',
+              filter: needsFilter ? 'var(--skill-icon-filter)' : 'none',
             }}
             onError={(e) => {
               const target = e.currentTarget
@@ -81,13 +82,13 @@ function SkillCard({ skill, index }: { skill: Skill; index: number }) {
                 target.style.display = 'none'
                 const parent = target.parentElement
                 if (parent) {
-                  parent.innerHTML = `<span style="font-size:20px;font-weight:800;color:var(--accent);font-family:Outfit,sans-serif;">${skill.name.charAt(0)}</span>`
+                  parent.innerHTML = `<span style="font-size:24px;font-weight:800;color:var(--accent);font-family:Outfit,sans-serif;">${skill.name.charAt(0)}</span>`
                 }
               }
             }}
           />
         ) : (
-          <span style={{ fontSize: 20, fontWeight: 800, color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
+          <span style={{ fontSize: 24, fontWeight: 800, color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
             {skill.name.charAt(0)}
           </span>
         )}

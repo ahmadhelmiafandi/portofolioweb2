@@ -41,20 +41,33 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       style={{
         background: 'var(--surface)',
         border: '1px solid var(--border)',
-        borderRadius: '16px',
+        borderRadius: '14px',
         overflow: 'hidden',
         display: 'flex', flexDirection: 'column',
         transition: 'var(--transition)',
+        boxShadow: 'var(--shadow-sm)'
       }}
-      whileHover={{ y: -3, boxShadow: 'var(--shadow-md)' }}
+      whileHover={{ y: -6, boxShadow: '0 12px 40px rgba(20,184,166,0.15)', borderColor: 'var(--accent)' }}
     >
       {/* Image */}
       {project.image && (
         <div style={{ position: 'relative', width: '100%', aspectRatio: '16/10', overflow: 'hidden', background: 'var(--surface-2)' }}>
-          <Image src={project.image} alt={title} fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
-            style={{ objectFit: 'cover', transition: 'transform 0.4s ease' }}
-          />
+          <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.3 }}>
+            <Image src={project.image} alt={title} fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
+              style={{ objectFit: 'cover' }}
+            />
+          </motion.div>
+          {/* Gradient overlay for better text readability */}
+          <div style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: '40%',
+            background: 'linear-gradient(to top, rgba(0,0,0,0.6), transparent)',
+            pointerEvents: 'none'
+          }} />
         </div>
       )}
 
@@ -64,8 +77,19 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             {project.category}
           </span>
           {project.featured && (
-            <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--accent-2)', background: 'var(--accent-2-light)', padding: '2px 10px', borderRadius: '9999px' }}>
-              {t.projects.featured}
+            <span style={{ 
+              fontSize: 11, 
+              fontWeight: 700, 
+              color: '#000',
+              background: 'linear-gradient(135deg, #fbbf24, #f59e0b)',
+              padding: '4px 12px', 
+              borderRadius: '9999px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              boxShadow: '0 2px 8px rgba(245,158,11,0.35)'
+            }}>
+              ⭐ {t.projects.featured}
             </span>
           )}
         </div>
@@ -86,31 +110,25 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           {project.tech_stack.map(tech => <span key={tech} className="tech-tag">{tech}</span>)}
         </div>
 
-        <div style={{ display: 'flex', gap: 8, marginTop: 8, paddingTop: 16, borderTop: '1px solid var(--border)' }}>
+        <div style={{ display: 'flex', gap: 8, marginTop: 12, paddingTop: 16, borderTop: '1px solid var(--border)' }}>
           {project.link && (
             <a href={formatLink(project.link)} target="_blank" rel="noopener noreferrer"
               className="btn-primary"
-              style={{ flex: 1, justifyContent: 'center', padding: '9px 14px', fontSize: 13 }}
+              style={{ flex: 1, justifyContent: 'center', padding: '10px 16px', fontSize: 13 }}
             >
-              <ExternalLink size={13} />
+              <ExternalLink size={14} />
               {t.projects.visit_project}
             </a>
           )}
           {project.github && (
             <a href={formatLink(project.github)} target="_blank" rel="noopener noreferrer"
               className="btn-secondary"
-              style={{ padding: '9px 14px', fontSize: 13 }}
-              aria-label="GitHub"
+              style={{ padding: '10px 14px', fontSize: 13 }}
+              aria-label="GitHub Repository"
             >
-              <GitBranch size={14} />
+              <GitBranch size={15} />
             </a>
           )}
-          <Link href={`/projects/${project.id}`}
-            className="btn-secondary"
-            style={{ flex: project.link ? undefined : 1, justifyContent: 'center', padding: '9px 14px', fontSize: 13 }}
-          >
-            {t.projects.view_project}
-          </Link>
         </div>
       </div>
     </motion.article>

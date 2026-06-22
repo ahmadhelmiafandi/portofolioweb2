@@ -228,6 +228,7 @@ exports.Prisma.ContactScalarFieldEnum = {
   footer_made: 'footer_made',
   portfolio_extra_en: 'portfolio_extra_en',
   portfolio_extra_id: 'portfolio_extra_id',
+  site_name: 'site_name',
   published: 'published',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

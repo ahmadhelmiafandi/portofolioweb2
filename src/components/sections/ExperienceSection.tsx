@@ -32,11 +32,13 @@ export function ExperienceSection({ data }: { data?: Experience[] | null }) {
           <h2 className="section-title">{t.experience.title}</h2>
         </motion.div>
 
-        <div style={{ maxWidth: 720, margin: '0 auto', position: 'relative' }}>
-          {/* vertical line */}
+        <div style={{ maxWidth: 800, margin: '0 auto', position: 'relative' }}>
+          {/* Animated gradient timeline line */}
           <div style={{
-            position: 'absolute', left: 15, top: 0, bottom: 0,
-            width: 1, background: 'var(--border)',
+            position: 'absolute', left: 19, top: 0, bottom: 0,
+            width: 2, 
+            background: 'linear-gradient(to bottom, var(--accent), var(--accent-2), var(--accent-3))',
+            borderRadius: '9999px'
           }} />
 
           {experiences.map((exp, i) => {
@@ -54,15 +56,16 @@ export function ExperienceSection({ data }: { data?: Experience[] | null }) {
                 transition={{ delay: i * 0.1, duration: 0.5 }}
                 style={{ display: 'flex', gap: 28, marginBottom: 20 }}
               >
-                {/* Timeline dot */}
+                {/* Timeline dot with company icon */}
                 <div style={{ flexShrink: 0, paddingTop: 18, position: 'relative', zIndex: 1 }}>
                   <div style={{
-                    width: 30, height: 30, borderRadius: '50%',
-                    background: i === 0 ? 'var(--accent)' : 'var(--surface-2)',
-                    border: `1px solid ${i === 0 ? 'var(--accent)' : 'var(--border)'}`,
+                    width: 40, height: 40, borderRadius: '50%',
+                    background: !exp.end_date ? 'linear-gradient(135deg, var(--accent), var(--accent-2))' : 'var(--surface-2)',
+                    border: `2px solid ${!exp.end_date ? 'var(--accent)' : 'var(--border)'}`,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    boxShadow: !exp.end_date ? '0 4px 12px rgba(20,184,166,0.25)' : 'none'
                   }}>
-                    <Briefcase size={13} color={i === 0 ? '#000' : 'var(--text-muted)'} />
+                    <Briefcase size={18} color={!exp.end_date ? '#000' : 'var(--text-muted)'} strokeWidth={2} />
                   </div>
                 </div>
 
@@ -86,12 +89,15 @@ export function ExperienceSection({ data }: { data?: Experience[] | null }) {
                       </h3>
                       <span style={{
                         display: 'inline-flex', alignItems: 'center', gap: 5,
-                        fontSize: 12, color: 'var(--accent)',
-                        background: 'var(--accent-light)',
-                        padding: '3px 10px', borderRadius: '9999px',
-                        whiteSpace: 'nowrap', fontWeight: 500,
+                        fontSize: 12, 
+                        color: !exp.end_date ? '#000' : 'var(--text-secondary)',
+                        background: !exp.end_date ? 'linear-gradient(135deg, #10b981, #059669)' : 'var(--surface-2)',
+                        padding: '4px 12px', borderRadius: '9999px',
+                        whiteSpace: 'nowrap', fontWeight: 600,
+                        border: `1px solid ${!exp.end_date ? '#10b98130' : 'var(--border)'}`,
+                        boxShadow: !exp.end_date ? '0 2px 8px rgba(16,185,129,0.2)' : 'none'
                       }}>
-                        <Calendar size={11} />
+                        <Calendar size={12} />
                         {start} — {end}
                       </span>
                     </div>

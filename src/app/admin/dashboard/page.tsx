@@ -46,8 +46,8 @@ const statCards: { label: string; value: number; icon: any; color: string }[] = 
   return (
     <div>
       <div style={{ marginBottom: '40px' }}>
-        <h1 style={{ fontSize: '32px', fontWeight: '800', fontFamily: 'Syne', marginBottom: '8px' }}>Dashboard Overview</h1>
-        <p style={{ color: 'var(--text-secondary)' }}>Welcome back to your portfolio management system.</p>
+        <h1 style={{ fontSize: '28px', fontWeight: '800', fontFamily: 'Outfit', marginBottom: '8px' }}>Dashboard Overview</h1>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>Welcome back to your portfolio management system.</p>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px', marginBottom: '48px' }}>
@@ -58,33 +58,34 @@ const statCards: { label: string; value: number; icon: any; color: string }[] = 
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
             className="card"
-            style={{ display: 'flex', alignItems: 'center', gap: '20px' }}
+            style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '24px', borderRadius: '12px', boxShadow: 'var(--shadow-sm)' }}
           >
             <div style={{
-              width: '56px',
-              height: '56px',
-              background: 'var(--bg-secondary)',
-              borderRadius: '16px',
+              width: '64px',
+              height: '64px',
+              background: `${stat.color}15`,
+              borderRadius: '14px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: stat.color
+              color: stat.color,
+              border: `1px solid ${stat.color}25`
             }}>
-              <stat.icon size={28} />
+              <stat.icon size={30} strokeWidth={2} />
             </div>
             <div>
-              <div style={{ fontSize: '14px', color: 'var(--text-secondary)', fontWeight: '500' }}>{stat.label}</div>
-              <div style={{ fontSize: '28px', fontWeight: '800', color: 'var(--text-primary)' }}>{stat.value}</div>
+              <div style={{ fontSize: '13px', color: 'var(--text-secondary)', fontWeight: '600', marginBottom: '4px' }}>{stat.label}</div>
+              <div style={{ fontSize: '32px', fontWeight: '800', color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>{stat.value}</div>
             </div>
           </motion.div>
         ))}
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '24px' }}>
-        <div className="card">
+        <div className="card" style={{ borderRadius: '12px', boxShadow: 'var(--shadow-sm)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: '700' }}>Recent Projects</h3>
-            <a href="/admin/projects" style={{ fontSize: '13px', color: 'var(--accent)', textDecoration: 'none' }}>View All</a>
+            <h3 style={{ fontSize: '18px', fontWeight: '700', fontFamily: 'Outfit' }}>Recent Projects</h3>
+            <a href="/admin/projects" style={{ fontSize: '13px', color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>View All →</a>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {data?.recentProjects && data.recentProjects.length > 0 ? (

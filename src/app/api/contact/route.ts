@@ -20,10 +20,10 @@ export async function PATCH(request: Request) {
   try {
     const body = await request.json()
 
-    // Auto translate fields
-    if (body.title_id) body.title_en = await translateIdToEn(body.title_id)
-    if (body.desc_id) body.desc_en = await translateIdToEn(body.desc_id)
-    if (body.portfolio_extra_id) body.portfolio_extra_en = await translateIdToEn(body.portfolio_extra_id)
+    // Auto translate fields if not manually provided
+    if (body.title_id && !body.title_en) body.title_en = await translateIdToEn(body.title_id)
+    if (body.desc_id && !body.desc_en) body.desc_en = await translateIdToEn(body.desc_id)
+    if (body.portfolio_extra_id && !body.portfolio_extra_en) body.portfolio_extra_en = await translateIdToEn(body.portfolio_extra_id)
 
     const contact = await prisma.contact.findFirst()
 

@@ -7,6 +7,7 @@ import { CertificatesSection } from '@/components/sections/CertificatesSection'
 import { ExperienceSection } from '@/components/sections/ExperienceSection'
 import { ContactSection } from '@/components/sections/ContactSection'
 import { Footer } from '@/components/Footer'
+import { ScrollToTop } from '@/components/ScrollToTop'
 import { prisma } from '@/lib/prisma'
 
 export const dynamic = 'force-dynamic'
@@ -35,9 +36,9 @@ export default async function HomePage() {
 
   return (
     <>
-      <Navbar hero={hero} />
+      <Navbar hero={hero} contact={contact} />
       <main>
-        <HeroSection data={hero} />
+        <HeroSection data={hero} socials={socials.length > 0 ? socials : null} />
         <AboutSection data={about} />
         <SkillsSection data={skills.length > 0 ? skills : null} />
         <ProjectsSection data={projects.length > 0 ? projects as any : null} />
@@ -46,6 +47,7 @@ export default async function HomePage() {
         <ContactSection contact={contact} socials={socials.length > 0 ? socials : null} />
       </main>
       <Footer contact={contact} hero={hero} />
+      <ScrollToTop />
     </>
   )
 }

@@ -20,25 +20,33 @@ interface HeroData {
   title_en?: string | null
 }
 
-// Ambil nama pertama dari title hero (misal "Helmi Afandi" → "Helmi")
-function getSiteName(hero?: HeroData | null): { first: string; last: string } {
-  const raw = hero?.title_id || hero?.title_en || 'Helmi Afandi'
-  const parts = raw.trim().split(/\s+/)
-  if (parts.length === 1) return { first: parts[0], last: '' }
-  const last  = parts[parts.length - 1]
-  const first = parts.slice(0, -1).join(' ')
-  return { first, last }
+interface ContactData {
+  phone?: string | null
+  site_name?: string | null
 }
 
-const WA_NUMBER = '6282323609362'
-const getWaLink = (lang: 'en' | 'id') => {
+// Ambil nama dari contact atau hero title — tampilkan max 2 kata
+function getSiteName(hero?: HeroData | null, contact?: ContactData | null): { first: string; last: string; initial: string } {
+  const raw = contact?.site_name || hero?.title_id || hero?.title_en || 'Helmi Afandi'
+  const parts = raw.trim().split(/\s+/).filter(Boolean)
+  const initial = (parts[0]?.charAt(0) || 'H').toUpperCase()
+  if (parts.length === 1) return { first: parts[0], last: '', initial }
+  // Ambil kata pertama + kata terakhir saja
+  const first = parts[0]
+  const last  = parts[parts.length - 1]
+  return { first, last, initial }
+}
+
+const getWaLink = (phone: string | null | undefined, lang: 'en' | 'id') => {
+  const cleanPhone = (phone || '6282323609362').replace(/\D/g, '')
+  const waNumber = cleanPhone.startsWith('0') ? '62' + cleanPhone.slice(1) : cleanPhone
   const msg = lang === 'en'
     ? `Hi Helmi! I visited your portfolio and I'm interested in discussing a project collaboration with you. Could we connect?`
     : `Halo Helmi! Saya sudah melihat portofolio kamu dan tertarik untuk mendiskusikan kerja sama proyek. Apakah kita bisa ngobrol lebih lanjut?`
-  return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`
+  return `https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`
 }
 
-export function Navbar({ hero }: { hero?: HeroData | null }) {
+export function Navbar({ hero, contact }: { hero?: HeroData | null; contact?: ContactData | null }) {
   const { theme, setTheme } = useTheme()
   const { lang, setLang, t } = useLang()
   const [scrolled, setScrolled]   = useState(false)
@@ -54,7 +62,7 @@ export function Navbar({ hero }: { hero?: HeroData | null }) {
 
   const toggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark')
   const toggleLang  = () => setLang(lang === 'en' ? 'id' : 'en')
-  const { first, last } = getSiteName(hero)
+  const { first, last, initial } = getSiteName(hero, contact)
 
   return (
     <>
@@ -76,17 +84,8 @@ export function Navbar({ hero }: { hero?: HeroData | null }) {
 
           {/* Logo */}
           <a href="#" aria-label="portohelmi home" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{
-              width: 36, height: 36,
-              background: 'linear-gradient(135deg, #14b8a6, #f43f5e)',
-              borderRadius: '10px',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: '#fff', fontWeight: 800, fontSize: 16,
-              fontFamily: 'Outfit, sans-serif',
-              flexShrink: 0,
-            }}>{(first.charAt(0) || 'H').toUpperCase()}</div>
             <span style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 700, fontSize: 18, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
-              {first.toLowerCase()}<span style={{ color: 'var(--accent)' }}>{last ? last.toLowerCase() : ''}</span>
+              { first.toLowerCase() }<span style={{ color: 'var(--accent)' }}>{ last ? last.toLowerCase() : '' }</span>
             </span>
           </a>
 
@@ -124,7 +123,7 @@ export function Navbar({ hero }: { hero?: HeroData | null }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             {/* WhatsApp */}
             <a
-              href={getWaLink(lang)}
+              href={getWaLink(contact?.phone, lang)}
               target="_blank"
               rel="noopener noreferrer"
               aria-label={lang === 'en' ? 'Chat on WhatsApp' : 'Chat di WhatsApp'}
@@ -261,7 +260,7 @@ export function Navbar({ hero }: { hero?: HeroData | null }) {
               </a>
             ))}
             <a
-              href={getWaLink(lang)}
+              href={getWaLink(contact?.phone, lang)}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setMobileOpen(false)}
