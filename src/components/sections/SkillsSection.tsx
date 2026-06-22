@@ -39,6 +39,7 @@ function SkillCard({ skill, index }: { skill: Skill; index: number }) {
       transition={{ delay: index * 0.05, duration: 0.4 }}
       style={{
         background: 'var(--surface)',
+        border: '1px solid var(--border)',
         borderRadius: '14px',
         padding: '20px',
         display: 'flex',
