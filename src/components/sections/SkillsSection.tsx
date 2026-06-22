@@ -23,8 +23,7 @@ const DEFAULT_SKILLS: Skill[] = [
 function SkillCard({ skill, index }: { skill: Skill; index: number }) {
   const iconName = skill.icon?.toLowerCase().replace(/[\s/.]/g, '') || ''
 
-  // Icon yang punya warna hitam/gelap perlu filter di dark mode
-  const darkModeIcons = ['github', 'nextjs', 'express', 'prisma', 'vercel', 'figma', 'flask', 'dbeaver']
+  const darkModeIcons = ['github', 'nextjs', 'express', 'prisma', 'vercel', 'figma', 'flask', 'dbeaver', 'java', 'postgresql']
   const needsFilter = darkModeIcons.includes(iconName)
 
   const iconUrl = iconName
@@ -65,15 +64,15 @@ function SkillCard({ skill, index }: { skill: Skill; index: number }) {
         transition: 'var(--transition)'
       }}>
         {iconUrl ? (
-          <img
-            src={iconUrl}
-            alt={skill.name}
-            width={36} height={36}
-            style={{
-              objectFit: 'contain',
-              filter: needsFilter ? 'var(--skill-icon-filter)' : 'none',
-            }}
-            onError={(e) => {
+           <img
+             src={iconUrl}
+             alt={skill.name}
+             width={36} height={36}
+             style={{
+               objectFit: 'contain',
+               filter: needsFilter ? 'var(--skill-icon-filter)' : 'none',
+             }}
+             onError={(e) => {
               const target = e.currentTarget
               if (!target.src.includes('-plain')) {
                 target.src = `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${iconName}/${iconName}-plain.svg`
