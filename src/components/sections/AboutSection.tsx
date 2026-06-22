@@ -32,7 +32,7 @@ function LanyardCard({ image, name }: { image?: string | null; name: string }) {
   return (
     <div style={{
       position: 'relative',
-      width: 280,
+      width: 240,
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -42,26 +42,26 @@ function LanyardCard({ image, name }: { image?: string | null; name: string }) {
     }}>
       {/* Pin anchor */}
       <div style={{
-        width: 12, height: 12, borderRadius: '50%',
+        width: 10, height: 10, borderRadius: '50%',
         background: '#a1a1aa',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.8)',
+        boxShadow: '0 1px 4px rgba(0,0,0,0.8)',
         flexShrink: 0, zIndex: 4, position: 'relative',
       }} />
 
       {/* Tali SVG */}
       <svg style={{
-        position: 'absolute', top: 6, left: '50%',
+        position: 'absolute', top: 5, left: '50%',
         transform: 'translateX(-50%)',
         overflow: 'visible', pointerEvents: 'none', zIndex: 3,
         width: 2, height: 2,
       }}>
         <motion.path
           style={{ d: stringD }}
-          fill="none" stroke="#27272a" strokeWidth="6" strokeLinecap="round"
+          fill="none" stroke="#27272a" strokeWidth="5" strokeLinecap="round"
         />
       </svg>
 
-      {/* Card Container */}
+      {/* Card */}
       <motion.div
         drag
         dragMomentum={false}
@@ -69,6 +69,7 @@ function LanyardCard({ image, name }: { image?: string | null; name: string }) {
         _dragX={x}
         _dragY={y}
         onDragEnd={() => {
+          // Snap balik ke 0,0 via spring
           x.set(0)
           y.set(0)
         }}
@@ -76,7 +77,7 @@ function LanyardCard({ image, name }: { image?: string | null; name: string }) {
           x: springX,
           y: springY,
           rotateZ,
-          marginTop: 8,
+          marginTop: 4,
           cursor: 'grab',
           zIndex: 5,
           touchAction: 'none',
@@ -84,121 +85,39 @@ function LanyardCard({ image, name }: { image?: string | null; name: string }) {
         whileDrag={{ scale: 1.02, cursor: 'grabbing' }}
       >
         {/* D-ring */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: -3, position: 'relative', zIndex: 2 }}>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: -2, position: 'relative', zIndex: 2 }}>
           <div style={{
-            width: 28, height: 22,
-            borderTop: '5px solid #27272a',
-            borderLeft: '5px solid #27272a',
-            borderRight: '5px solid #27272a',
-            borderRadius: '14px 14px 0 0',
+            width: 22, height: 18,
+            border: '4px solid #27272a',
+            borderRadius: '10px 10px 0 0',
+            borderBottom: 'none',
           }} />
         </div>
 
-        {/* ID Card */}
+        {/* Foto — pointer-events: none pada img agar drag tidak terblokir */}
         <div style={{
-          width: 260, height: 360,
-          borderRadius: '20px', overflow: 'hidden',
-          background: 'linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%)',
-          boxShadow: '0 25px 80px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.1)',
-          border: '1px solid rgba(255,255,255,0.08)',
+          width: 210, aspectRatio: '3/4',
+          borderRadius: '16px', overflow: 'hidden',
+          background: '#18181b',
+          boxShadow: '0 20px 60px rgba(0,0,0,0.8)',
           pointerEvents: 'none',
-          display: 'flex',
-          flexDirection: 'column',
-          position: 'relative',
         }}>
-          {/* Card Header - Blue gradient */}
-          <div style={{
-            height: 100,
-            background: 'linear-gradient(135deg, #3b82f6 0%, #1e40af 100%)',
-            position: 'relative',
-            overflow: 'hidden',
-          }}>
+          {image ? (
+            <Image
+              src={image} alt={name} width={210} height={280}
+              draggable={false}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', pointerEvents: 'none' }}
+            />
+          ) : (
             <div style={{
-              position: 'absolute',
-              top: 12,
-              left: 16,
-              display: 'flex',
-              gap: 6,
-            }}>
-              <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#ef4444' }} />
-              <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#eab308' }} />
-              <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#22c55e' }} />
-            </div>
-          </div>
-
-          {/* Photo Section */}
-          <div style={{
-            display: 'flex',
-            gap: 12,
-            padding: 16,
-            flex: 1,
-          }}>
-            {/* Main Photo */}
-            <div style={{
-              width: 100, height: 140,
-              borderRadius: '12px', overflow: 'hidden',
-              background: '#18181b',
-              border: '2px solid rgba(255,255,255,0.1)',
-              flexShrink: 0,
-            }}>
-              {image ? (
-                <Image
-                  src={image} alt={name} width={100} height={140}
-                  draggable={false}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', pointerEvents: 'none' }}
-                />
-              ) : (
-                <div style={{
-                  width: '100%', height: '100%',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 48, fontWeight: 800, color: 'var(--accent)',
-                  fontFamily: 'Outfit, sans-serif',
-                  background: 'linear-gradient(160deg, #18181b, #09090b)',
-                  pointerEvents: 'none',
-                }}>H</div>
-              )}
-            </div>
-
-            {/* Info Section */}
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              flex: 1,
-              color: '#e4e4e7',
-              fontSize: 12,
-            }}>
-              <div>
-                <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 2, color: '#f1f5f9' }}>Developer</div>
-                <div style={{ fontSize: 10, color: '#a1a1aa' }}>Full-Stack</div>
-              </div>
-              <div style={{ fontSize: 10, color: '#a1a1aa', fontFamily: 'monospace' }}>ID: DEV2024001</div>
-            </div>
-          </div>
-
-          {/* Stats Section */}
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-around',
-            padding: '12px 16px',
-            borderTop: '1px solid rgba(255,255,255,0.08)',
-            backgroundColor: 'rgba(0,0,0,0.3)',
-          }}>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ color: '#14b8a6', fontSize: 16, fontWeight: 800 }}>3+</div>
-              <div style={{ fontSize: 9, color: '#a1a1aa', textTransform: 'uppercase', letterSpacing: '0.5px', marginTop: 2 }}>Years</div>
-            </div>
-            <div style={{ borderLeft: '1px solid rgba(255,255,255,0.08)' }} />
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ color: '#14b8a6', fontSize: 16, fontWeight: 800 }}>20+</div>
-              <div style={{ fontSize: 9, color: '#a1a1aa', textTransform: 'uppercase', letterSpacing: '0.5px', marginTop: 2 }}>Projects</div>
-            </div>
-            <div style={{ borderLeft: '1px solid rgba(255,255,255,0.08)' }} />
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ color: '#14b8a6', fontSize: 16, fontWeight: 800 }}>10+</div>
-              <div style={{ fontSize: 9, color: '#a1a1aa', textTransform: 'uppercase', letterSpacing: '0.5px', marginTop: 2 }}>Clients</div>
-            </div>
-          </div>
+              width: '100%', height: '100%', minHeight: 280,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 64, fontWeight: 800, color: 'var(--accent)',
+              fontFamily: 'Outfit, sans-serif',
+              background: 'linear-gradient(160deg, #18181b, #09090b)',
+              pointerEvents: 'none',
+            }}>H</div>
+          )}
         </div>
       </motion.div>
     </div>
