@@ -27,74 +27,63 @@ const DEFAULT_HERO: HeroData = {
   badge_en: 'Available for Freelance', badge_id: 'Tersedia untuk Freelance',
 }
 
-// ── Dribbble Illustration ────────────────────────────
+// ── Laptop + Coffee illustration ────────────────────────────
 function HeroIllustration() {
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.65 }}
-      style={{
-        position: 'relative',
-        width: 340,
-        height: 380,
-        zIndex: 1,
-        borderRadius: 12,
-        overflow: 'hidden',
-      }}
-    >
-      <img
-        src="https://cdn.dribbble.com/users/7584522/screenshots/18065825/media/8c08b4d0e7d6b3a9f2c1e5d4a6b9c3f1.png"
-        alt="Computer Neon Sign Animation"
-        style={{
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          display: 'block',
-        }}
-      />
-      {/* Floating badges */}
-      <motion.div
-        animate={{ y: [0, -8, 0], x: [0, 4, 0] }}
-        transition={{ repeat: Infinity, duration: 5, ease: 'easeInOut', delay: 1 }}
-        style={{
-          position: 'absolute',
-          top: 20,
-          right: 10,
-          background: 'rgba(20,184,166,0.15)',
-          backdropFilter: 'blur(8px)',
-          border: '1px solid rgba(20,184,166,0.3)',
-          borderRadius: 10,
-          padding: '6px 12px',
-          fontSize: 12,
-          color: '#14b8a6',
-          fontFamily: 'monospace',
-          fontWeight: 600,
-          zIndex: 3,
-        }}
-      >
+    <div style={{ position: 'relative', width: 340, height: 380, zIndex: 1 }}>
+      <div style={{ position: 'absolute', width: 220, height: 220, borderRadius: '50%', background: 'radial-gradient(circle, rgba(20,184,166,0.18) 0%, transparent 70%)', top: '10%', left: '10%', filter: 'blur(32px)', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', width: 160, height: 160, borderRadius: '50%', background: 'radial-gradient(circle, rgba(244,63,94,0.12) 0%, transparent 70%)', bottom: '5%', right: '5%', filter: 'blur(28px)', pointerEvents: 'none' }} />
+
+      {/* Laptop */}
+      <motion.div animate={{ y: [0, -10, 0] }} transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
+        style={{ position: 'absolute', top: 60, left: 30, width: 280 }}>
+        <div style={{ width: 280, height: 180, background: 'linear-gradient(135deg, #111827 0%, #1f2937 100%)', borderRadius: '12px 12px 0 0', border: '2px solid #374151', overflow: 'hidden', boxShadow: '0 20px 60px rgba(0,0,0,0.5)' }}>
+          <div style={{ padding: '14px 16px', height: '100%' }}>
+            <div style={{ display: 'flex', gap: 6, marginBottom: 14 }}>
+              <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#f43f5e' }} />
+              <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#eab308' }} />
+              <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#22c55e' }} />
+            </div>
+            {[{ w: '60%', color: '#14b8a6' }, { w: '80%', color: '#9ca3af' }, { w: '45%', color: '#f43f5e' }, { w: '70%', color: '#9ca3af' }, { w: '55%', color: '#14b8a6' }, { w: '40%', color: '#9ca3af' }].map((line, i) => (
+              <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 0.7, x: 0 }} transition={{ delay: 0.5 + i * 0.12, duration: 0.4 }}
+                style={{ height: 8, borderRadius: 4, background: line.color, width: line.w, marginBottom: 10 }} />
+            ))}
+            <motion.div animate={{ opacity: [1, 0, 1] }} transition={{ repeat: Infinity, duration: 1 }}
+              style={{ width: 8, height: 14, background: '#14b8a6', borderRadius: 2 }} />
+          </div>
+        </div>
+        <div style={{ width: 280, height: 6, background: '#374151', borderRadius: '0 0 2px 2px' }} />
+        <div style={{ width: 300, height: 16, marginLeft: -10, background: 'linear-gradient(180deg, #1f2937 0%, #111827 100%)', borderRadius: '0 0 12px 12px', border: '2px solid #374151', borderTop: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ width: 60, height: 4, background: '#374151', borderRadius: 4 }} />
+        </div>
+      </motion.div>
+
+      {/* Coffee */}
+      <motion.div animate={{ y: [0, -7, 0], rotate: [-2, 2, -2] }} transition={{ repeat: Infinity, duration: 3.5, ease: 'easeInOut', delay: 0.5 }}
+        style={{ position: 'absolute', bottom: 28, right: 20, zIndex: 2 }}>
+        {[0, 1, 2].map(i => (
+          <motion.div key={i} animate={{ y: [0, -18, 0], opacity: [0.6, 0, 0.6] }} transition={{ repeat: Infinity, duration: 1.8, delay: i * 0.4, ease: 'easeInOut' }}
+            style={{ position: 'absolute', top: -18, left: 14 + i * 10, width: 3, height: 14, background: 'linear-gradient(to top, rgba(20,184,166,0.6), transparent)', borderRadius: 4 }} />
+        ))}
+        <div style={{ width: 52, height: 48, background: 'linear-gradient(135deg, #1f2937, #111827)', borderRadius: '6px 6px 14px 14px', border: '2px solid #374151', position: 'relative', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', paddingTop: 6, boxShadow: '0 8px 20px rgba(0,0,0,0.4)' }}>
+          <div style={{ width: 36, height: 8, background: '#7c3f00', borderRadius: '50%', opacity: 0.9 }} />
+          <div style={{ position: 'absolute', right: -14, top: 10, width: 14, height: 24, border: '2px solid #374151', borderLeft: 'none', borderRadius: '0 10px 10px 0' }} />
+        </div>
+        <div style={{ width: 66, height: 8, marginLeft: -7, background: '#1f2937', borderRadius: '0 0 8px 8px', border: '1px solid #374151', borderTop: 'none' }} />
+      </motion.div>
+
+      {/* Badge </> */}
+      <motion.div animate={{ y: [0, -8, 0], x: [0, 4, 0] }} transition={{ repeat: Infinity, duration: 5, ease: 'easeInOut', delay: 1 }}
+        style={{ position: 'absolute', top: 20, right: 10, background: 'rgba(20,184,166,0.15)', backdropFilter: 'blur(8px)', border: '1px solid rgba(20,184,166,0.3)', borderRadius: 10, padding: '6px 12px', fontSize: 12, color: '#14b8a6', fontFamily: 'monospace', fontWeight: 600, zIndex: 3 }}>
         {'</>'}
       </motion.div>
 
-      <motion.div
-        animate={{ y: [0, -6, 0], rotate: [0, 15, 0] }}
-        transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut', delay: 1.5 }}
-        style={{
-          position: 'absolute',
-          bottom: 80,
-          left: 10,
-          background: 'rgba(244,63,94,0.15)',
-          backdropFilter: 'blur(8px)',
-          border: '1px solid rgba(244,63,94,0.3)',
-          borderRadius: 10,
-          padding: '6px 10px',
-          fontSize: 16,
-          zIndex: 3,
-        }}
-      >
+      {/* Badge ⚡ */}
+      <motion.div animate={{ y: [0, -6, 0], rotate: [0, 15, 0] }} transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut', delay: 1.5 }}
+        style={{ position: 'absolute', bottom: 80, left: 10, background: 'rgba(244,63,94,0.15)', backdropFilter: 'blur(8px)', border: '1px solid rgba(244,63,94,0.3)', borderRadius: 10, padding: '6px 10px', fontSize: 16, zIndex: 3 }}>
         ⚡
       </motion.div>
-    </motion.div>
+    </div>
   )
 }
 
