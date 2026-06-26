@@ -23,7 +23,7 @@ import {
   Menu,
   X
 } from 'lucide-react'
-import { useTheme } from 'next-themes'
+import { useTheme } from '@/components/Providers'
 import { ToastProvider } from '@/components/admin/Toast'
 
 const SIDEBAR_ITEMS = [
@@ -119,7 +119,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           >
             <Menu size={24} />
           </button>
-          <span style={{ fontFamily: 'Outfit', fontWeight: 800, color: 'var(--text-primary)', fontSize: '18px' }}>PortoCMS</span>
+          <span style={{ fontFamily: 'Outfit', fontWeight: 800, color: 'var(--text-primary)', fontSize: '18px' }}>Admin Panel</span>
           <div style={{ width: 24 }} />
         </header>
 
@@ -150,7 +150,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               fontWeight: '800',
               flexShrink: 0
             }}>H</div>
-            <span className="sidebar-logo-text">PortoCMS</span>
+            <span className="sidebar-logo-text">Admin Panel</span>
             
             {/* Collapse toggle (Desktop only) */}
             {!mobileOpen && (

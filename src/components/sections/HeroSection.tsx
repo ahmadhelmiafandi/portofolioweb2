@@ -2,9 +2,8 @@
 
 import { motion } from 'framer-motion'
 import { useLang } from '@/contexts/LangContext'
-import { ArrowRight, Link2, MessageCircle } from 'lucide-react'
+import { ArrowRight, Download, Link2, Mail, MessageCircle, Phone, Globe } from 'lucide-react'
 import { Github, Linkedin, Instagram, Twitter, Facebook, Youtube, Twitch, Whatsapp } from '@/components/icons/BrandIcons'
-import { Mail, Phone, Globe } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 interface HeroData {
@@ -27,67 +26,6 @@ const DEFAULT_HERO: HeroData = {
   badge_en: 'Available for Freelance', badge_id: 'Tersedia untuk Freelance',
 }
 
-// ── Laptop + Coffee illustration ────────────────────────────
-function HeroIllustration() {
-  return (
-    <div style={{ position: 'relative', width: 340, height: 380, zIndex: 1 }}>
-      <div style={{ position: 'absolute', width: 220, height: 220, borderRadius: '50%', background: 'radial-gradient(circle, rgba(20,184,166,0.18) 0%, transparent 70%)', top: '10%', left: '10%', filter: 'blur(32px)', pointerEvents: 'none' }} />
-      <div style={{ position: 'absolute', width: 160, height: 160, borderRadius: '50%', background: 'radial-gradient(circle, rgba(244,63,94,0.12) 0%, transparent 70%)', bottom: '5%', right: '5%', filter: 'blur(28px)', pointerEvents: 'none' }} />
-
-      {/* Laptop */}
-      <motion.div animate={{ y: [0, -10, 0] }} transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
-        style={{ position: 'absolute', top: 60, left: 30, width: 280 }}>
-        <div style={{ width: 280, height: 180, background: 'linear-gradient(135deg, #111827 0%, #1f2937 100%)', borderRadius: '12px 12px 0 0', border: '2px solid #374151', overflow: 'hidden', boxShadow: '0 20px 60px rgba(0,0,0,0.5)' }}>
-          <div style={{ padding: '14px 16px', height: '100%' }}>
-            <div style={{ display: 'flex', gap: 6, marginBottom: 14 }}>
-              <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#f43f5e' }} />
-              <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#eab308' }} />
-              <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#22c55e' }} />
-            </div>
-            {[{ w: '60%', color: '#14b8a6' }, { w: '80%', color: '#9ca3af' }, { w: '45%', color: '#f43f5e' }, { w: '70%', color: '#9ca3af' }, { w: '55%', color: '#14b8a6' }, { w: '40%', color: '#9ca3af' }].map((line, i) => (
-              <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 0.7, x: 0 }} transition={{ delay: 0.5 + i * 0.12, duration: 0.4 }}
-                style={{ height: 8, borderRadius: 4, background: line.color, width: line.w, marginBottom: 10 }} />
-            ))}
-            <motion.div animate={{ opacity: [1, 0, 1] }} transition={{ repeat: Infinity, duration: 1 }}
-              style={{ width: 8, height: 14, background: '#14b8a6', borderRadius: 2 }} />
-          </div>
-        </div>
-        <div style={{ width: 280, height: 6, background: '#374151', borderRadius: '0 0 2px 2px' }} />
-        <div style={{ width: 300, height: 16, marginLeft: -10, background: 'linear-gradient(180deg, #1f2937 0%, #111827 100%)', borderRadius: '0 0 12px 12px', border: '2px solid #374151', borderTop: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ width: 60, height: 4, background: '#374151', borderRadius: 4 }} />
-        </div>
-      </motion.div>
-
-      {/* Coffee */}
-      <motion.div animate={{ y: [0, -7, 0], rotate: [-2, 2, -2] }} transition={{ repeat: Infinity, duration: 3.5, ease: 'easeInOut', delay: 0.5 }}
-        style={{ position: 'absolute', bottom: 28, right: 20, zIndex: 2 }}>
-        {[0, 1, 2].map(i => (
-          <motion.div key={i} animate={{ y: [0, -18, 0], opacity: [0.6, 0, 0.6] }} transition={{ repeat: Infinity, duration: 1.8, delay: i * 0.4, ease: 'easeInOut' }}
-            style={{ position: 'absolute', top: -18, left: 14 + i * 10, width: 3, height: 14, background: 'linear-gradient(to top, rgba(20,184,166,0.6), transparent)', borderRadius: 4 }} />
-        ))}
-        <div style={{ width: 52, height: 48, background: 'linear-gradient(135deg, #1f2937, #111827)', borderRadius: '6px 6px 14px 14px', border: '2px solid #374151', position: 'relative', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', paddingTop: 6, boxShadow: '0 8px 20px rgba(0,0,0,0.4)' }}>
-          <div style={{ width: 36, height: 8, background: '#7c3f00', borderRadius: '50%', opacity: 0.9 }} />
-          <div style={{ position: 'absolute', right: -14, top: 10, width: 14, height: 24, border: '2px solid #374151', borderLeft: 'none', borderRadius: '0 10px 10px 0' }} />
-        </div>
-        <div style={{ width: 66, height: 8, marginLeft: -7, background: '#1f2937', borderRadius: '0 0 8px 8px', border: '1px solid #374151', borderTop: 'none' }} />
-      </motion.div>
-
-      {/* Badge </> */}
-      <motion.div animate={{ y: [0, -8, 0], x: [0, 4, 0] }} transition={{ repeat: Infinity, duration: 5, ease: 'easeInOut', delay: 1 }}
-        style={{ position: 'absolute', top: 20, right: 10, background: 'rgba(20,184,166,0.15)', backdropFilter: 'blur(8px)', border: '1px solid rgba(20,184,166,0.3)', borderRadius: 10, padding: '6px 12px', fontSize: 12, color: '#14b8a6', fontFamily: 'monospace', fontWeight: 600, zIndex: 3 }}>
-        {'</>'}
-      </motion.div>
-
-      {/* Badge ⚡ */}
-      <motion.div animate={{ y: [0, -6, 0], rotate: [0, 15, 0] }} transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut', delay: 1.5 }}
-        style={{ position: 'absolute', bottom: 80, left: 10, background: 'rgba(244,63,94,0.15)', backdropFilter: 'blur(8px)', border: '1px solid rgba(244,63,94,0.3)', borderRadius: 10, padding: '6px 10px', fontSize: 16, zIndex: 3 }}>
-        ⚡
-      </motion.div>
-    </div>
-  )
-}
-
-// ── Typewriter ───────────────────────────────────────────────
 function TypewriterText({ text, speed = 35, delay = 0 }: { text: string; speed?: number; delay?: number }) {
   const [displayed, setDisplayed] = useState('')
   const [started, setStarted] = useState(false)
@@ -121,7 +59,7 @@ function TypewriterText({ text, speed = 35, delay = 0 }: { text: string; speed?:
         <motion.span
           animate={{ opacity: [1, 0, 1] }}
           transition={{ repeat: Infinity, duration: 0.8 }}
-          style={{ display: 'inline-block', width: 2, height: '1em', background: 'var(--accent)', marginLeft: 2, verticalAlign: 'middle', borderRadius: 1 }}
+          style={{ display: 'inline-block', width: 2, height: '1em', background: '#00E5FF', marginLeft: 2, verticalAlign: 'middle', borderRadius: 1 }}
         />
       )}
     </span>
@@ -144,9 +82,16 @@ const formatLink = (url: string | null | undefined) => {
 export function HeroSection({ data, socials }: { data?: HeroData | null; socials?: Social[] | null }) {
   const { lang } = useLang()
   const hero = data || DEFAULT_HERO
-  const name     = lang === 'en' ? hero.title_en    : hero.title_id
-  const role     = lang === 'en' ? hero.subtitle_en : hero.subtitle_id
-  const badge    = lang === 'en' ? hero.badge_en    : hero.badge_id
+  const name = lang === 'en' ? hero.title_en : hero.title_id
+  const role = lang === 'en' ? hero.subtitle_en : hero.subtitle_id
+  const badge = lang === 'en' ? hero.badge_en : hero.badge_id
+  const imageUrl = hero.image || '/uploads/hero-cutout.png'
+  const titleWords = name.trim().split(/\s+/)
+  // For 3+ word names: first two words on line 1, rest on line 2
+  // For 2 word names: first on line 1, second on line 2
+  const splitAt = titleWords.length >= 3 ? 2 : 1
+  const firstTitle = titleWords.slice(0, splitAt).join(' ') || name
+  const secondTitle = titleWords.slice(splitAt).join(' ') || ''
 
   const heroSocials = (socials && socials.length > 0) ? socials.map(s => {
     const iconKey = (s.icon || s.name || '').toLowerCase()
@@ -161,166 +106,792 @@ export function HeroSection({ data, socials }: { data?: HeroData | null; socials
   return (
     <>
       <style>{`
-        .hero-section {
-          min-height: 100vh;
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&display=swap');
+
+        .hero-editorial {
+          --cyan: #00E5FF;
+          --cyan-dim: rgba(0, 229, 255, 0.12);
+          --cyan-glow: rgba(0, 229, 255, 0.25);
+
+          position: relative;
+          width: 100%;
+          height: 100vh;
+          min-height: 700px;
+          overflow: hidden;
+          background: var(--bg);
+          display: flex;
+          align-items: flex-end;
+        }
+
+        /* ── Subtle grid background ── */
+        .hero-editorial::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background-image:
+            linear-gradient(var(--border) 1px, transparent 1px),
+            linear-gradient(90deg, var(--border) 1px, transparent 1px);
+          background-size: 72px 72px;
+          opacity: 0.2;
+          z-index: 0;
+          pointer-events: none;
+          mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 20%, transparent 90%);
+          -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 20%, transparent 90%);
+        }
+
+        /* ── Ambient top-left glow ── */
+        .hero-ambient-glow {
+          position: absolute;
+          left: -8%;
+          top: 10%;
+          width: 500px;
+          height: 500px;
+          background: radial-gradient(circle, rgba(0, 229, 255, 0.06) 0%, transparent 70%);
+          z-index: 0;
+          pointer-events: none;
+          filter: blur(80px);
+        }
+
+        /* ── Noise texture overlay ── */
+        .hero-noise {
+          position: absolute;
+          inset: 0;
+          opacity: 0.03;
+          z-index: 1;
+          pointer-events: none;
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E");
+        }
+
+        /* ── Main composition wrapper ── */
+        .hero-composition {
+          position: relative;
+          z-index: 2;
+          width: 100%;
+          height: 100%;
+          max-width: 1440px;
+          margin: 0 auto;
+          padding: 0 clamp(24px, 5vw, 80px);
+          display: flex;
+          align-items: flex-end;
+          padding-bottom: clamp(60px, 8vh, 120px);
+        }
+
+        /* ── Oversized Title Block ── */
+        .hero-title-block {
+          position: relative;
+          z-index: 10;
+          width: clamp(600px, 70vw, 1100px);
+          padding-bottom: 20px;
+        }
+
+        /* Kicker / subtitle badge */
+        .hero-kicker-row {
           display: flex;
           align-items: center;
-          position: relative;
-          overflow: hidden;
-          padding-top: var(--navbar-height);
-          background: var(--bg);
+          gap: 14px;
+          margin-bottom: clamp(16px, 2vh, 28px);
         }
-        .hero-inner {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 80px;
-          align-items: center;
-          width: 100%;
-          padding: 80px 24px 64px;
-          max-width: 1200px;
-          margin: 0 auto;
+
+        .hero-kicker-dot {
+          width: 8px;
+          height: 8px;
+          background: var(--cyan);
+          border-radius: 50%;
+          box-shadow: 0 0 12px var(--cyan), 0 0 24px rgba(0,229,255,0.3);
+          animation: hero-pulse-dot 2s ease-in-out infinite;
         }
-        .hero-label {
-          font-size: 12px;
+
+        @keyframes hero-pulse-dot {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.5; transform: scale(0.85); }
+        }
+
+        .hero-kicker-text {
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: clamp(11px, 0.85vw, 13px);
           font-weight: 700;
-          letter-spacing: 0.15em;
+          letter-spacing: 0.18em;
           text-transform: uppercase;
-          color: var(--text-muted);
-          margin-bottom: 12px;
-          font-family: 'Outfit', sans-serif;
+          color: var(--cyan);
         }
-        .hero-name {
-          font-size: clamp(36px, 4.5vw, 60px);
-          font-weight: 800;
+
+        .hero-kicker-line {
+          flex-grow: 1;
+          max-width: 120px;
+          height: 1px;
+          background: linear-gradient(90deg, rgba(0,229,255,0.5), transparent);
+        }
+
+        /* Giant name */
+        .hero-giant-name {
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: clamp(80px, 11vw, 220px);
+          font-weight: 900;
+          line-height: 0.88;
+          letter-spacing: -0.04em;
+          text-transform: uppercase;
           color: var(--text-primary);
-          font-family: 'Outfit', sans-serif;
-          letter-spacing: -0.03em;
-          line-height: 1.1;
-          margin-bottom: 8px;
+          margin: 0;
+          position: relative;
         }
-        .hero-role {
-          font-size: clamp(16px, 2vw, 20px);
-          color: var(--text-secondary);
-          font-weight: 400;
-          margin-bottom: 24px;
-          font-family: 'Outfit', sans-serif;
-          line-height: 1.5;
+
+        .hero-name-first {
+          display: block;
+          position: relative;
+          z-index: 12;
         }
-        .hero-desc {
-          font-size: 15px;
-          color: var(--text-muted);
-          line-height: 1.7;
+
+        .hero-name-second-wrap {
+          display: inline-block;
+          position: relative;
+        }
+
+        /* Brush underline under second name */
+        .hero-brush-underline {
+          position: absolute;
+          bottom: -4px;
+          left: -2%;
+          width: 108%;
+          height: clamp(10px, 1.2vw, 22px);
+          z-index: 11;
+          pointer-events: none;
+        }
+
+        .hero-brush-underline path {
+          stroke: var(--cyan);
+          fill: none;
+        }
+
+        /* ── Role & Description ── */
+        .hero-meta {
+          margin-top: clamp(24px, 3vh, 40px);
           max-width: 480px;
-          margin-bottom: 32px;
+          position: relative;
+          z-index: 15;
         }
-        .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
-        .hero-right {
+
+        .hero-role-tag {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 6px 16px;
+          background: var(--cyan-dim);
+          border: 1px solid rgba(0,229,255,0.2);
+          border-radius: 999px;
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: 12px;
+          font-weight: 600;
+          color: var(--cyan);
+          letter-spacing: 0.04em;
+          margin-bottom: 16px;
+        }
+
+        .hero-desc-block {
+          border-left: 2px solid rgba(0,229,255,0.4);
+          padding-left: 18px;
+        }
+
+        .hero-desc-text {
+          font-family: 'Outfit', 'Space Grotesk', sans-serif;
+          color: var(--text-secondary);
+          font-size: clamp(13px, 1vw, 15px);
+          font-weight: 400;
+          line-height: 1.7;
+          margin: 0;
+        }
+
+        /* ── Action Buttons ── */
+        .hero-actions {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          flex-wrap: wrap;
+          margin-top: clamp(24px, 3vh, 36px);
+          position: relative;
+          z-index: 15;
+        }
+
+        .hero-btn-primary {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          padding: 13px 30px;
+          background: var(--cyan);
+          color: #000;
+          border: none;
+          border-radius: 999px;
+          font-family: 'Space Grotesk', sans-serif;
+          font-weight: 700;
+          font-size: 14px;
+          letter-spacing: 0.02em;
+          cursor: pointer;
+          text-decoration: none;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: 0 4px 20px rgba(0,229,255,0.25), 0 0 40px rgba(0,229,255,0.1);
+        }
+
+        .hero-btn-primary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 30px rgba(0,229,255,0.4), 0 0 60px rgba(0,229,255,0.15);
+          background: #33EBFF;
+        }
+
+        .hero-btn-secondary {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          padding: 12px 28px;
+          background: transparent;
+          color: var(--text-primary);
+          border: 1px solid rgba(255,255,255,0.15);
+          border-radius: 999px;
+          font-family: 'Space Grotesk', sans-serif;
+          font-weight: 600;
+          font-size: 14px;
+          cursor: pointer;
+          text-decoration: none;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme='light'] .hero-btn-secondary {
+          border-color: rgba(0,0,0,0.15);
+          color: var(--text-primary);
+        }
+
+        .hero-btn-secondary:hover {
+          transform: translateY(-2px);
+          border-color: var(--cyan);
+          color: var(--cyan);
+          background: var(--cyan-dim);
+        }
+
+        /* ── Social Links ── */
+        .hero-socials {
+          display: flex;
+          gap: 10px;
+          margin-top: 24px;
+          position: relative;
+          z-index: 15;
+        }
+
+        .hero-social-link {
+          width: 42px;
+          height: 42px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          color: var(--text-muted);
+          text-decoration: none;
+          border: 1px solid var(--border);
+          border-radius: 12px;
+          background: rgba(255,255,255,0.02);
+          backdrop-filter: blur(8px);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hero-social-link:hover {
+          color: var(--cyan);
+          border-color: var(--cyan);
+          transform: translateY(-3px);
+          background: var(--cyan-dim);
+          box-shadow: 0 4px 16px rgba(0,229,255,0.15);
+        }
+
+        /* ── Portrait (Absolute Positioned, Overlapping) ── */
+        .hero-portrait-container {
+          position: absolute;
+          bottom: 0;
+          right: 18%;
+          height: 82vh;
+          z-index: 20;
+          pointer-events: none;
+          display: flex;
+          align-items: flex-end;
+        }
+
+        .hero-portrait-img {
+          height: 100%;
+          width: auto;
+          object-fit: contain;
+          object-position: bottom center;
+          filter: drop-shadow(0 0 60px rgba(0,0,0,0.3));
+          user-select: none;
+          pointer-events: none;
+          mask-image: radial-gradient(ellipse at 50% 55%, black 25%, transparent 75%);
+          -webkit-mask-image: radial-gradient(ellipse at 50% 55%, black 25%, transparent 75%);
+        }
+
+        /* ── Cyan glow behind portrait ── */
+        .hero-portrait-glow {
+          position: absolute;
+          bottom: 15%;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 400px;
+          height: 500px;
+          background: radial-gradient(ellipse, rgba(0,229,255,0.22) 0%, rgba(0,229,255,0.08) 40%, transparent 70%);
+          filter: blur(80px);
+          z-index: -1;
+          pointer-events: none;
+        }
+
+        /* ── Floating Glass Stats Card ── */
+        .hero-stats-card {
+          position: absolute;
+          bottom: 35%;
+          right: -60px;
+          z-index: 25;
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          padding: 14px 22px;
+          background: rgba(10, 10, 10, 0.6);
+          border: 1px solid rgba(0, 229, 255, 0.2);
+          border-radius: 20px;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 40px rgba(0,229,255,0.08);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          pointer-events: auto;
+          cursor: default;
+          transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+          white-space: nowrap;
+        }
+
+        [data-theme='light'] .hero-stats-card {
+          background: rgba(255, 255, 255, 0.85);
+          border: 1px solid rgba(0, 0, 0, 0.08);
+          box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+        }
+
+        .hero-stats-card:hover {
+          transform: translateY(-6px) scale(1.03);
+        }
+
+        .hero-stats-info {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .hero-status-dot {
+          width: 8px;
+          height: 8px;
+          background: #10B981;
+          border-radius: 50%;
+          box-shadow: 0 0 10px #10B981, 0 0 20px rgba(16, 185, 129, 0.4);
+          animation: hero-pulse-dot 2s ease-in-out infinite;
+        }
+
+        .hero-stats-number {
+          font-family: 'Space Grotesk', sans-serif;
+          font-weight: 700;
+          font-size: 14px;
+          color: var(--text-primary);
+          line-height: 1.2;
+          letter-spacing: -0.01em;
+        }
+
+        /* ── Doodle arrow near portrait head ── */
+        .hero-doodle-arrow {
+          position: absolute;
+          top: 12%;
+          right: -30px;
+          width: 48px;
+          height: 48px;
+          color: var(--cyan);
+          z-index: 26;
+          pointer-events: none;
+          opacity: 0.75;
+        }
+
+        /* ── Decorative corner markers ── */
+        .hero-corner-mark {
+          position: absolute;
+          width: 40px;
+          height: 40px;
+          border-color: rgba(0,229,255,0.2);
+          border-style: solid;
+          z-index: 5;
+          pointer-events: none;
+        }
+
+        .hero-corner-tl {
+          top: clamp(80px, 12vh, 140px);
+          left: clamp(24px, 5vw, 80px);
+          border-width: 1px 0 0 1px;
+        }
+
+        .hero-corner-br {
+          bottom: clamp(24px, 4vh, 60px);
+          right: clamp(24px, 5vw, 80px);
+          border-width: 0 1px 1px 0;
+        }
+
+        /* ── Vertical side text (scroll indicator) ── */
+        .hero-side-text {
+          position: absolute;
+          right: clamp(24px, 3vw, 48px);
+          bottom: clamp(60px, 10vh, 140px);
+          z-index: 15;
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 16px;
+          gap: 12px;
         }
-        @media (max-width: 900px) {
-          .hero-inner {
-            grid-template-columns: 1fr;
-            text-align: center;
-            padding: 64px 20px 80px;
-            gap: 48px;
+
+        .hero-side-label {
+          writing-mode: vertical-rl;
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: 0.15em;
+          text-transform: uppercase;
+          color: var(--text-muted);
+        }
+
+        .hero-side-line {
+          width: 1px;
+          height: 50px;
+          background: linear-gradient(180deg, var(--cyan), transparent);
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 1200px) {
+          .hero-portrait-container {
+            right: 10%;
+            height: 70vh;
           }
-          .hero-content-col { order: 2; }
-          .hero-right        { order: 1; }
-          .hero-name         { font-size: clamp(28px, 8vw, 44px); }
-          .hero-desc         { margin: 0 auto 32px; }
-          .hero-btns         { justify-content: center; }
-          .hero-socials      { justify-content: center; }
+
+          .hero-giant-name {
+            font-size: clamp(60px, 9vw, 140px);
+          }
+
+          .hero-title-block {
+            width: clamp(400px, 65vw, 800px);
+          }
         }
-        @media (max-width: 480px) {
-          .hero-btns { flex-direction: column; align-items: center; }
-          .hero-btns a, .hero-btns span { width: 100%; max-width: 280px; justify-content: center; }
+
+        @media (max-width: 1024px) {
+          .hero-editorial {
+            height: auto;
+            min-height: auto;
+            align-items: flex-start;
+            padding-top: calc(var(--navbar-height) + 40px);
+            padding-bottom: 0;
+          }
+
+          .hero-composition {
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 0;
+            gap: 0;
+          }
+
+          .hero-title-block {
+            width: 100%;
+            text-align: center;
+            padding-bottom: 0;
+          }
+
+          .hero-kicker-row {
+            justify-content: center;
+          }
+
+          .hero-giant-name {
+            font-size: clamp(48px, 11vw, 100px);
+            text-align: center;
+          }
+
+          .hero-meta {
+            max-width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+
+          .hero-desc-block {
+            border-left: none;
+            padding-left: 0;
+            text-align: center;
+          }
+
+          .hero-actions {
+            justify-content: center;
+          }
+
+          .hero-socials {
+            justify-content: center;
+          }
+
+          .hero-portrait-container {
+            position: relative;
+            right: auto;
+            bottom: auto;
+            height: clamp(350px, 55vh, 500px);
+            width: 100%;
+            justify-content: center;
+            margin-top: 32px;
+          }
+
+          .hero-portrait-glow {
+            bottom: 10%;
+            width: 300px;
+            height: 350px;
+          }
+
+          .hero-stats-card {
+            bottom: 20%;
+            right: 50%;
+            transform: translateX(80%);
+          }
+
+          .hero-stats-card:hover {
+            transform: translateX(80%) translateY(-6px) scale(1.03);
+          }
+
+          .hero-doodle-arrow {
+            display: none;
+          }
+
+          .hero-side-text {
+            display: none;
+          }
+
+          .hero-corner-mark {
+            display: none;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .hero-editorial {
+            padding-top: calc(var(--navbar-height) + 20px);
+          }
+
+          .hero-giant-name {
+            font-size: clamp(40px, 14vw, 72px);
+          }
+
+          .hero-portrait-container {
+            height: clamp(300px, 45vh, 400px);
+          }
+
+          .hero-actions {
+            flex-direction: column;
+            align-items: stretch;
+            width: 100%;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+          }
+
+          .hero-btn-primary,
+          .hero-btn-secondary {
+            justify-content: center;
+            width: 100%;
+          }
+
+          .hero-stats-card {
+            bottom: 15%;
+            right: 50%;
+            transform: translateX(50%);
+            padding: 10px 16px;
+            gap: 10px;
+          }
+
+          .hero-stats-card:hover {
+            transform: translateX(50%) translateY(-6px) scale(1.03);
+          }
         }
       `}</style>
 
-      <section id="home" className="hero-section" aria-label="Hero">
-        <div className="grid-pattern" style={{ position: 'absolute', inset: 0, opacity: 1, zIndex: 0 }} />
-        <div style={{ position: 'absolute', width: 600, height: 600, background: 'radial-gradient(circle, rgba(20,184,166,0.1) 0%, transparent 65%)', top: '-15%', left: '-10%', zIndex: 0, borderRadius: '50%' }} />
-        <div style={{ position: 'absolute', width: 500, height: 500, background: 'radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 65%)', bottom: '-10%', right: '-8%', zIndex: 0, borderRadius: '50%' }} />
+      <section id="home" className="hero-editorial" aria-label="Hero">
+        {/* Decorative elements */}
+        <div className="hero-ambient-glow" />
+        <div className="hero-noise" />
+        <div className="hero-corner-mark hero-corner-tl" />
+        <div className="hero-corner-mark hero-corner-br" />
 
-        <div className="hero-inner" style={{ position: 'relative', zIndex: 1 }}>
+        {/* Scroll indicator on right side */}
+        <motion.div
+          className="hero-side-text"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5, duration: 0.8 }}
+        >
+          <span className="hero-side-label">{lang === 'en' ? 'Scroll' : 'Gulir'}</span>
+          <motion.div
+            className="hero-side-line"
+            animate={{ scaleY: [1, 0.4, 1] }}
+            transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
+            style={{ transformOrigin: 'top' }}
+          />
+        </motion.div>
 
-          {/* LEFT */}
-          <motion.div className="hero-content-col"
-            initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }}>
+        {/* Portrait – absolutely positioned to overlap the text */}
+        <motion.div
+          className="hero-portrait-container"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+        >
+          {/* Cyan glow behind portrait body */}
+          <div className="hero-portrait-glow" />
 
-            {/* Badge */}
-            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
-              <span className="badge" style={{ marginBottom: 20, display: 'inline-flex' }}>
-                <span style={{ width: 7, height: 7, background: '#22c55e', borderRadius: '50%', flexShrink: 0, boxShadow: '0 0 6px #22c55e' }} />
-                {badge}
+          {/* The portrait image */}
+          <img
+            className="hero-portrait-img"
+            src={imageUrl}
+            alt={name}
+            loading="eager"
+            draggable={false}
+          />
+
+          {/* Doodle arrow near head */}
+          <motion.svg
+            className="hero-doodle-arrow"
+            viewBox="0 0 60 60"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 0.75, scale: 1 }}
+            transition={{ delay: 1.2, duration: 0.5 }}
+          >
+            <path d="M50 15 C 32 10, 20 22, 22 36" />
+            <path d="M14 30 L22 36 L25 26" />
+          </motion.svg>
+
+          {/* Floating Glass Stats Card near waist */}
+          <motion.div
+            className="hero-stats-card"
+            initial={{ opacity: 0, scale: 0.8, y: 20 }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              y: [0, -10, 0]
+            }}
+            transition={{
+              opacity: { duration: 0.6, delay: 0.8 },
+              scale: { duration: 0.6, delay: 0.8 },
+              y: {
+                repeat: Infinity,
+                duration: 4.5,
+                ease: 'easeInOut',
+                delay: 1.4
+              }
+            }}
+          >
+            <div className="hero-stats-info">
+              <div className="hero-status-dot" />
+              <span className="hero-stats-number">
+                {lang === 'en' ? 'Open for Collaboration' : 'Terbuka untuk Kerja Sama'}
               </span>
+            </div>
+          </motion.div>
+        </motion.div>
+
+        {/* Main content composition */}
+        <div className="hero-composition">
+          <div className="hero-title-block">
+            {/* Kicker row */}
+            <motion.div
+              className="hero-kicker-row"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              <div className="hero-kicker-dot" />
+              <span className="hero-kicker-text">{badge}</span>
+              <div className="hero-kicker-line" />
             </motion.div>
 
-            {/* Label */}
-            <div className="hero-label">
-              {lang === 'en' ? 'HELLO, I AM' : 'HALO, SAYA'}
-            </div>
-
-            {/* Name */}
-            <motion.h1 className="hero-name"
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5 }}>
-              {name}
+            {/* Giant overlapping name */}
+            <motion.h1
+              className="hero-giant-name"
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <span className="hero-name-first">{firstTitle}</span>
+              <span className="hero-name-second-wrap">
+                {secondTitle}
+                {/* Brush underline */}
+                <svg className="hero-brush-underline" viewBox="0 0 500 20" preserveAspectRatio="none">
+                  <motion.path
+                    d="M5 12C100 8 300 2 495 10"
+                    stroke="#00E5FF"
+                    fill="none"
+                    strokeWidth="6"
+                    strokeLinecap="round"
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    animate={{ pathLength: 1, opacity: 1 }}
+                    transition={{ duration: 1, delay: 0.8, ease: 'easeOut' }}
+                  />
+                  <motion.path
+                    d="M15 16C120 11 320 7 480 14"
+                    stroke="#00E5FF"
+                    fill="none"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    style={{ opacity: 0.5 }}
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    animate={{ pathLength: 1, opacity: 0.5 }}
+                    transition={{ duration: 0.8, delay: 1.1, ease: 'easeOut' }}
+                  />
+                </svg>
+              </span>
             </motion.h1>
 
-            {/* Social icons */}
-            <motion.div className="hero-socials"
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
-              style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
-              {heroSocials.map((s) => (
-                <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label}
-                  style={{
-                    width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: '10px',
-                    color: 'var(--text-secondary)', textDecoration: 'none', transition: 'var(--transition)',
-                  }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)' }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-secondary)' }}
-                >
-                  <s.icon size={15} />
+            {/* Meta: role tag, description, CTAs, socials */}
+            <motion.div
+              className="hero-meta"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.5 }}
+            >
+              <div className="hero-role-tag">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style={{ flexShrink: 0 }}>
+                  <path d="M12 2L14.8 9.2L22 12L14.8 14.8L12 22L9.2 14.8L2 12L9.2 9.2L12 2Z" />
+                </svg>
+                {role}
+              </div>
+
+              <div className="hero-desc-block">
+                <p className="hero-desc-text">
+                  <TypewriterText
+                    text={lang === 'en'
+                      ? 'A Full-Stack Developer focused on building elegant, high-performance web applications with modern technology.'
+                      : 'Seorang Full-Stack Developer yang berfokus membuat aplikasi web modern, elegan, dan berkinerja tinggi.'}
+                    speed={30}
+                    delay={1000}
+                  />
+                </p>
+              </div>
+
+              <div className="hero-actions">
+                <a href="#projects" className="hero-btn-primary">
+                  {lang === 'en' ? hero.cta_en : hero.cta_id}
+                  <ArrowRight size={15} />
                 </a>
-              ))}
+                {hero.cv_url && (
+                  <a href={hero.cv_url} className="hero-btn-secondary" target="_blank" rel="noopener noreferrer">
+                    <Download size={15} />
+                    {lang === 'en' ? 'Download CV' : 'Unduh CV'}
+                  </a>
+                )}
+              </div>
+
+              <div className="hero-socials">
+                {heroSocials.map((s) => (
+                  <a className="hero-social-link" key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label}>
+                    <s.icon size={17} />
+                  </a>
+                ))}
+              </div>
             </motion.div>
-
-            {/* Description — typewriter effect */}
-            <motion.p className="hero-desc"
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.25 }}>
-              <TypewriterText
-                text={lang === 'en'
-                  ? 'A Full-Stack Developer focused on building elegant, high-performance web applications with modern technology.'
-                  : 'Seorang Full-Stack Developer yang berfokus pada pembuatan aplikasi web elegan dan berkinerja tinggi dengan teknologi modern.'}
-                speed={30}
-                delay={900}
-              />
-            </motion.p>
-
-            {/* CTA Buttons */}
-            <motion.div className="hero-btns"
-              initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-              <a href="#projects" className="btn-primary">
-                {lang === 'en' ? 'View My Work' : 'Lihat Karya Saya'}
-                <ArrowRight size={15} />
-              </a>
-              <a href="#contact" className="btn-secondary">
-                {lang === 'en' ? 'Contact Me' : 'Hubungi Saya'}
-              </a>
-            </motion.div>
-          </motion.div>
-
-          {/* RIGHT */}
-          <motion.div className="hero-right"
-            initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.65, delay: 0.1 }}>
-
-            <HeroIllustration />
-          </motion.div>
-
+          </div>
         </div>
       </section>
     </>

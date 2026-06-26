@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useTheme } from 'next-themes'
+import { useTheme } from '@/components/Providers'
 import { useLang } from '@/contexts/LangContext'
 import { Moon, Sun, Globe, Menu, X, MessageCircle } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
