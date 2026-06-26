@@ -491,18 +491,7 @@ export function HeroSection({ data, socials }: { data?: HeroData | null; socials
           letter-spacing: -0.01em;
         }
 
-        /* ── Doodle arrow near portrait head ── */
-        .hero-doodle-arrow {
-          position: absolute;
-          top: 12%;
-          right: -30px;
-          width: 48px;
-          height: 48px;
-          color: var(--cyan);
-          z-index: 26;
-          pointer-events: none;
-          opacity: 0.75;
-        }
+
 
         /* ── Decorative corner markers ── */
         .hero-corner-mark {
@@ -573,9 +562,11 @@ export function HeroSection({ data, socials }: { data?: HeroData | null; socials
 
         @media (max-width: 1024px) {
           .hero-editorial {
+            display: flex;
+            flex-direction: column-reverse;
             height: auto;
             min-height: auto;
-            align-items: flex-start;
+            align-items: center;
             padding-top: calc(var(--navbar-height) + 40px);
             padding-bottom: 0;
           }
@@ -649,9 +640,7 @@ export function HeroSection({ data, socials }: { data?: HeroData | null; socials
             transform: translateX(80%) translateY(-6px) scale(1.03);
           }
 
-          .hero-doodle-arrow {
-            display: none;
-          }
+
 
           .hero-side-text {
             display: none;
@@ -746,22 +735,7 @@ export function HeroSection({ data, socials }: { data?: HeroData | null; socials
             draggable={false}
           />
 
-          {/* Doodle arrow near head */}
-          <motion.svg
-            className="hero-doodle-arrow"
-            viewBox="0 0 60 60"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 0.75, scale: 1 }}
-            transition={{ delay: 1.2, duration: 0.5 }}
-          >
-            <path d="M50 15 C 32 10, 20 22, 22 36" />
-            <path d="M14 30 L22 36 L25 26" />
-          </motion.svg>
+
 
           {/* Floating Glass Stats Card near waist */}
           <motion.div
