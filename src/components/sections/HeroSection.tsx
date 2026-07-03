@@ -709,12 +709,14 @@ export function HeroSection({
           .hero-editorial {
             background-position: center center;
             display: flex;
-            flex-direction: column-reverse;
+            flex-direction: column;
             height: auto;
             min-height: 100vh;
             align-items: center;
             padding-top: calc(var(--navbar-height) + 40px);
             padding-bottom: 40px;
+            overflow-x: hidden;
+            overflow-y: visible;
           }
 
           .hero-composition {
@@ -797,7 +799,7 @@ export function HeroSection({
           }
 
           .hero-portrait-img {
-            transform: scale(1.55);
+            transform: translateY(35px) scale(1.55);
             transform-origin: bottom center;
           }
 
