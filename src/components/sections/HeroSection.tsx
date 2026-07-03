@@ -634,13 +634,7 @@ export function HeroSection({
           background: linear-gradient(135deg, #818cf8, #4f46e5);
         }
 
-        .hero-curved-arrow {
-          position: absolute;
-          top: 25%;
-          left: 5%;
-          z-index: 45;
-          pointer-events: none;
-        }
+
 
 
 
@@ -817,12 +811,7 @@ export function HeroSection({
             z-index: 5;
           }
 
-          .hero-curved-arrow {
-            left: auto;
-            right: 8%;
-            top: 20%;
-            transform: scaleX(-1);
-          }
+
 
           .hero-stats-card {
             bottom: 8%;
@@ -1104,13 +1093,7 @@ export function HeroSection({
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
           >
-            {/* Curved arrow decoration pointing to model's shoulder */}
-            <div className="hero-curved-arrow">
-              <svg width="60" height="60" viewBox="0 0 60 60" fill="none" stroke="var(--hero-accent)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M15 15 C25 12, 38 22, 45 38" />
-                <path d="M35 35 L45 38 L42 28" />
-              </svg>
-            </div>
+
 
             {/* Cyan glow behind portrait body */}
             <div className="hero-portrait-glow" />
