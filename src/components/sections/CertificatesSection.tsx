@@ -31,7 +31,7 @@ export function CertificatesSection({ data }: { data?: Certificate[] | null }) {
   ]
 
   return (
-    <section id="certificates" className="section" style={{ background: 'var(--bg-secondary)', position: 'relative', overflow: 'hidden' }}>
+    <section id="certificates" className="section" style={{ background: 'var(--bg-secondary)', position: 'relative' }}>
       <div className="grid-pattern" style={{ position: 'absolute', inset: 0, opacity: 1, zIndex: 0 }} />
 
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
@@ -74,10 +74,11 @@ export function CertificatesSection({ data }: { data?: Certificate[] | null }) {
                 {/* SVG Animation on hover */}
                 <iframe 
                   src="/stitch/anim-svg.html" 
+                  scrolling="no"
                   style={{
                     position: 'absolute', top: -50, right: -50, width: '200px', height: '200px', 
                     border: 'none', zIndex: 0, pointerEvents: 'none', opacity: 0, 
-                    transition: 'opacity 0.4s ease', transform: 'scale(1.5)'
+                    transition: 'opacity 0.4s ease', transform: 'scale(1.5)', overflow: 'hidden'
                   }}
                   className="cert-bg-anim"
                   aria-hidden="true"

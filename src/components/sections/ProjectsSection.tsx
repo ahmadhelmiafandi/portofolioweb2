@@ -78,11 +78,12 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           
           <iframe 
              src="/stitch/shader.html" 
+             scrolling="no"
              style={{
                position: 'absolute', inset: 0, width: '100%', height: '100%', 
                border: 'none', zIndex: 1, pointerEvents: 'none', 
                opacity: isHovered ? 0.6 : 0, transition: 'opacity 0.5s ease',
-               mixBlendMode: 'screen'
+               mixBlendMode: 'screen', overflow: 'hidden'
              }}
              aria-hidden="true"
              title="Project Background Animation"
