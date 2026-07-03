@@ -71,10 +71,23 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               inset: 0,
               background: 'linear-gradient(135deg, rgba(20,184,166,0.2), rgba(139,92,246,0.2))',
               backdropFilter: 'blur(4px)',
-              pointerEvents: 'none'
+              pointerEvents: 'none',
+              zIndex: 2
             }} 
           />
           
+          <iframe 
+             src="/stitch/shader.html" 
+             style={{
+               position: 'absolute', inset: 0, width: '100%', height: '100%', 
+               border: 'none', zIndex: 1, pointerEvents: 'none', 
+               opacity: isHovered ? 0.6 : 0, transition: 'opacity 0.5s ease',
+               mixBlendMode: 'screen'
+             }}
+             aria-hidden="true"
+             title="Project Background Animation"
+          />
+
           <div style={{
             position: 'absolute',
             bottom: 0,
@@ -82,7 +95,8 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             right: 0,
             height: '50%',
             background: 'linear-gradient(to top, rgba(5,5,5,0.8), rgba(5,5,5,0.3))',
-            pointerEvents: 'none'
+            pointerEvents: 'none',
+            zIndex: 3
           }} />
 
           {project.featured && (

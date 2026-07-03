@@ -66,10 +66,28 @@ export function CertificatesSection({ data }: { data?: Certificate[] | null }) {
                   justifyContent: 'space-between',
                   position: 'relative',
                   transition: 'var(--transition)',
-                  boxShadow: 'var(--shadow-sm)'
+                  boxShadow: 'var(--shadow-sm)',
+                  overflow: 'hidden'
                 }}
                 whileHover={{ borderColor: pair.color, y: -4, boxShadow: '0 12px 32px rgba(20,184,166,0.15)' }}
               >
+                {/* SVG Animation on hover */}
+                <iframe 
+                  src="/stitch/anim-svg.html" 
+                  style={{
+                    position: 'absolute', top: -50, right: -50, width: '200px', height: '200px', 
+                    border: 'none', zIndex: 0, pointerEvents: 'none', opacity: 0, 
+                    transition: 'opacity 0.4s ease', transform: 'scale(1.5)'
+                  }}
+                  className="cert-bg-anim"
+                  aria-hidden="true"
+                  title="Certificate Background Animation"
+                />
+                
+                <style>{`
+                  article:hover .cert-bg-anim { opacity: 0.15 !important; }
+                `}</style>
+
                 {/* Issuer badge with larger icon */}
                 <div style={{
                   position: 'absolute', top: 20, right: 20,
@@ -78,12 +96,13 @@ export function CertificatesSection({ data }: { data?: Certificate[] | null }) {
                   border: `2px solid ${pair.color}20`,
                   color: pair.color,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  boxShadow: `0 4px 12px ${pair.color}25`
+                  boxShadow: `0 4px 12px ${pair.color}25`,
+                  zIndex: 2
                 }}>
                   <Award size={24} strokeWidth={2.5} />
                 </div>
 
-                <div>
+                <div style={{ position: 'relative', zIndex: 2 }}>
                   {/* Issuer text badge */}
                   <div style={{
                     display: 'inline-flex', alignItems: 'center', gap: 6,
@@ -118,16 +137,18 @@ export function CertificatesSection({ data }: { data?: Certificate[] | null }) {
 
                 {/* Action button - Single primary CTA */}
                 {(cert.link || cert.file_url) && (
-                  <a 
-                    href={cert.file_url || cert.link || '#'} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="btn-primary"
-                    style={{ justifyContent: 'center', fontSize: 13, padding: '10px 16px', width: '100%' }}
-                  >
-                    <ExternalLink size={14} />
-                    {lang === 'en' ? 'View Certificate' : 'Lihat Sertifikat'}
-                  </a>
+                  <div style={{ position: 'relative', zIndex: 2 }}>
+                    <a 
+                      href={cert.file_url || cert.link || '#'} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="btn-primary"
+                      style={{ justifyContent: 'center', fontSize: 13, padding: '10px 16px', width: '100%' }}
+                    >
+                      <ExternalLink size={14} />
+                      {lang === 'en' ? 'View Certificate' : 'Lihat Sertifikat'}
+                    </a>
+                  </div>
                 )}
               </motion.article>
             )
