@@ -1,42 +1,65 @@
-import type { Metadata, Viewport } from 'next'
-import './globals.css'
-import { Providers } from '@/components/Providers'
-import { LoadingScreen } from '@/components/LoadingScreen'
+import type { Metadata, Viewport } from "next";
+import "./globals.css";
+import { Providers } from "@/components/Providers";
+import { LoadingScreen } from "@/components/LoadingScreen";
+import { Outfit, Space_Grotesk } from "next/font/google";
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-outfit",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-space",
+});
 
 export const metadata: Metadata = {
-  title: 'Helmi | Full-Stack Developer',
-  description: 'Creative full-stack developer crafting modern, elegant digital experiences. Specialized in React, Next.js, and scalable web solutions.',
-  keywords: ['developer', 'portfolio', 'web development', 'full-stack', 'react', 'next.js'],
-  authors: [{ name: 'Helmi' }],
+  title: "Helmi | Full-Stack Developer",
+  description:
+    "Creative full-stack developer crafting modern, elegant digital experiences. Specialized in React, Next.js, and scalable web solutions.",
+  keywords: [
+    "developer",
+    "portfolio",
+    "web development",
+    "full-stack",
+    "react",
+    "next.js",
+  ],
+  authors: [{ name: "Helmi" }],
   openGraph: {
-    title: 'Helmi | Full-Stack Developer',
-    description: 'Creative full-stack developer crafting modern, elegant digital experiences.',
-    type: 'website',
+    title: "Helmi | Full-Stack Developer",
+    description:
+      "Creative full-stack developer crafting modern, elegant digital experiences.",
+    type: "website",
   },
-}
+};
 
 // Eksplisit izinkan zoom browser (Ctrl+/-)
 export const viewport: Viewport = {
-  width: 'device-width',
+  width: "device-width",
   initialScale: 1,
   // TIDAK pakai maximumScale atau userScalable=no
   // agar Ctrl+/- dan pinch zoom tetap berfungsi
-}
+};
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="id" suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-      </head>
+    <html
+      lang="id"
+      className={`${outfit.className} ${spaceGrotesk.className}`}
+      suppressHydrationWarning
+    >
       <body suppressHydrationWarning>
         <LoadingScreen />
-        <Providers>
-          {children}
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
-  )
+  );
 }

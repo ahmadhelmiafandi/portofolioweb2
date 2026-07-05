@@ -1,9 +1,11 @@
 'use client'
 
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
+import { m, useMotionValue, useSpring, useTransform } from 'framer-motion'
+import { useMemo, useState, useEffect } from 'react'
 import { useLang } from '@/contexts/LangContext'
 import Image from 'next/image'
 import { Download } from 'lucide-react'
+import { containerVariants, itemRevealUp } from '@/lib/motion'
 
 interface AboutData {
   description_en: string
@@ -55,14 +57,14 @@ function LanyardCard({ image, name }: { image?: string | null; name: string }) {
         overflow: 'visible', pointerEvents: 'none', zIndex: 3,
         width: 2, height: 2,
       }}>
-        <motion.path
+        <m.path
           style={{ d: stringD }}
           fill="none" stroke="#3a3a3a" strokeWidth="8" strokeLinecap="round"
         />
       </svg>
 
       {/* Card */}
-      <motion.div
+      <m.div
         drag
         dragMomentum={false}
         dragElastic={0}
@@ -119,7 +121,7 @@ function LanyardCard({ image, name }: { image?: string | null; name: string }) {
             }}>H</div>
           )}
         </div>
-      </motion.div>
+      </m.div>
     </div>
   )
 }
@@ -130,20 +132,25 @@ export function AboutSection({ data }: { data?: AboutData | null }) {
   const desc  = lang === 'en' ? about.description_en : about.description_id
   const paragraphs = desc.split('\n\n')
 
-  const stats = [
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => { setMounted(true) }, [])
+
+  const stats = useMemo(() => [
     { value: '3+',  label: lang === 'en' ? 'Years' : 'Tahun' },
     { value: '20+', label: lang === 'en' ? 'Projects' : 'Proyek' },
     { value: '10+', label: lang === 'en' ? 'Clients' : 'Klien' },
-  ]
+  ], [lang])
 
   return (
     <section id="about" className="section" style={{ background: 'var(--bg)' }}>
       <div className="container">
-        <motion.div
-          initial={{ opacity: 0, y: 32 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+        <m.div
+          {...(mounted ? {
+            variants: containerVariants,
+            initial: "hidden",
+            whileInView: "show",
+            viewport: { once: true, margin: "-100px" }
+          } : {})}
           style={{
             background: 'var(--surface)',
             border: '1px solid var(--border)',
@@ -163,46 +170,46 @@ export function AboutSection({ data }: { data?: AboutData | null }) {
             alignItems: 'flex-start',
           }}>
             {/* Left: Lanyard photo */}
-            <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 20, paddingBottom: 32 }}>
+            <m.div {...(mounted ? { variants: itemRevealUp } : {})} style={{ display: 'flex', justifyContent: 'center', paddingTop: 20, paddingBottom: 32 }}>
               <LanyardCard image={about.image} name="Helmi Afandi" />
-            </div>
+            </m.div>
 
             {/* Right: Content */}
-            <div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               {/* Title */}
-              <motion.h2
-                initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                style={{ fontSize: 'clamp(26px, 3.5vw, 38px)', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 12, color: 'var(--text-primary)', fontFamily: 'Outfit, sans-serif' }}
+              <m.h2
+                {...(mounted ? { variants: itemRevealUp } : {})}
+                style={{ fontSize: 'clamp(26px, 3.5vw, 38px)', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 0, color: 'var(--text-primary)', fontFamily: 'Outfit, sans-serif' }}
               >
                 {lang === 'en' ? 'About ' : 'Tentang '}
                 <span style={{ color: 'var(--accent)' }}>{lang === 'en' ? 'Me' : 'Saya'}</span>
-              </motion.h2>
+              </m.h2>
 
               {/* Tagline */}
-              <motion.p
-                initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.1 }}
-                style={{ fontSize: 14, fontStyle: 'italic', color: 'var(--text-muted)', marginBottom: 20, borderLeft: '3px solid var(--accent)', paddingLeft: 12, lineHeight: 1.6 }}
+              <m.p
+                {...(mounted ? { variants: itemRevealUp } : {})}
+                style={{ fontSize: 14, fontStyle: 'italic', color: 'var(--text-muted)', marginBottom: 8, borderLeft: '3px solid var(--accent)', paddingLeft: 12, lineHeight: 1.6 }}
               >
                 {lang === 'en'
                   ? 'A blend of logic and design aesthetics.'
                   : 'Perpaduan logika kode dan estetika desain.'}
-              </motion.p>
+              </m.p>
 
               {/* Description paragraphs */}
-              <div style={{ marginBottom: 28 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                 {paragraphs.map((para, i) => (
-                  <motion.p key={i}
-                    initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 + i * 0.08 }}
-                    style={{ color: 'var(--text-secondary)', fontSize: 15, lineHeight: 1.75, marginBottom: 14 }}>
+                  <m.p key={i}
+                    {...(mounted ? { variants: itemRevealUp } : {})}
+                    style={{ color: 'var(--text-secondary)', fontSize: 15, lineHeight: 1.75, margin: 0 }}>
                     {para}
-                  </motion.p>
+                  </m.p>
                 ))}
               </div>
 
               {/* Stats */}
-              <motion.div
-                initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}
-                style={{ display: 'flex', gap: 12, marginBottom: 28, flexWrap: 'wrap' }}
+              <m.div
+                {...(mounted ? { variants: itemRevealUp } : {})}
+                style={{ display: 'flex', gap: 12, marginTop: 12, marginBottom: 12, flexWrap: 'wrap' }}
               >
                 {stats.map((s, i) => (
                   <div key={i} style={{
@@ -217,18 +224,18 @@ export function AboutSection({ data }: { data?: AboutData | null }) {
                     <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: 2 }}>{s.label}</div>
                   </div>
                 ))}
-              </motion.div>
+              </m.div>
 
               {/* Download CV button */}
-              <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.3 }}>
+              <m.div {...(mounted ? { variants: itemRevealUp } : {})} >
                 <a href="/api/cv/download" download className="btn-secondary" style={{ display: 'inline-flex' }}>
                   <Download size={15} />
                   {lang === 'en' ? 'Download CV' : 'Unduh CV'}
                 </a>
-              </motion.div>
+              </m.div>
             </div>
           </div>
-        </motion.div>
+        </m.div>
       </div>
 
       {/* Responsive */}

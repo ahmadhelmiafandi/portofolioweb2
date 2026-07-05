@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, useCallback, useMemo, ReactNode } from 'react'
 import { translations, Language } from '@/lib/i18n'
 
 interface LangContextType {
@@ -27,13 +27,15 @@ export function LangProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  const setLang = (newLang: Language) => {
+  const setLang = useCallback((newLang: Language) => {
     setLangState(newLang)
     localStorage.setItem('portfolio-lang', newLang)
-  }
+  }, [])
+
+  const value = useMemo(() => ({ lang, setLang, t: translations[lang] }), [lang, setLang])
 
   return (
-    <LangContext.Provider value={{ lang, setLang, t: translations[lang] }}>
+    <LangContext.Provider value={value}>
       {children}
     </LangContext.Provider>
   )
@@ -42,3 +44,4 @@ export function LangProvider({ children }: { children: ReactNode }) {
 export function useLang() {
   return useContext(LangContext)
 }
+

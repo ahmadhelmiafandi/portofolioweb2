@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { Home, ArrowLeft, Search } from 'lucide-react'
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
@@ -47,7 +47,7 @@ export default function NotFound() {
         }} />
 
         <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', maxWidth: '600px' }}>
-          <motion.div
+          <m.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
@@ -64,18 +64,18 @@ export default function NotFound() {
             }}>
               404
             </div>
-          </motion.div>
+          </m.div>
 
-          <motion.h2
+          <m.h2
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
             style={{ fontSize: '28px', fontWeight: '800', fontFamily: 'Syne', marginBottom: '16px', color: 'var(--text-primary)' }}
           >
             Halaman Tidak Ditemukan
-          </motion.h2>
+          </m.h2>
 
-          <motion.p
+          <m.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
@@ -83,9 +83,9 @@ export default function NotFound() {
           >
             Oops! Sepertinya halaman yang Anda cari telah dipindahkan atau tidak pernah ada. 
             Jangan khawatir, Anda bisa kembali ke tempat yang aman.
-          </motion.p>
+          </m.p>
 
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
@@ -101,7 +101,7 @@ export default function NotFound() {
             >
               <ArrowLeft size={18} /> Kembali Sebelumnya
             </button>
-          </motion.div>
+          </m.div>
         </div>
       </main>
       <Footer />

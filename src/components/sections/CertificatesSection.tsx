@@ -1,9 +1,10 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
+import { containerVariants, itemRevealUp } from '@/lib/motion'
 import { useLang } from '@/contexts/LangContext'
 import { Award, Calendar, ExternalLink, ShieldCheck, ChevronDown, ChevronUp } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 
 interface Certificate {
   id: string; name: string; issuer: string
@@ -16,33 +17,47 @@ interface Certificate {
 export function CertificatesSection({ data }: { data?: Certificate[] | null }) {
   const { t, lang } = useLang()
   const [showAll, setShowAll] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
-  if (!data || data.length === 0) return null
-  const publishedCerts = data.filter(c => c.published)
-  if (publishedCerts.length === 0) return null
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
-  const visibleCerts = showAll ? publishedCerts : publishedCerts.slice(0, 3)
+  const publishedCerts = useMemo(() => data ? data.filter(c => c.published) : [], [data])
+  const visibleCerts = useMemo(() => showAll ? publishedCerts : publishedCerts.slice(0, 3), [publishedCerts, showAll])
 
-  const accentPairs = [
+  const accentPairs = useMemo(() => [
     { bg: 'var(--accent-light)',   color: 'var(--accent)' },
     { bg: 'var(--accent-2-light)', color: 'var(--accent-2)' },
     { bg: 'rgba(99,102,241,0.1)',  color: '#818cf8' },
     { bg: 'rgba(234,179,8,0.1)',   color: '#eab308' },
-  ]
+  ], [])
+
+  if (!data || data.length === 0) return null
+  if (publishedCerts.length === 0) return null
 
   return (
     <section id="certificates" className="section" style={{ background: 'var(--bg-secondary)', position: 'relative' }}>
       <div className="grid-pattern" style={{ position: 'absolute', inset: 0, opacity: 1, zIndex: 0 }} />
 
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-        <motion.div className="section-header"
+        <m.div className="section-header"
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
           <span className="section-subtitle">{t.certificates.subtitle}</span>
           <h2 className="section-title">{t.certificates.title}</h2>
-        </motion.div>
+        </m.div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 20 }}>
+        <m.div
+          {...(mounted ? {
+            variants: containerVariants,
+            initial: "hidden",
+            whileInView: "show",
+            viewport: { once: true, margin: "-60px" }
+          } : {})}
+          style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 20 }}
+        >
           {visibleCerts.map((cert, index) => {
             const pair = accentPairs[index % accentPairs.length]
             const formattedDate = cert.issue_date
@@ -50,12 +65,10 @@ export function CertificatesSection({ data }: { data?: Certificate[] | null }) {
               : ''
 
             return (
-              <motion.article
+              <m.article
                 key={cert.id}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-80px' }}
-                transition={{ duration: 0.45, delay: index * 0.08 }}
+                {...(mounted ? { variants: itemRevealUp } : {})}
+                className="cert-card-perf"
                 style={{
                   background: 'var(--surface)',
                   border: '1px solid var(--border)',
@@ -65,29 +78,21 @@ export function CertificatesSection({ data }: { data?: Certificate[] | null }) {
                   display: 'flex', flexDirection: 'column',
                   justifyContent: 'space-between',
                   position: 'relative',
-                  transition: 'var(--transition)',
                   boxShadow: 'var(--shadow-sm)',
                   overflow: 'hidden'
                 }}
-                whileHover={{ borderColor: pair.color, y: -4, boxShadow: '0 12px 32px rgba(20,184,166,0.15)' }}
               >
-                {/* SVG Animation on hover */}
-                <iframe 
-                  src="/stitch/anim-svg.html" 
-                  scrolling="no"
-                  style={{
-                    position: 'absolute', top: -50, right: -50, width: '200px', height: '200px', 
-                    border: 'none', zIndex: 0, pointerEvents: 'none', opacity: 0, 
-                    transition: 'opacity 0.4s ease', transform: 'scale(1.5)', overflow: 'hidden'
-                  }}
-                  className="cert-bg-anim"
-                  aria-hidden="true"
-                  title="Certificate Background Animation"
-                />
-                
-                <style>{`
-                  article:hover .cert-bg-anim { opacity: 0.15 !important; }
-                `}</style>
+                {/* CSS gradient on hover — replaces expensive iframe anim-svg.html */}
+                <div className="cert-hover-glow" style={{
+                  position: 'absolute', top: -50, right: -50,
+                  width: 200, height: 200,
+                  background: `radial-gradient(circle, ${pair.color}15 0%, transparent 70%)`,
+                  opacity: 0,
+                  transition: 'opacity 0.4s ease',
+                  transform: 'scale(1.5)',
+                  pointerEvents: 'none',
+                  zIndex: 0,
+                }} />
 
                 {/* Issuer badge with larger icon */}
                 <div style={{
@@ -151,13 +156,14 @@ export function CertificatesSection({ data }: { data?: Certificate[] | null }) {
                     </a>
                   </div>
                 )}
-              </motion.article>
+
+              </m.article>
             )
           })}
-        </div>
+        </m.div>
 
         {publishedCerts.length > 3 && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
             style={{ display: 'flex', justifyContent: 'center', marginTop: 40 }}
           >
@@ -179,7 +185,7 @@ export function CertificatesSection({ data }: { data?: Certificate[] | null }) {
                 <><ChevronDown size={15} />{lang === 'en' ? `View All Certificates (${publishedCerts.length})` : `Lihat Semua Sertifikat (${publishedCerts.length})`}</>
               )}
             </button>
-          </motion.div>
+          </m.div>
         )}
       </div>
     </section>

@@ -1,7 +1,8 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import { useState, useEffect } from 'react'
+import { m } from 'framer-motion'
+import { containerVariants, itemRevealUp } from '@/lib/motion'
+import { useState, useEffect, useMemo, memo } from 'react'
 import { useLang } from '@/contexts/LangContext'
 
 interface Skill {
@@ -20,7 +21,7 @@ const DEFAULT_SKILLS: Skill[] = [
   { id: '9', name: 'Figma',            level: 72, category: 'Design',   icon: 'figma' },
 ]
 
-function SkillCard({ skill, index }: { skill: Skill; index: number }) {
+const SkillCard = memo(function SkillCard({ skill, index, mounted }: { skill: Skill; index: number; mounted: boolean }) {
   const iconName = skill.icon?.toLowerCase().replace(/[\s/.]/g, '') || ''
 
   const darkModeIcons = ['github', 'nextjs', 'express', 'prisma', 'vercel', 'figma', 'flask', 'dbeaver', 'java', 'postgresql']
@@ -31,11 +32,9 @@ function SkillCard({ skill, index }: { skill: Skill; index: number }) {
     : null
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.05, duration: 0.4 }}
+    <m.div
+      {...(mounted ? { variants: itemRevealUp } : {})}
+      className="skill-card-perf"
       style={{
         background: 'var(--surface)',
         border: '1px solid var(--border)',
@@ -48,9 +47,7 @@ function SkillCard({ skill, index }: { skill: Skill; index: number }) {
         cursor: 'default',
         textAlign: 'center',
         boxShadow: 'var(--shadow-sm)',
-        transition: 'var(--transition)',
       }}
-      whileHover={{ y: -4, boxShadow: '0 8px 24px rgba(20,184,166,0.12)' }}
       suppressHydrationWarning
     >
       {/* Icon container */}
@@ -68,6 +65,7 @@ function SkillCard({ skill, index }: { skill: Skill; index: number }) {
              src={iconUrl}
              alt={skill.name}
              width={36} height={36}
+             loading="lazy"
              style={{
                objectFit: 'contain',
                filter: needsFilter ? 'var(--skill-icon-filter)' : 'none',
@@ -86,7 +84,7 @@ function SkillCard({ skill, index }: { skill: Skill; index: number }) {
                 }
               }
             }}
-          />
+           />
         ) : (
           <span style={{ fontSize: 24, fontWeight: 800, color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
             {skill.name.charAt(0)}
@@ -98,33 +96,34 @@ function SkillCard({ skill, index }: { skill: Skill; index: number }) {
       <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', fontFamily: 'Outfit, sans-serif', lineHeight: 1.3 }}>
         {skill.name}
       </span>
-    </motion.div>
+
+    </m.div>
   )
-}
+})
 
 export function SkillsSection({ data }: { data?: Skill[] | null }) {
   const { t } = useLang()
   const skills     = (data && data.length > 0) ? data : DEFAULT_SKILLS
-  const categories = ['All', ...Array.from(new Set(skills.map(s => s.category)))]
+  const categories = useMemo(() => ['All', ...Array.from(new Set(skills.map(s => s.category)))], [skills])
   const [activeCategory, setActiveCategory] = useState('All')
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => { setMounted(true) }, [])
 
-  const filtered = activeCategory === 'All'
+  const filtered = useMemo(() => activeCategory === 'All'
     ? skills
-    : skills.filter(s => s.category === activeCategory)
+    : skills.filter(s => s.category === activeCategory), [skills, activeCategory])
 
   return (
     <section id="skills" className="section" style={{ background: 'var(--bg)' }}>
       <div className="container">
-        <motion.div className="section-header"
+        <m.div className="section-header"
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
           <span className="section-subtitle">{t.skills.subtitle}</span>
           <h2 className="section-title">{t.skills.title}</h2>
-        </motion.div>
+        </m.div>
 
         {/* Category pills */}
         {mounted && (
@@ -147,16 +146,26 @@ export function SkillsSection({ data }: { data?: Skill[] | null }) {
         )}
 
         {/* Icon grid */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))',
-          gap: 16,
-        }}>
+        <m.div
+          {...(mounted ? {
+            variants: containerVariants,
+            initial: "hidden",
+            whileInView: "show",
+            viewport: { once: true, margin: "-60px" }
+          } : {})}
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))',
+            gap: 16,
+          }}
+        >
           {filtered.map((skill, i) => (
-            <SkillCard key={skill.id} skill={skill} index={i} />
+            <SkillCard key={skill.id} skill={skill} index={i} mounted={mounted} />
           ))}
-        </div>
+        </m.div>
       </div>
+
+
     </section>
   )
 }

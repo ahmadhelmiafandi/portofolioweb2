@@ -1,11 +1,12 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
+import { containerVariants, itemRevealUp } from '@/lib/motion'
+import { useState, useMemo, memo, useEffect } from 'react'
 import { useLang } from '@/contexts/LangContext'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ExternalLink, GitBranch } from 'lucide-react'
-import { useState } from 'react'
 
 interface Project {
   id: string; title_en: string; title_id: string
@@ -27,67 +28,44 @@ const formatLink = (url: string | null | undefined) => {
   return `https://${url}`
 }
 
-function ProjectCard({ project, index }: { project: Project; index: number }) {
+const ProjectCard = memo(function ProjectCard({ project, index, mounted }: { project: Project; index: number; mounted: boolean }) {
   const { lang, t } = useLang()
   const title = lang === 'en' ? project.title_en : project.title_id
   const desc  = lang === 'en' ? project.description_en : project.description_id
-  const [isHovered, setIsHovered] = useState(false)
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.08, duration: 0.5 }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+    <m.article
+      {...(mounted ? { variants: itemRevealUp } : {})}
+      className="project-card-perf"
       style={{
         background: 'var(--surface)',
         border: '1px solid var(--border)',
         borderRadius: '16px',
         overflow: 'hidden',
         display: 'flex', flexDirection: 'column',
-        transition: 'var(--transition)',
         boxShadow: 'var(--shadow-sm)',
         height: '100%'
       }}
-      whileHover={{ y: -8, boxShadow: '0 16px 48px rgba(20,184,166,0.2)' }}
     >
       {project.image && (
         <div style={{ position: 'relative', width: '100%', aspectRatio: '16/9', overflow: 'hidden', background: 'var(--surface-2)' }}>
-          <motion.div whileHover={{ scale: 1.08 }} transition={{ duration: 0.4 }}>
+          <div className="project-img-hover-wrap">
             <Image src={project.image} alt={title} fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
-              style={{ objectFit: 'cover' }}
+              style={{ objectFit: 'cover', transition: 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)', willChange: 'transform' }}
             />
-          </motion.div>
+          </div>
           
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: isHovered ? 1 : 0 }}
-            transition={{ duration: 0.3 }}
-            style={{
-              position: 'absolute',
-              inset: 0,
-              background: 'linear-gradient(135deg, rgba(20,184,166,0.2), rgba(139,92,246,0.2))',
-              backdropFilter: 'blur(4px)',
-              pointerEvents: 'none',
-              zIndex: 2
-            }} 
-          />
-          
-          <iframe 
-             src="/stitch/shader.html" 
-             scrolling="no"
-             style={{
-               position: 'absolute', inset: 0, width: '100%', height: '100%', 
-               border: 'none', zIndex: 1, pointerEvents: 'none', 
-               opacity: isHovered ? 0.6 : 0, transition: 'opacity 0.5s ease',
-               mixBlendMode: 'screen', overflow: 'hidden'
-             }}
-             aria-hidden="true"
-             title="Project Background Animation"
-          />
+          {/* CSS gradient overlay on hover — replaces expensive iframe + backdrop-filter */}
+          <div className="project-hover-overlay" style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(135deg, rgba(20,184,166,0.15), rgba(139,92,246,0.15))',
+            opacity: 0,
+            transition: 'opacity 0.3s ease',
+            pointerEvents: 'none',
+            zIndex: 2
+          }} />
 
           <div style={{
             position: 'absolute',
@@ -101,9 +79,10 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           }} />
 
           {project.featured && (
-            <motion.span 
+            <m.span 
               initial={{ scale: 0, y: -10 }}
               whileInView={{ scale: 1, y: 0 }}
+              viewport={{ once: true }}
               transition={{ delay: 0.2, duration: 0.3 }}
               style={{ 
                 position: 'absolute',
@@ -122,7 +101,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                 zIndex: 10
               }}>
               ⭐ {t.projects.featured}
-            </motion.span>
+            </m.span>
           )}
         </div>
       )}
@@ -156,59 +135,62 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 
         <div style={{ display: 'flex', gap: 8, marginTop: 16, paddingTop: 16, borderTop: '1px solid var(--border)' }}>
           {project.link && (
-            <motion.a 
+            <a 
               href={formatLink(project.link)} 
               target="_blank" 
               rel="noopener noreferrer"
               className="btn-primary"
               style={{ flex: 1, justifyContent: 'center', padding: '10px 16px', fontSize: 13 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
             >
               <ExternalLink size={14} />
               {t.projects.visit_project}
-            </motion.a>
+            </a>
           )}
           {project.github && (
-            <motion.a 
+            <a 
               href={formatLink(project.github)} 
               target="_blank" 
               rel="noopener noreferrer"
               className="btn-secondary"
               style={{ padding: '10px 14px', fontSize: 13 }}
               aria-label="GitHub Repository"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
             >
               <GitBranch size={15} />
-            </motion.a>
+            </a>
           )}
         </div>
       </div>
-    </motion.article>
+
+    </m.article>
   )
-}
+})
 
 export function ProjectsSection({ data }: { data?: Project[] | null }) {
   const { lang, t } = useLang()
   const projects   = (data && data.length > 0) ? data : DEFAULT_PROJECTS
-  const categories = ['All', ...Array.from(new Set(projects.map(p => p.category)))]
+  const categories = useMemo(() => ['All', ...Array.from(new Set(projects.map(p => p.category)))], [projects])
   const [activeCategory, setActiveCategory] = useState('All')
+  const [mounted, setMounted] = useState(false)
 
-  const filtered = activeCategory === 'All' ? projects : projects.filter(p => p.category === activeCategory)
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const filtered = useMemo(() => activeCategory === 'All' ? projects : projects.filter(p => p.category === activeCategory), [projects, activeCategory])
 
   return (
     <section id="projects" className="section" style={{ background: 'var(--bg-secondary)' }}>
       <div className="container">
-        <motion.div className="section-header"
+        <m.div className="section-header"
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
           <span className="section-subtitle">{t.projects.subtitle}</span>
           <h2 className="section-title">{t.projects.title}</h2>
           <p className="section-desc">
             {lang === 'en' ? 'A curated selection of my favorite and most impactful work.' : 'Koleksi karya favorit dan paling berdampak dari saya.'}
           </p>
-        </motion.div>
+        </m.div>
 
         <div style={{ display: 'flex', gap: 8, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 48 }}>
           {categories.map(cat => (
@@ -225,9 +207,17 @@ export function ProjectsSection({ data }: { data?: Project[] | null }) {
           ))}
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: 28, marginTop: 32 }}>
-           {filtered.map((p, i) => <ProjectCard key={p.id} project={p} index={i} />)}
-        </div>
+        <m.div
+          {...(mounted ? {
+            variants: containerVariants,
+            initial: "hidden",
+            whileInView: "show",
+            viewport: { once: true, margin: "-60px" }
+          } : {})}
+          style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: 28, marginTop: 32 }}
+        >
+           {filtered.map((p, i) => <ProjectCard key={p.id} project={p} index={i} mounted={mounted} />)}
+        </m.div>
       </div>
     </section>
   )

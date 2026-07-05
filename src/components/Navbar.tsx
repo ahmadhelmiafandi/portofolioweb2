@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useTheme } from '@/components/Providers'
 import { useLang } from '@/contexts/LangContext'
 import { Moon, Sun, Globe, Menu, X, MessageCircle } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
+
+import { useScrollPosition } from '@/lib/useScrollPosition'
 
 const NAV_ITEMS = [
   { href: '#about',        key: 'about' },
@@ -49,19 +50,16 @@ const getWaLink = (phone: string | null | undefined, lang: 'en' | 'id') => {
 export function Navbar({ hero, contact }: { hero?: HeroData | null; contact?: ContactData | null }) {
   const { theme, setTheme } = useTheme()
   const { lang, setLang, t } = useLang()
-  const [scrolled, setScrolled]   = useState(false)
+  const scrolled = useScrollPosition(20)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [mounted, setMounted]     = useState(false)
 
   useEffect(() => {
     setMounted(true)
-    const onScroll = () => setScrolled(window.scrollY > 20)
-    window.addEventListener('scroll', onScroll)
-    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const toggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark')
-  const toggleLang  = () => setLang(lang === 'en' ? 'id' : 'en')
+  const toggleTheme = useCallback(() => setTheme(theme === 'dark' ? 'light' : 'dark'), [theme, setTheme])
+  const toggleLang  = useCallback(() => setLang(lang === 'en' ? 'id' : 'en'), [lang, setLang])
   const { first, last, initial } = getSiteName(hero, contact)
 
   return (
@@ -72,13 +70,15 @@ export function Navbar({ hero, contact }: { hero?: HeroData | null; contact?: Co
           position: 'fixed', top: 0, left: 0, right: 0,
           height: 'var(--navbar-height)',
           zIndex: 99,
-          transition: 'all 0.3s ease',
+          transition: 'background 0.3s ease',
           background: scrolled
             ? 'color-mix(in srgb, var(--bg) 92%, transparent)'
             : 'color-mix(in srgb, var(--bg) 70%, transparent)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          borderBottom: '1px solid var(--border)',        }}
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          borderBottom: '1px solid var(--border)',
+          transform: 'translateZ(0)',
+        }}
       >
         <div className="container" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
 
@@ -95,6 +95,7 @@ export function Navbar({ hero, contact }: { hero?: HeroData | null; contact?: Co
               <a
                 key={item.key}
                 href={item.href}
+                className="nav-link"
                 style={{
                   padding: '8px 14px',
                   color: 'var(--text-secondary)',
@@ -103,15 +104,6 @@ export function Navbar({ hero, contact }: { hero?: HeroData | null; contact?: Co
                   fontWeight: 500,
                   fontFamily: 'Outfit, sans-serif',
                   borderRadius: '9999px',
-                  transition: 'var(--transition)',
-                }}
-                onMouseEnter={e => {
-                  (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)'
-                  ;(e.currentTarget as HTMLElement).style.background = 'var(--surface-2)'
-                }}
-                onMouseLeave={e => {
-                  (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)'
-                  ;(e.currentTarget as HTMLElement).style.background = 'transparent'
                 }}
               >
                 {t.nav[item.key as keyof typeof t.nav]}
@@ -127,7 +119,7 @@ export function Navbar({ hero, contact }: { hero?: HeroData | null; contact?: Co
               target="_blank"
               rel="noopener noreferrer"
               aria-label={lang === 'en' ? 'Chat on WhatsApp' : 'Chat di WhatsApp'}
-              className="hidden-mobile"
+              className="hidden-mobile nav-wa-btn"
               style={{
                 display: 'flex', alignItems: 'center', gap: 6,
                 padding: '8px 18px',
@@ -137,17 +129,6 @@ export function Navbar({ hero, contact }: { hero?: HeroData | null; contact?: Co
                 fontSize: 13, fontWeight: 600,
                 fontFamily: 'Outfit, sans-serif',
                 textDecoration: 'none',
-                transition: 'var(--transition)',
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.background = 'var(--accent-hover)'
-                e.currentTarget.style.transform = 'translateY(-1px)'
-                e.currentTarget.style.boxShadow = '0 6px 20px rgba(20,184,166,0.35)'
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.background = 'var(--accent)'
-                e.currentTarget.style.transform = 'none'
-                e.currentTarget.style.boxShadow = 'none'
               }}
             >
               <MessageCircle size={14} />
@@ -158,6 +139,7 @@ export function Navbar({ hero, contact }: { hero?: HeroData | null; contact?: Co
             <button
               onClick={toggleLang}
               aria-label="Toggle language"
+              className="nav-ctrl-btn"
               style={{
                 display: 'flex', alignItems: 'center', gap: 5,
                 padding: '7px 12px',
@@ -166,11 +148,9 @@ export function Navbar({ hero, contact }: { hero?: HeroData | null; contact?: Co
                 borderRadius: '9999px',
                 color: 'var(--text-secondary)',
                 fontSize: 12, fontWeight: 600,
-                cursor: 'pointer', transition: 'var(--transition)',
+                cursor: 'pointer',
                 fontFamily: 'Outfit, sans-serif',
               }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)' }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-secondary)' }}
             >
               <Globe size={13} />
               {lang.toUpperCase()}
@@ -181,6 +161,7 @@ export function Navbar({ hero, contact }: { hero?: HeroData | null; contact?: Co
               <button
                 onClick={toggleTheme}
                 aria-label="Toggle theme"
+                className="nav-ctrl-btn"
                 style={{
                   width: 36, height: 36,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -188,10 +169,8 @@ export function Navbar({ hero, contact }: { hero?: HeroData | null; contact?: Co
                   border: '1px solid var(--border)',
                   borderRadius: '9999px',
                   color: 'var(--text-secondary)',
-                  cursor: 'pointer', transition: 'var(--transition)',
+                  cursor: 'pointer',
                 }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)' }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-secondary)' }}
               >
                 {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
               </button>
@@ -220,26 +199,24 @@ export function Navbar({ hero, contact }: { hero?: HeroData | null; contact?: Co
       </nav>
 
       {/* Mobile drawer */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            role="dialog"
-            aria-label="Mobile navigation"
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.18 }}
-            style={{
-              position: 'fixed',
-              top: 'var(--navbar-height)',
-              left: 0, right: 0,
-              background: 'rgba(10,10,10,0.97)',
-              backdropFilter: 'blur(20px)',
-              borderBottom: '1px solid var(--border)',
-              padding: '16px 24px 24px',
-              zIndex: 98,
-            }}
-          >
+      {mobileOpen && (
+        <div
+          role="dialog"
+          aria-label="Mobile navigation"
+          style={{
+            position: 'fixed',
+            top: 'var(--navbar-height)',
+            left: 0, right: 0,
+            background: 'color-mix(in srgb, var(--bg) 97%, transparent)',
+            backdropFilter: 'blur(12px)',
+            borderBottom: '1px solid var(--border)',
+            padding: '16px 24px 24px',
+            zIndex: 98,
+            opacity: mobileOpen ? 1 : 0,
+            transform: mobileOpen ? 'translateY(0)' : 'translateY(-8px)',
+            transition: 'opacity 0.18s ease, transform 0.18s ease',
+          }}
+        >
             {NAV_ITEMS.map(item => (
               <a
                 key={item.key}
@@ -277,16 +254,8 @@ export function Navbar({ hero, contact }: { hero?: HeroData | null; contact?: Co
               <MessageCircle size={18} />
               {lang === 'en' ? 'Hire Me via WhatsApp' : 'Hubungi via WhatsApp'}
             </a>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <style>{`
-        @media (max-width: 768px) {
-          .hidden-mobile { display: none !important; }
-          .show-mobile   { display: flex !important; }
-        }
-      `}</style>
+        </div>
+      )}
     </>
   )
 }

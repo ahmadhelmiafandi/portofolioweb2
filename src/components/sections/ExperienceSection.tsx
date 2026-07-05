@@ -1,9 +1,11 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
+import { containerVariants, itemRevealRight } from '@/lib/motion'
 import { useLang } from '@/contexts/LangContext'
 import { formatDate } from '@/lib/utils'
 import { Briefcase, MapPin, Calendar } from 'lucide-react'
+import { useState, useEffect } from 'react'
 
 interface Experience {
   id: string; title_en: string; title_id: string
@@ -21,18 +23,32 @@ const DEFAULT_EXPERIENCES: Experience[] = [
 export function ExperienceSection({ data }: { data?: Experience[] | null }) {
   const { lang, t } = useLang()
   const experiences = (data && data.length > 0) ? data : DEFAULT_EXPERIENCES
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   return (
     <section id="experience" className="section" style={{ background: 'var(--bg)' }}>
       <div className="container">
-        <motion.div className="section-header"
+        <m.div className="section-header"
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
           <span className="section-subtitle">{t.experience.subtitle}</span>
           <h2 className="section-title">{t.experience.title}</h2>
-        </motion.div>
+        </m.div>
 
-        <div style={{ maxWidth: 800, margin: '0 auto', position: 'relative' }}>
+        <m.div
+          {...(mounted ? {
+            variants: containerVariants,
+            initial: "hidden",
+            whileInView: "show",
+            viewport: { once: true, margin: "-60px" }
+          } : {})}
+          style={{ maxWidth: 800, margin: '0 auto', position: 'relative' }}
+        >
           {/* Animated gradient timeline line */}
           <div style={{
             position: 'absolute', left: 19, top: 0, bottom: 0,
@@ -48,12 +64,9 @@ export function ExperienceSection({ data }: { data?: Experience[] | null }) {
             const end   = exp.end_date ? formatDate(exp.end_date) : t.experience.present
 
             return (
-              <motion.div
+              <m.div
                 key={exp.id}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.5 }}
+                {...(mounted ? { variants: itemRevealRight } : {})}
                 style={{ display: 'flex', gap: 28, marginBottom: 20 }}
               >
                 {/* Timeline dot with company icon */}
@@ -69,8 +82,9 @@ export function ExperienceSection({ data }: { data?: Experience[] | null }) {
                   </div>
                 </div>
 
-                {/* Card */}
-                <motion.div
+                {/* Card — hover via CSS, not framer-motion */}
+                <div
+                  className="exp-card-perf"
                   style={{
                     flex: 1,
                     background: 'var(--surface)',
@@ -78,9 +92,7 @@ export function ExperienceSection({ data }: { data?: Experience[] | null }) {
                     borderRadius: '14px',
                     padding: '20px 24px',
                     marginBottom: 8,
-                    transition: 'var(--transition)',
                   }}
-                  whileHover={{ borderColor: 'var(--accent)' }}
                 >
                   <div style={{ marginBottom: 10 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap', marginBottom: 8 }}>
@@ -115,11 +127,11 @@ export function ExperienceSection({ data }: { data?: Experience[] | null }) {
                   </div>
 
                   <p style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.7 }}>{desc}</p>
-                </motion.div>
-              </motion.div>
+                </div>
+              </m.div>
             )
           })}
-        </div>
+        </m.div>
       </div>
     </section>
   )
