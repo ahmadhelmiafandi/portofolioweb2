@@ -367,7 +367,7 @@
 .hero-portrait-container {
   position: absolute;
   bottom: 0;
-  right: 16%;
+  right: 8%; /* Shifted further right to avoid text overlap */
   height: 88vh;
   z-index: 10;
   pointer-events: none;
@@ -412,24 +412,26 @@
   transform: translateX(-50%) translateZ(0);
 }
 
-/* ── Floating Glass Stats Card ── */
-.hero-stats-card {
+/* ── Floating Glass Stats Card (Speech Bubble) ── */
+.hero-stats-card-container {
   position: absolute;
-  bottom: 35%;
-  right: -60px;
+  bottom: 72%; /* Positioned near head/shoulder */
+  left: 57%; /* Positioned relative to the portrait wrapper width */
   z-index: 50;
+  pointer-events: none;
+}
+
+.hero-stats-card {
+  --bubble-bg: rgba(10, 10, 10, 0.65);
+  --bubble-border: rgba(20, 184, 166, 0.35); /* More vibrant cyan border */
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 14px 22px;
-  background: rgba(10, 10, 10, 0.6);
-  border: 1px solid rgba(20, 184, 166, 0.2);
-  border-radius: 20px;
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.4),
-    0 0 40px rgba(20, 184, 166, 0.08);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  gap: 8px;
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
   pointer-events: auto;
   cursor: default;
   transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -437,14 +439,43 @@
   will-change: transform;
 }
 
+.hero-stats-card-bg {
+  position: absolute;
+  inset: 0;
+  background: var(--bubble-bg);
+  border: 1.5px solid var(--bubble-border); /* Thicker border */
+  border-radius: 16px; /* Speech bubble rounding */
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(20, 184, 166, 0.15); /* Teal accent glow */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 1;
+  pointer-events: none;
+  /* Clip out the bottom-left corner where the tail attaches on desktop */
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 16.75px 100%, 0 calc(100% - 16.75px));
+}
+
+.hero-stats-card-tail-svg {
+  display: block;
+  filter: drop-shadow(0 0 15px rgba(20, 184, 166, 0.15));
+}
+
 [data-theme="light"] .hero-stats-card {
-  background: rgba(255, 255, 255, 0.85);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  --bubble-bg: rgba(255, 255, 255, 0.85);
+  --bubble-border: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .hero-stats-card-bg {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
 }
 
 .hero-stats-card:hover {
   transform: translateY(-6px) scale(1.03);
+}
+
+.hero-mobile-badge-container {
+  display: none;
 }
 
 .hero-stats-info {
@@ -565,7 +596,7 @@
 /* ── Responsive ── */
 @media (max-width: 1200px) {
   .hero-portrait-container {
-    right: 10%;
+    right: 5%; /* Shifted further right to avoid text overlap on tablet */
     height: 70vh;
   }
 
@@ -680,9 +711,13 @@
     background-position: center center;
   }
 
-  .hero-portrait-img {
+  .hero-portrait-wrapper {
     transform: translateY(35px) scale(1.55);
     transform-origin: bottom center;
+  }
+
+  .hero-portrait-img {
+    transform: none;
   }
 
   .hero-portrait-glow {
@@ -700,17 +735,19 @@
     z-index: 5;
   }
 
-  .hero-stats-card {
-    bottom: 8%;
-    left: 0;
-    right: 0;
-    margin-left: auto;
-    margin-right: auto;
-    width: fit-content;
+  .hero-stats-card-container {
+    left: 49%; /* Positioned on the right side of the head, shifted slightly left to prevent right-screen overflow */
+    bottom: 70%; /* Positioned next to the neck/shoulder/head */
+    transform: scale(0.62);
+    transform-origin: bottom left;
   }
 
-  .hero-stats-card:hover {
-    transform: translateY(-6px) scale(1.03);
+  .hero-stats-card-bg {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 16.75px 100%, 0 calc(100% - 16.75px));
+  }
+
+  .hero-stats-card-tail-svg {
+    display: block;
   }
 
   .hero-side-text {
@@ -759,20 +796,6 @@
     white-space: nowrap;
   }
 
-  .hero-stats-card {
-    bottom: 8%;
-    left: 0;
-    right: 0;
-    margin-left: auto;
-    margin-right: auto;
-    width: fit-content;
-    padding: 10px 16px;
-    gap: 10px;
-  }
-
-  .hero-stats-card:hover {
-    transform: translateY(-6px) scale(1.03);
-  }
 }
 
 /* ── Light Mode Custom Theme Fixes ── */
@@ -827,7 +850,7 @@
     filter: blur(40px);
   }
 
-  .hero-stats-card {
+  .hero-stats-card-bg {
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
   }

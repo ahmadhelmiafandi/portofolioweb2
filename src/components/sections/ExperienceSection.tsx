@@ -3,6 +3,7 @@
 import { m } from 'framer-motion'
 import { containerVariants, itemRevealRight } from '@/lib/motion'
 import { useLang } from '@/contexts/LangContext'
+import { translations } from '@/lib/i18n'
 import { formatDate } from '@/lib/utils'
 import { Briefcase, MapPin, Calendar } from 'lucide-react'
 import { useState, useEffect } from 'react'
@@ -21,13 +22,17 @@ const DEFAULT_EXPERIENCES: Experience[] = [
 ]
 
 export function ExperienceSection({ data }: { data?: Experience[] | null }) {
-  const { lang, t } = useLang()
-  const experiences = (data && data.length > 0) ? data : DEFAULT_EXPERIENCES
+  const { lang: clientLang, t: clientT } = useLang()
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  const lang = mounted ? clientLang : 'id'
+  const t = mounted ? clientT : translations.id
+
+  const experiences = (data && data.length > 0) ? data : DEFAULT_EXPERIENCES
 
   return (
     <section id="experience" className="section" style={{ background: 'var(--bg)' }}>

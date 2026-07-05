@@ -1,9 +1,10 @@
 'use client'
 
 import { m } from 'framer-motion'
-import { containerVariants, itemRevealUp } from '@/lib/motion'
+import { containerVariants, cardRevealUp } from '@/lib/motion'
 import { useState, useMemo, memo, useEffect } from 'react'
 import { useLang } from '@/contexts/LangContext'
+import { translations } from '@/lib/i18n'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ExternalLink, GitBranch } from 'lucide-react'
@@ -29,13 +30,15 @@ const formatLink = (url: string | null | undefined) => {
 }
 
 const ProjectCard = memo(function ProjectCard({ project, index, mounted }: { project: Project; index: number; mounted: boolean }) {
-  const { lang, t } = useLang()
+  const { lang: clientLang, t: clientT } = useLang()
+  const lang = mounted ? clientLang : 'id'
+  const t = mounted ? clientT : translations.id
   const title = lang === 'en' ? project.title_en : project.title_id
   const desc  = lang === 'en' ? project.description_en : project.description_id
 
   return (
     <m.article
-      {...(mounted ? { variants: itemRevealUp } : {})}
+      {...(mounted ? { variants: cardRevealUp } : {})}
       className="project-card-perf"
       style={{
         background: 'var(--surface)',
@@ -166,15 +169,19 @@ const ProjectCard = memo(function ProjectCard({ project, index, mounted }: { pro
 })
 
 export function ProjectsSection({ data }: { data?: Project[] | null }) {
-  const { lang, t } = useLang()
-  const projects   = (data && data.length > 0) ? data : DEFAULT_PROJECTS
-  const categories = useMemo(() => ['All', ...Array.from(new Set(projects.map(p => p.category)))], [projects])
-  const [activeCategory, setActiveCategory] = useState('All')
+  const { lang: clientLang, t: clientT } = useLang()
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  const lang = mounted ? clientLang : 'id'
+  const t = mounted ? clientT : translations.id
+
+  const projects   = (data && data.length > 0) ? data : DEFAULT_PROJECTS
+  const categories = useMemo(() => ['All', ...Array.from(new Set(projects.map(p => p.category)))], [projects])
+  const [activeCategory, setActiveCategory] = useState('All')
 
   const filtered = useMemo(() => activeCategory === 'All' ? projects : projects.filter(p => p.category === activeCategory), [projects, activeCategory])
 

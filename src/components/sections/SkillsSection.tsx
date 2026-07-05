@@ -1,7 +1,7 @@
 'use client'
 
 import { m } from 'framer-motion'
-import { containerVariants, itemRevealUp } from '@/lib/motion'
+import { containerVariants, cardRevealUp } from '@/lib/motion'
 import { useState, useEffect, useMemo, memo } from 'react'
 import { useLang } from '@/contexts/LangContext'
 
@@ -33,7 +33,7 @@ const SkillCard = memo(function SkillCard({ skill, index, mounted }: { skill: Sk
 
   return (
     <m.div
-      {...(mounted ? { variants: itemRevealUp } : {})}
+      {...(mounted ? { variants: cardRevealUp } : {})}
       className="skill-card-perf"
       style={{
         background: 'var(--surface)',

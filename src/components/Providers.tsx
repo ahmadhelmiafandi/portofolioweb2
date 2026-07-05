@@ -10,7 +10,7 @@ import {
   createContext,
   useContext,
 } from "react";
-import { LazyMotion, domAnimation } from "framer-motion";
+import { LazyMotion, domMax } from "framer-motion";
 
 type Theme = "light" | "dark";
 
@@ -54,7 +54,7 @@ export function Providers({ children }: { children: ReactNode }) {
 
   return (
     <ThemeContext.Provider value={value}>
-      <LazyMotion features={domAnimation} strict>
+      <LazyMotion features={domMax} strict>
         <LangProvider>{children}</LangProvider>
       </LazyMotion>
     </ThemeContext.Provider>

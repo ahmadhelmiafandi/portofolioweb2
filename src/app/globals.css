@@ -42,6 +42,7 @@
 
   --skill-icon-filter: invert(1);
   --transform-gpu: translate3d(0, 0, 0);
+  --reveal-y: 20px; /* Desktop reveal offset */
 }
 
 [data-theme="light"] {
@@ -200,7 +201,6 @@ nav[aria-label="Main navigation"] {
 .cert-card-perf,
 .exp-card-perf {
   transform: translate3d(0, 0, 0);
-  will-change: transform, opacity;
 }
 
 /* ── Section header ── */
@@ -801,6 +801,9 @@ tr:hover td {
   }
 }
 @media (max-width: 1024px) {
+  :root {
+    --reveal-y: 16px; /* Tablet reveal offset */
+  }
   .container {
     max-width: 100%;
   }
@@ -809,6 +812,9 @@ tr:hover td {
   }
 }
 @media (max-width: 768px) {
+  :root {
+    --reveal-y: 12px; /* Mobile reveal offset */
+  }
   .section {
     padding: 64px 0;
   }
@@ -963,6 +969,7 @@ tr:hover td {
   transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .skill-card-perf:hover {
+  will-change: transform;
   border-color: var(--border-hover);
   transform: translateY(-4px);
 }
@@ -988,6 +995,7 @@ tr:hover td {
   transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .project-card-perf:hover {
+  will-change: transform;
   border-color: var(--border-hover);
   transform: translateY(-6px);
 }
@@ -1033,6 +1041,7 @@ tr:hover td {
   transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .cert-card-perf:hover {
+  will-change: transform;
   transform: translateY(-4px);
 }
 .cert-card-perf:hover::after {

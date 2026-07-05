@@ -3,6 +3,7 @@
 import { m } from 'framer-motion'
 import { containerVariants, itemRevealLeft, itemRevealRight } from '@/lib/motion'
 import { useLang } from '@/contexts/LangContext'
+import { translations } from '@/lib/i18n'
 import { Mail, MapPin, Phone, Link2, Send, Globe } from 'lucide-react'
 import { Github, Linkedin, Instagram, Twitter, Facebook, Youtube, Twitch, Whatsapp } from '@/components/icons/BrandIcons'
 import { useState, useCallback, useEffect } from 'react'
@@ -30,15 +31,19 @@ const ICON_MAP: Record<string, React.ElementType> = {
 }
 
 export function ContactSection({ contact, socials }: { contact?: ContactData | null; socials?: Social[] | null }) {
-  const { lang, t } = useLang()
-  const cd = contact || DEFAULT_CONTACT
-  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
-  const [form, setForm] = useState({ name: '', email: '', message: '' })
+  const { lang: clientLang, t: clientT } = useLang()
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  const lang = mounted ? clientLang : 'id'
+  const t = mounted ? clientT : translations.id
+
+  const cd = contact || DEFAULT_CONTACT
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+  const [form, setForm] = useState({ name: '', email: '', message: '' })
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault()

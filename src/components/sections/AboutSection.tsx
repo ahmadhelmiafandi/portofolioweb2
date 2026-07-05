@@ -1,6 +1,6 @@
 'use client'
 
-import { m, useMotionValue, useSpring, useTransform } from 'framer-motion'
+import { m, useMotionValue, useTransform } from 'framer-motion'
 import { useMemo, useState, useEffect } from 'react'
 import { useLang } from '@/contexts/LangContext'
 import Image from 'next/image'
@@ -21,14 +21,28 @@ const DEFAULT_ABOUT: AboutData = {
 function LanyardCard({ image, name }: { image?: string | null; name: string }) {
   const x = useMotionValue(0)
   const y = useMotionValue(0)
-  const springX = useSpring(x, { stiffness: 180, damping: 20, mass: 0.8 })
-  const springY = useSpring(y, { stiffness: 180, damping: 20, mass: 0.8 })
-  const rotateZ = useTransform(springX, [-100, 100], [10, -10])
+  const rotateZ = useTransform(x, [-100, 100], [12, -12])
 
-  const stringD = useTransform(
-    [springX, springY] as any,
-    ([lx, ly]: number[]) =>
-      `M 0 0 Q ${lx * 0.3} ${Math.max(24, ly * 0.5)} ${lx} ${ly + 50}`
+  // Dynamic left and right strap paths for a realistic neck-loop lanyard
+  const leftStrapD = useTransform(
+    [x, y] as any,
+    ([lx, ly]: number[]) => {
+      const endX = lx
+      const endY = ly + 140
+      const cpX = -45 + (endX + 45) * 0.3
+      const cpY = endY * 0.4
+      return `M -45 0 Q ${cpX} ${cpY} ${endX} ${endY}`
+    }
+  )
+  const rightStrapD = useTransform(
+    [x, y] as any,
+    ([lx, ly]: number[]) => {
+      const endX = lx
+      const endY = ly + 140
+      const cpX = 45 + (endX - 45) * 0.3
+      const cpY = endY * 0.4
+      return `M 45 0 Q ${cpX} ${cpY} ${endX} ${endY}`
+    }
   )
 
   return (
@@ -41,85 +55,227 @@ function LanyardCard({ image, name }: { image?: string | null; name: string }) {
       userSelect: 'none',
       overflow: 'visible',
       zIndex: 10,
+      paddingTop: 140, // Spacer for the lanyard strap area
     }}>
-      {/* Pin anchor */}
-      <div style={{
-        width: 10, height: 10, borderRadius: '50%',
-        background: '#a1a1aa',
-        boxShadow: '0 1px 4px rgba(0,0,0,0.8)',
-        flexShrink: 0, zIndex: 4, position: 'relative',
-      }} />
-
-      {/* Tali SVG - Lanyard string */}
+      {/* SVG Canvas for Double Ribbon Straps */}
       <svg style={{
-        position: 'absolute', top: 5, left: '50%',
+        position: 'absolute', top: 0, left: '50%',
         transform: 'translateX(-50%)',
         overflow: 'visible', pointerEvents: 'none', zIndex: 3,
         width: 2, height: 2,
       }}>
-        <m.path
-          style={{ d: stringD }}
-          fill="none" stroke="#3a3a3a" strokeWidth="8" strokeLinecap="round"
-        />
+        {/* Left Strap Fabric & Texture */}
+        <m.path style={{ d: leftStrapD }} fill="none" stroke="rgba(0,0,0,0.55)" strokeWidth="13" strokeLinecap="round" />
+        <m.path style={{ d: leftStrapD }} fill="none" stroke="#18181b" strokeWidth="10" strokeLinecap="round" />
+        <m.path style={{ d: leftStrapD }} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="2.5" strokeDasharray="5 3" />
+
+        {/* Right Strap Fabric & Texture */}
+        <m.path style={{ d: rightStrapD }} fill="none" stroke="rgba(0,0,0,0.55)" strokeWidth="13" strokeLinecap="round" />
+        <m.path style={{ d: rightStrapD }} fill="none" stroke="#18181b" strokeWidth="10" strokeLinecap="round" />
+        <m.path style={{ d: rightStrapD }} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="2.5" strokeDasharray="5 3" />
       </svg>
 
-      {/* Card */}
+      {/* ID Badge Holder & Clasp Assembly */}
       <m.div
         drag
-        dragMomentum={false}
-        dragElastic={0}
-        _dragX={x}
-        _dragY={y}
-        onDragEnd={() => {
-          // Snap balik ke 0,0 via spring
-          x.set(0)
-          y.set(0)
-        }}
+        dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
+        dragElastic={0.8}
+        dragTransition={{ bounceStiffness: 150, bounceDamping: 14 }}
         style={{
-          x: springX,
-          y: springY,
+          x,
+          y,
           rotateZ,
-          marginTop: 4,
+          marginTop: -6,
           cursor: 'grab',
           zIndex: 5,
           touchAction: 'none',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
         }}
-        whileDrag={{ scale: 1.02, cursor: 'grabbing' }}
+        whileDrag={{ scale: 1.03, cursor: 'grabbing' }}
       >
-        {/* D-ring */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: -2, position: 'relative', zIndex: 2 }}>
-          <div style={{
-            width: 22, height: 18,
-            border: '4px solid #27272a',
-            borderRadius: '10px 10px 0 0',
-            borderBottom: 'none',
-          }} />
-        </div>
+        {/* Metal Lobster Clasp & Ring */}
+        <svg width="32" height="42" viewBox="0 0 32 42" style={{ marginBottom: -8, position: 'relative', zIndex: 6, filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.4))' }}>
+          <defs>
+            <linearGradient id="silver-metal" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#f8fafc" />
+              <stop offset="35%" stopColor="#cbd5e1" />
+              <stop offset="70%" stopColor="#64748b" />
+              <stop offset="100%" stopColor="#334155" />
+            </linearGradient>
+          </defs>
+          {/* Triangular Loop */}
+          <path d="M 8 6 L 24 6 L 16 16 Z" fill="none" stroke="url(#silver-metal)" strokeWidth="3.5" strokeLinejoin="round" />
+          {/* Swivel Cylinder */}
+          <rect x="13.5" y="15" width="5" height="10" rx="1.5" fill="url(#silver-metal)" />
+          <circle cx="16" cy="20" r="3.5" fill="#475569" />
+          {/* Hook clip body */}
+          <path d="M 12 25 C 12 25, 12 36, 16 36 C 20 36, 20 25, 20 25" fill="none" stroke="url(#silver-metal)" strokeWidth="4.5" strokeLinecap="round" />
+          {/* Spring lever */}
+          <line x1="13.5" y1="26" x2="18.5" y2="33" stroke="#94a3b8" strokeWidth="2" />
+        </svg>
 
-        {/* Foto — pointer-events: none pada img agar drag tidak terblokir */}
+        {/* Clear Plastic Mika PVC Badge Holder */}
         <div style={{
-          width: 210, aspectRatio: '3/4',
-          borderRadius: '16px', overflow: 'hidden',
-          background: '#18181b',
-          boxShadow: '0 20px 60px rgba(0,0,0,0.8)',
-          pointerEvents: 'none',
+          width: 220,
+          padding: 8,
+          borderRadius: 18,
+          background: 'rgba(255, 255, 255, 0.04)',
+          border: '2px solid rgba(255, 255, 255, 0.1)',
+          boxShadow: '0 24px 64px rgba(0,0,0,0.7), inset 0 1px 2px rgba(255,255,255,0.05)',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
         }}>
-          {image ? (
-            <Image
-              src={image} alt={name} width={210} height={280}
-              draggable={false}
-              style={{ width: '100%', height: '100%', objectFit: 'cover', pointerEvents: 'none' }}
-            />
-          ) : (
+          {/* Horizontal Slot hole on the mika casing */}
+          <div style={{
+            width: 44,
+            height: 9,
+            borderRadius: 99,
+            background: 'rgba(5, 5, 5, 0.95)',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            margin: '0 auto 8px',
+            flexShrink: 0,
+          }} />
+
+          {/* Internal Employee ID Card */}
+          <div style={{
+            width: '100%',
+            aspectRatio: '3/4',
+            borderRadius: 12,
+            overflow: 'hidden',
+            background: 'linear-gradient(180deg, #1e1e24 0%, #0c0c0f 100%)',
+            border: '1px solid rgba(255, 255, 255, 0.05)',
+            position: 'relative',
+            display: 'flex',
+            flexDirection: 'column',
+            pointerEvents: 'none',
+          }}>
+            {/* Header Ribbon / Corporate Banner */}
             <div style={{
-              width: '100%', height: '100%', minHeight: 280,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 64, fontWeight: 800, color: 'var(--accent)',
-              fontFamily: 'Outfit, sans-serif',
-              background: 'linear-gradient(160deg, #18181b, #09090b)',
-              pointerEvents: 'none',
-            }}>H</div>
-          )}
+              background: 'linear-gradient(90deg, var(--accent), var(--accent-2))',
+              height: 22,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: '12px 12px 0 0',
+              flexShrink: 0,
+            }}>
+              <span style={{ fontSize: 9, fontWeight: 800, letterSpacing: '0.08em', color: '#000', fontFamily: 'Outfit, sans-serif' }}>
+                CREATIVE DEVELOPER
+              </span>
+            </div>
+
+            {/* Photo Casing & Portrait Image */}
+            <div style={{
+              flex: 1,
+              margin: '12px auto 8px',
+              width: 130,
+              aspectRatio: '3/4',
+              borderRadius: 8,
+              overflow: 'hidden',
+              background: '#09090b',
+              border: '2px solid rgba(255, 255, 255, 0.04)',
+              boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+              position: 'relative',
+            }}>
+              {image ? (
+                <Image
+                  src={image} alt={name} width={130} height={173}
+                  draggable={false}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', pointerEvents: 'none' }}
+                />
+              ) : (
+                <div style={{
+                  width: '100%', height: '100%',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 48, fontWeight: 800, color: 'var(--accent)',
+                  fontFamily: 'Outfit, sans-serif',
+                  background: 'linear-gradient(160deg, #18181b, #09090b)',
+                  pointerEvents: 'none',
+                }}>H</div>
+              )}
+            </div>
+
+            {/* Card Footer: Name & Barcode Aligned Horizontally */}
+            <div style={{
+              padding: '10px 14px 14px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              minHeight: 52,
+            }}>
+              {/* Text details container */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', flex: 1, minWidth: 0, paddingRight: 8 }}>
+                {/* Employee Name */}
+                <div style={{
+                  fontSize: 12,
+                  fontWeight: 700,
+                  color: 'var(--text-primary)',
+                  fontFamily: 'Outfit, sans-serif',
+                  letterSpacing: '-0.02em',
+                  lineHeight: 1.2,
+                  marginBottom: 1,
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  width: '100%',
+                }}>
+                  {name}
+                </div>
+                <div style={{ fontSize: 8, color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase', lineHeight: 1 }}>
+                  Jepara, ID
+                </div>
+              </div>
+
+              {/* Barcode representation */}
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 2,
+                opacity: 0.8,
+                flexShrink: 0,
+              }}>
+                <svg width="48" height="15">
+                  <rect x="0" width="2" height="15" fill="#fff" />
+                  <rect x="3" width="1" height="15" fill="#fff" />
+                  <rect x="5" width="2" height="15" fill="#fff" />
+                  <rect x="9" width="3" height="15" fill="#fff" />
+                  <rect x="13" width="1" height="15" fill="#fff" />
+                  <rect x="15" width="2" height="15" fill="#fff" />
+                  <rect x="18" width="1" height="15" fill="#fff" />
+                  <rect x="20" width="3" height="15" fill="#fff" />
+                  <rect x="24" width="1" height="15" fill="#fff" />
+                  <rect x="26" width="2" height="15" fill="#fff" />
+                  <rect x="29" width="1" height="15" fill="#fff" />
+                  <rect x="31" width="3" height="15" fill="#fff" />
+                  <rect x="35" width="2" height="15" fill="#fff" />
+                  <rect x="38" width="1" height="15" fill="#fff" />
+                  <rect x="40" width="2" height="15" fill="#fff" />
+                  <rect x="43" width="1" height="15" fill="#fff" />
+                  <rect x="45" width="2" height="15" fill="#fff" />
+                </svg>
+                <span style={{ fontSize: 7, color: 'var(--text-muted)', fontFamily: 'monospace', letterSpacing: '0.05em' }}>
+                  ID-82323
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Holographic Plastic Reflector Sheen Overlay */}
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 40%, transparent 60%)',
+            pointerEvents: 'none',
+            borderRadius: 'inherit',
+            zIndex: 10,
+          }} />
         </div>
       </m.div>
     </div>
@@ -167,36 +323,36 @@ export function AboutSection({ data }: { data?: AboutData | null }) {
             display: 'grid',
             gridTemplateColumns: 'minmax(180px, 220px) 1fr',
             gap: 'clamp(24px, 4vw, 56px)',
-            alignItems: 'flex-start',
+            alignItems: 'center', // Vertically center for premium layout balance
           }}>
             {/* Left: Lanyard photo */}
             <m.div {...(mounted ? { variants: itemRevealUp } : {})} style={{ display: 'flex', justifyContent: 'center', paddingTop: 20, paddingBottom: 32 }}>
-              <LanyardCard image={about.image} name="Helmi Afandi" />
+              <LanyardCard image={about.image} name="Ahmad Helmi Afandi" />
             </m.div>
-
+ 
             {/* Right: Content */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
               {/* Title */}
               <m.h2
                 {...(mounted ? { variants: itemRevealUp } : {})}
-                style={{ fontSize: 'clamp(26px, 3.5vw, 38px)', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 0, color: 'var(--text-primary)', fontFamily: 'Outfit, sans-serif' }}
+                style={{ fontSize: 'clamp(26px, 3.5vw, 38px)', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 12, color: 'var(--text-primary)', fontFamily: 'Outfit, sans-serif' }}
               >
                 {lang === 'en' ? 'About ' : 'Tentang '}
                 <span style={{ color: 'var(--accent)' }}>{lang === 'en' ? 'Me' : 'Saya'}</span>
               </m.h2>
-
+ 
               {/* Tagline */}
               <m.p
                 {...(mounted ? { variants: itemRevealUp } : {})}
-                style={{ fontSize: 14, fontStyle: 'italic', color: 'var(--text-muted)', marginBottom: 8, borderLeft: '3px solid var(--accent)', paddingLeft: 12, lineHeight: 1.6 }}
+                style={{ fontSize: 14, fontStyle: 'italic', color: 'var(--text-muted)', marginBottom: 20, borderLeft: '3px solid var(--accent)', paddingLeft: 12, lineHeight: 1.6 }}
               >
                 {lang === 'en'
                   ? 'A blend of logic and design aesthetics.'
                   : 'Perpaduan logika kode dan estetika desain.'}
               </m.p>
-
+ 
               {/* Description paragraphs */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 24 }}>
                 {paragraphs.map((para, i) => (
                   <m.p key={i}
                     {...(mounted ? { variants: itemRevealUp } : {})}
@@ -205,11 +361,11 @@ export function AboutSection({ data }: { data?: AboutData | null }) {
                   </m.p>
                 ))}
               </div>
-
+ 
               {/* Stats */}
               <m.div
                 {...(mounted ? { variants: itemRevealUp } : {})}
-                style={{ display: 'flex', gap: 12, marginTop: 12, marginBottom: 12, flexWrap: 'wrap' }}
+                style={{ display: 'flex', gap: 12, marginBottom: 24, flexWrap: 'wrap' }}
               >
                 {stats.map((s, i) => (
                   <div key={i} style={{
@@ -225,7 +381,7 @@ export function AboutSection({ data }: { data?: AboutData | null }) {
                   </div>
                 ))}
               </m.div>
-
+ 
               {/* Download CV button */}
               <m.div {...(mounted ? { variants: itemRevealUp } : {})} >
                 <a href="/api/cv/download" download className="btn-secondary" style={{ display: 'inline-flex' }}>
@@ -237,22 +393,6 @@ export function AboutSection({ data }: { data?: AboutData | null }) {
           </div>
         </m.div>
       </div>
-
-      {/* Responsive */}
-      <style>{`
-        @media (max-width: 640px) {
-          #about .container > div > div {
-            grid-template-columns: 1fr !important;
-            text-align: center;
-          }
-          #about .container > div > div > div:first-child {
-            padding-bottom: 40px;
-          }
-          #about p[style*="border-left"] {
-            text-align: left;
-          }
-        }
-      `}</style>
     </section>
   )
 }

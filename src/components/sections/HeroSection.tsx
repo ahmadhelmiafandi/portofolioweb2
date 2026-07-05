@@ -66,39 +66,41 @@ function TypewriterText({
   speed?: number;
   delay?: number;
 }) {
-  const [displayed, setDisplayed] = useState("");
-  const [started, setStarted] = useState(false);
-  const [done, setDone] = useState(false);
-  const indexRef = useRef(0);
+  const containerRef = useRef<HTMLSpanElement>(null);
+  const cursorRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => setStarted(true), delay);
-    return () => clearTimeout(timer);
-  }, [delay]);
+    const container = containerRef.current;
+    const cursor = cursorRef.current;
+    if (!container) return;
 
-  useEffect(() => {
-    if (!started) return;
+    container.textContent = "";
+    if (cursor) cursor.style.display = "inline-block";
 
-    indexRef.current = 0;
-    setDisplayed("");
-    setDone(false);
+    let index = 0;
+    let intervalId: any = null;
 
-    const interval = setInterval(() => {
-      indexRef.current += 1;
-      setDisplayed(text.slice(0, indexRef.current));
-      if (indexRef.current >= text.length) {
-        clearInterval(interval);
-        setDone(true);
-      }
-    }, speed);
+    const timerId = setTimeout(() => {
+      intervalId = setInterval(() => {
+        index += 1;
+        container.textContent = text.slice(0, index);
+        if (index >= text.length) {
+          clearInterval(intervalId);
+          if (cursor) cursor.style.display = "none";
+        }
+      }, speed);
+    }, delay);
 
-    return () => clearInterval(interval);
-  }, [text, speed, started]);
+    return () => {
+      clearTimeout(timerId);
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [text, speed, delay]);
 
   return (
     <span>
-      {displayed}
-      {!done && <span className="hero-typewriter-cursor" />}
+      <span ref={containerRef} />
+      <span ref={cursorRef} className="hero-typewriter-cursor" />
     </span>
   );
 }
@@ -191,9 +193,12 @@ export function HeroSection({
 
   const shouldAnimate = isInView && isTabActive && !prefersReducedMotion;
 
-  const { scrollY } = useScroll();
-  const rawYPortrait = useTransform(scrollY, [0, 800], [0, -40]);
-  const rawYText = useTransform(scrollY, [0, 800], [0, -80]);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+  const rawYPortrait = useTransform(scrollYProgress, [0, 1], [0, -40]);
+  const rawYText = useTransform(scrollYProgress, [0, 1], [0, -80]);
 
   const yPortraitVal = shouldAnimate && !isMobile ? rawYPortrait : 0;
   const yTextVal = shouldAnimate && !isMobile ? rawYText : 0;
@@ -347,6 +352,7 @@ export function HeroSection({
                 )}
               </div>
 
+
               <div className="hero-socials">
                 {heroSocials.map((s) => (
                   <a
@@ -366,65 +372,94 @@ export function HeroSection({
 
           {/* Portrait – absolutely positioned to overlap the text */}
           <div className="hero-portrait-container">
-            <m.div style={{ y: yPortraitVal, display: 'flex', alignItems: 'flex-end', height: '100%', width: '100%', position: 'relative' }}>
-              {/* Cyan glow behind portrait body */}
-              <div className="hero-portrait-glow" />
+            <m.div style={{ y: yPortraitVal, display: 'flex', justifyContent: 'center', alignItems: 'flex-end', height: '100%', width: '100%', position: 'relative' }}>
+              
+              {/* Aspect Ratio Wrapper matching the portrait image dimensions */}
+              <div className="hero-portrait-wrapper" style={{ position: 'relative', height: '100%', aspectRatio: '720/960', maxWidth: '100%', display: 'flex', alignItems: 'flex-end', pointerEvents: 'none' }}>
+                
+                {/* Cyan glow behind portrait body */}
+                <div className="hero-portrait-glow" />
 
-              {/* The portrait image — explicit dimensions to prevent CLS */}
-              <Image
-                className="hero-portrait-img"
-                src={imageUrl}
-                alt={name}
-                width={720}
-                height={960}
-                priority
-                fetchPriority="high"
-                decoding="async"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 720px"
-                draggable={false}
-              />
+                {/* The portrait image — explicit dimensions to prevent CLS */}
+                <Image
+                  className="hero-portrait-img"
+                  src={imageUrl}
+                  alt={name}
+                  width={720}
+                  height={960}
+                  priority
+                  fetchPriority="high"
+                  decoding="async"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 720px"
+                  draggable={false}
+                  style={{ width: '100%', height: '100%', objectFit: 'contain', pointerEvents: 'none' }}
+                />
 
-              {/* Floating Glass Stats Card near waist */}
-              <m.div
-                className="hero-stats-card"
-                initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                animate={{
-                  opacity: 1,
-                  scale: 1,
-                  y: shouldAnimate ? [0, -10, 0] : 0,
-                }}
-                transition={{
-                  opacity: { duration: dur ?? 0.6, delay: 0.8 },
-                  scale: { duration: dur ?? 0.6, delay: 0.8 },
-                  y: shouldAnimate
-                    ? {
-                        repeat: Infinity,
-                        duration: 4.5,
-                        ease: "easeInOut",
-                        delay: 1.4,
-                      }
-                    : { duration: 0 },
-                }}
-              >
-                <div className="hero-stats-info">
-                  <div className="hero-stats-text">
-                    <span className="hero-stats-number">
-                      4.8k Plus
-                    </span>
-                    <span className="hero-stats-label">
-                      {lang === "en" ? "Happy Customers" : "Pelanggan Puas"}
-                    </span>
-                  </div>
-                  
-                  {/* Overlapping Avatars */}
-                  <div className="hero-stats-avatars">
-                    <div className="hero-stats-avatar hero-stats-avatar-cyan" />
-                    <div className="hero-stats-avatar hero-stats-avatar-sky" />
-                    <div className="hero-stats-avatar hero-stats-avatar-blue" />
-                    <div className="hero-stats-avatar hero-stats-avatar-indigo" />
-                  </div>
+                {/* Floating Glass Stats Card near head/shoulder */}
+                <div className="hero-stats-card-container">
+                  <m.div
+                    className="hero-stats-card"
+                    initial={{ scale: 0.94, y: 10 }}
+                    animate={{
+                      scale: 1,
+                      y: shouldAnimate ? [0, -10, 0] : 0,
+                    }}
+                    transition={{
+                      scale: { duration: 0.65, delay: 0.8, ease: [0.33, 1, 0.68, 1] },
+                      y: shouldAnimate
+                        ? {
+                            repeat: Infinity,
+                            duration: 4.5,
+                            ease: "easeInOut",
+                            delay: 1.4,
+                          }
+                        : { duration: 0 },
+                    }}
+                  >
+                    {/* Glassmorphism Background with clipped bottom-left corner */}
+                    <div className="hero-stats-card-bg" />
+
+                    {/* Speech Bubble Tail SVG */}
+                    <svg
+                      className="hero-stats-card-tail-svg"
+                      width="40"
+                      height="40"
+                      viewBox="0 0 40 40"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      style={{
+                        position: 'absolute',
+                        bottom: '-20px',
+                        left: '-20px',
+                        pointerEvents: 'none',
+                        zIndex: 3,
+                      }}
+                    >
+                      {/* Tail Background Fill (closed with diagonal line) */}
+                      <path
+                        d="M 20.75,3.25 C 20.75,15 12,28 4,36 C 12,34 26,19.25 36.75,19.25 Z"
+                        fill="var(--bubble-bg)"
+                      />
+                      {/* Tail Glowing Border Stroke (no diagonal line) */}
+                      <path
+                        d="M 20.75,3.25 C 20.75,15 12,28 4,36 C 12,34 26,19.25 36.75,19.25"
+                        stroke="var(--bubble-border)"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+
+                    {/* Content */}
+                    <div className="hero-stats-info" style={{ display: 'flex', alignItems: 'center', gap: 8, position: 'relative', zIndex: 4 }}>
+                      <div className="hero-status-dot" style={{ width: 10, height: 10, flexShrink: 0 }} />
+                      <span className="hero-stats-number" style={{ fontSize: 14, fontWeight: 700, letterSpacing: '-0.01em', color: 'var(--text-primary)', lineHeight: 1 }}>
+                        {lang === "en" ? "Open to Work" : "Terbuka untuk Kerja"}
+                      </span>
+                    </div>
+                  </m.div>
                 </div>
-              </m.div>
+              </div>
             </m.div>
           </div>
         </div>

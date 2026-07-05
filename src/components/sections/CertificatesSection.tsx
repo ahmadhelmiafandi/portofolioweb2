@@ -1,8 +1,9 @@
 'use client'
 
 import { m } from 'framer-motion'
-import { containerVariants, itemRevealUp } from '@/lib/motion'
+import { containerVariants, cardRevealUp } from '@/lib/motion'
 import { useLang } from '@/contexts/LangContext'
+import { translations } from '@/lib/i18n'
 import { Award, Calendar, ExternalLink, ShieldCheck, ChevronDown, ChevronUp } from 'lucide-react'
 import { useState, useMemo, useEffect } from 'react'
 
@@ -15,13 +16,16 @@ interface Certificate {
 }
 
 export function CertificatesSection({ data }: { data?: Certificate[] | null }) {
-  const { t, lang } = useLang()
+  const { t: clientT, lang: clientLang } = useLang()
   const [showAll, setShowAll] = useState(false)
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  const lang = mounted ? clientLang : 'id'
+  const t = mounted ? clientT : translations.id
 
   const publishedCerts = useMemo(() => data ? data.filter(c => c.published) : [], [data])
   const visibleCerts = useMemo(() => showAll ? publishedCerts : publishedCerts.slice(0, 3), [publishedCerts, showAll])
@@ -67,7 +71,7 @@ export function CertificatesSection({ data }: { data?: Certificate[] | null }) {
             return (
               <m.article
                 key={cert.id}
-                {...(mounted ? { variants: itemRevealUp } : {})}
+                {...(mounted ? { variants: cardRevealUp } : {})}
                 className="cert-card-perf"
                 style={{
                   background: 'var(--surface)',
