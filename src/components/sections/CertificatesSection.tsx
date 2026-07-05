@@ -56,8 +56,9 @@ export function CertificatesSection({ data }: { data?: Certificate[] | null }) {
         <m.div
           {...(mounted ? {
             variants: containerVariants,
-            initial: "hidden",
+            initial: showAll ? "show" : "hidden",
             whileInView: "show",
+            animate: showAll ? "show" : undefined,
             viewport: { once: true, margin: "-60px" }
           } : {})}
           style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 20 }}
@@ -167,8 +168,7 @@ export function CertificatesSection({ data }: { data?: Certificate[] | null }) {
         </m.div>
 
         {publishedCerts.length > 3 && (
-          <m.div
-            initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+          <div
             style={{ display: 'flex', justifyContent: 'center', marginTop: 40 }}
           >
             <button
@@ -189,7 +189,7 @@ export function CertificatesSection({ data }: { data?: Certificate[] | null }) {
                 <><ChevronDown size={15} />{lang === 'en' ? `View All Certificates (${publishedCerts.length})` : `Lihat Semua Sertifikat (${publishedCerts.length})`}</>
               )}
             </button>
-          </m.div>
+          </div>
         )}
       </div>
     </section>

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { 
   Users, 
   Eye, 
@@ -52,7 +52,7 @@ const statCards: { label: string; value: number; icon: any; color: string }[] = 
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px', marginBottom: '48px' }}>
         {statCards.map((stat: { label: string; value: number; icon: any; color: string }, i: number) => (
-          <motion.div
+          <m.div
             key={i}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -77,7 +77,7 @@ const statCards: { label: string; value: number; icon: any; color: string }[] = 
               <div style={{ fontSize: '13px', color: 'var(--text-secondary)', fontWeight: '600', marginBottom: '4px' }}>{stat.label}</div>
               <div style={{ fontSize: '32px', fontWeight: '800', color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>{stat.value}</div>
             </div>
-          </motion.div>
+          </m.div>
         ))}
       </div>
 

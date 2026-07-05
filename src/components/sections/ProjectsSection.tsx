@@ -36,50 +36,75 @@ const ProjectCard = memo(function ProjectCard({ project, index, mounted }: { pro
   const title = lang === 'en' ? project.title_en : project.title_id
   const desc  = lang === 'en' ? project.description_en : project.description_id
 
+  const shadowColors = [
+    'var(--accent-2)', // Purple
+    'var(--accent-3)', // Pink
+    'var(--accent-4)', // Yellow
+    'var(--accent)',   // Teal
+  ]
+  const shadowColor = shadowColors[index % shadowColors.length]
+  const displayCategory = project.category === 'Web' ? 'Full Stack Developer' : project.category
+
   return (
     <m.article
       {...(mounted ? { variants: cardRevealUp } : {})}
-      className="project-card-perf"
-      style={{
-        background: 'var(--surface)',
-        border: '1px solid var(--border)',
-        borderRadius: '16px',
-        overflow: 'hidden',
-        display: 'flex', flexDirection: 'column',
-        boxShadow: 'var(--shadow-sm)',
-        height: '100%'
-      }}
+      className="neubrutal-card"
     >
-      {project.image && (
-        <div style={{ position: 'relative', width: '100%', aspectRatio: '16/9', overflow: 'hidden', background: 'var(--surface-2)' }}>
-          <div className="project-img-hover-wrap">
-            <Image src={project.image} alt={title} fill
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
-              style={{ objectFit: 'cover', transition: 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)', willChange: 'transform' }}
-            />
-          </div>
-          
-          {/* CSS gradient overlay on hover — replaces expensive iframe + backdrop-filter */}
-          <div className="project-hover-overlay" style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'linear-gradient(135deg, rgba(20,184,166,0.15), rgba(139,92,246,0.15))',
-            opacity: 0,
-            transition: 'opacity 0.3s ease',
-            pointerEvents: 'none',
-            zIndex: 2
-          }} />
-
-          <div style={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: '50%',
-            background: 'linear-gradient(to top, rgba(5,5,5,0.8), rgba(5,5,5,0.3))',
-            pointerEvents: 'none',
-            zIndex: 3
-          }} />
+      <div style={{ padding: '18px 18px 0 18px' }}>
+        <div style={{
+          position: 'relative',
+          width: '100%',
+          aspectRatio: '16/9',
+          overflow: 'hidden',
+          borderRadius: '12px',
+          border: '2px solid var(--text-primary)',
+          background: 'var(--surface-2)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          {project.image ? (
+            <>
+              <div className="project-img-hover-wrap" style={{ width: '100%', height: '100%', position: 'relative' }}>
+                <Image src={project.image} alt={title} fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
+                  style={{ objectFit: 'cover', transition: 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)', willChange: 'transform' }}
+                />
+              </div>
+              
+              {/* CSS gradient overlay on hover */}
+              <div className="project-hover-overlay" style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(135deg, rgba(20,184,166,0.15), rgba(139,92,246,0.15))',
+                opacity: 0,
+                transition: 'opacity 0.3s ease',
+                pointerEvents: 'none',
+                zIndex: 2
+              }} />
+            </>
+          ) : (
+            <>
+              <div className="grid-pattern" style={{ position: 'absolute', inset: 0, opacity: 0.15 }} />
+              <div style={{
+                position: 'absolute',
+                inset: 0,
+                background: `linear-gradient(135deg, ${shadowColor}10, ${shadowColor}25)`,
+                zIndex: 1
+              }} />
+              <span style={{
+                fontFamily: 'var(--font-space)',
+                fontSize: 36,
+                fontWeight: 900,
+                color: shadowColor,
+                opacity: 0.85,
+                textShadow: '1.5px 1.5px 0px var(--text-primary)',
+                zIndex: 2
+              }}>
+                {project.title_en.substring(0, 2).toUpperCase()}
+              </span>
+            </>
+          )}
 
           {project.featured && (
             <m.span 
@@ -89,61 +114,77 @@ const ProjectCard = memo(function ProjectCard({ project, index, mounted }: { pro
               transition={{ delay: 0.2, duration: 0.3 }}
               style={{ 
                 position: 'absolute',
-                top: 12,
-                right: 12,
-                fontSize: 11, 
-                fontWeight: 700, 
+                top: 10,
+                right: 10,
+                fontSize: 10, 
+                fontWeight: 800, 
                 color: '#000',
                 background: 'linear-gradient(135deg, #fbbf24, #f59e0b)',
-                padding: '6px 14px', 
+                padding: '4px 10px', 
                 borderRadius: '9999px',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '4px',
-                boxShadow: '0 4px 12px rgba(245,158,11,0.4)',
+                gap: '3px',
+                border: '1.5px solid #000',
+                boxShadow: '2px 2px 0px #000',
                 zIndex: 10
               }}>
               ⭐ {t.projects.featured}
             </m.span>
           )}
         </div>
-      )}
+      </div>
 
-      <div style={{ padding: '24px', flex: 1, display: 'flex', flexDirection: 'column', gap: 12 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
-          <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
-            {project.category}
-          </span>
-        </div>
-
+      <div style={{ padding: '20px 20px 24px 20px', flex: 1, display: 'flex', flexDirection: 'column', gap: 14 }}>
         <div>
-          <h3 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.02em', lineHeight: 1.3, marginBottom: 8 }}>
+          <h3 style={{ fontSize: 20, fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'var(--font-space)', letterSpacing: '-0.02em', lineHeight: 1.25, marginBottom: 6 }}>
             {title}
           </h3>
+          <div style={{ marginBottom: 12 }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'var(--font-space)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              {displayCategory}
+            </span>
+          </div>
           <p style={{
-            color: 'var(--text-secondary)', fontSize: 14, lineHeight: 1.6,
-            display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
+            color: 'var(--text-primary)', fontSize: 14, lineHeight: 1.6,
+            display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical',
             overflow: 'hidden', textOverflow: 'ellipsis',
+            margin: 0
           }}>
             {desc}
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 'auto' }}>
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center', marginTop: 'auto' }}>
           {project.tech_stack.slice(0, 4).map(tech => <span key={tech} className="tech-tag">{tech}</span>)}
           {project.tech_stack.length > 4 && (
-            <span className="tech-tag" style={{ color: 'var(--accent)' }}>+{project.tech_stack.length - 4}</span>
+            <span style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '26px',
+              height: '26px',
+              borderRadius: '50%',
+              fontSize: '11px',
+              fontWeight: 800,
+              background: 'var(--accent-4)',
+              color: '#000',
+              border: '1.5px solid var(--text-primary)',
+              boxShadow: '1.5px 1.5px 0px var(--text-primary)',
+            }}>
+              +{project.tech_stack.length - 4}
+            </span>
           )}
         </div>
 
-        <div style={{ display: 'flex', gap: 8, marginTop: 16, paddingTop: 16, borderTop: '1px solid var(--border)' }}>
+        <div style={{ display: 'flex', gap: 8, marginTop: 4, paddingTop: 16, borderTop: '1px solid var(--border)' }}>
           {project.link && (
             <a 
               href={formatLink(project.link)} 
               target="_blank" 
               rel="noopener noreferrer"
-              className="btn-primary"
-              style={{ flex: 1, justifyContent: 'center', padding: '10px 16px', fontSize: 13 }}
+              className="neubrutal-btn-primary"
+              style={{ flex: 1 }}
             >
               <ExternalLink size={14} />
               {t.projects.visit_project}
@@ -154,8 +195,7 @@ const ProjectCard = memo(function ProjectCard({ project, index, mounted }: { pro
               href={formatLink(project.github)} 
               target="_blank" 
               rel="noopener noreferrer"
-              className="btn-secondary"
-              style={{ padding: '10px 14px', fontSize: 13 }}
+              className="neubrutal-btn-secondary"
               aria-label="GitHub Repository"
             >
               <GitBranch size={15} />

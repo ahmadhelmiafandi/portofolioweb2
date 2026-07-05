@@ -54,6 +54,7 @@ export default function RootLayout({
     <html
       lang="id"
       className={`${outfit.className} ${spaceGrotesk.className}`}
+      data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
       <body suppressHydrationWarning>
