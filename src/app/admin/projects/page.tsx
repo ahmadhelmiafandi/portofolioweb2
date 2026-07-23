@@ -71,10 +71,15 @@ export default function AdminProjectsPage() {
     const method = currentProject?.id ? 'PATCH' : 'POST'
     const url = currentProject?.id ? `/api/projects/${currentProject.id}` : '/api/projects'
 
-    // Parse tech stack text into array at save time
+    // Combine tech_stack chips array with any pending text in input
+    const pendingTag = techStackText.trim()
+    const finalTechStack = pendingTag 
+      ? [...(currentProject?.tech_stack || []), pendingTag]
+      : (currentProject?.tech_stack || [])
+
     const projectData = {
       ...currentProject,
-      tech_stack: techStackText.split(',').map(s => s.trim()).filter(Boolean)
+      tech_stack: finalTechStack
     }
 
     try {
@@ -336,13 +341,115 @@ export default function AdminProjectsPage() {
               </div>
 
               <div>
-                <label className="label">Tech Stack (separated by commas)</label>
-                <input 
-                  type="text" className="input" required
-                  value={techStackText}
-                  onChange={(e) => setTechStackText(e.target.value)}
-                  placeholder="Next.js, Tailwind CSS, TypeScript"
-                />
+                <label className="label">Tech Stack</label>
+                <div 
+                  className="input" 
+                  style={{ 
+                    display: 'flex', 
+                    flexWrap: 'wrap', 
+                    gap: '8px', 
+                    alignItems: 'center', 
+                    minHeight: '48px', 
+                    padding: '8px 12px',
+                    cursor: 'text'
+                  }}
+                  onClick={(e) => {
+                    const inputEl = e.currentTarget.querySelector('input')
+                    if (inputEl) inputEl.focus()
+                  }}
+                >
+                  {(currentProject?.tech_stack || []).map((tech, idx) => (
+                    <span 
+                      key={idx} 
+                      style={{ 
+                        background: 'var(--accent-light)', 
+                        color: 'var(--accent)', 
+                        padding: '4px 10px', 
+                        borderRadius: '6px', 
+                        fontSize: '12px', 
+                        fontWeight: '600',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px'
+                      }}
+                    >
+                      {tech}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          const updated = (currentProject?.tech_stack || []).filter((_, i) => i !== idx)
+                          setCurrentProject({ ...currentProject, tech_stack: updated })
+                        }}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          color: 'var(--accent)',
+                          cursor: 'pointer',
+                          padding: 0,
+                          fontSize: '14px',
+                          lineHeight: 1,
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        &times;
+                      </button>
+                    </span>
+                  ))}
+                  <input 
+                    type="text"
+                    value={techStackText}
+                    onChange={(e) => {
+                      const val = e.target.value
+                      if (val.includes(',')) {
+                        const parts = val.split(',')
+                        const newTags = parts.slice(0, -1).map(s => s.trim()).filter(Boolean)
+                        const remainder = parts[parts.length - 1]
+                        const currentTags = currentProject?.tech_stack || []
+                        setCurrentProject({ ...currentProject, tech_stack: [...currentTags, ...newTags] })
+                        setTechStackText(remainder)
+                      } else {
+                        setTechStackText(val)
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault()
+                        if (techStackText.trim()) {
+                          const currentTags = currentProject?.tech_stack || []
+                          setCurrentProject({ ...currentProject, tech_stack: [...currentTags, techStackText.trim()] })
+                          setTechStackText('')
+                        }
+                      } else if (e.key === 'Backspace' && !techStackText) {
+                        const currentTags = currentProject?.tech_stack || []
+                        if (currentTags.length > 0) {
+                          setCurrentProject({ ...currentProject, tech_stack: currentTags.slice(0, -1) })
+                        }
+                      }
+                    }}
+                    onBlur={() => {
+                      if (techStackText.trim()) {
+                        const currentTags = currentProject?.tech_stack || []
+                        setCurrentProject({ ...currentProject, tech_stack: [...currentTags, techStackText.trim()] })
+                        setTechStackText('')
+                      }
+                    }}
+                    placeholder={(currentProject?.tech_stack || []).length === 0 ? "Ketik teknologi lalu tekan Koma (,), Enter, atau Spasi..." : "Tambah lagi..."}
+                    style={{ 
+                      border: 'none', 
+                      outline: 'none', 
+                      background: 'transparent', 
+                      color: 'var(--text-primary)', 
+                      fontSize: '14px', 
+                      flex: 1, 
+                      minWidth: '160px',
+                      padding: '4px 0' 
+                    }}
+                  />
+                </div>
+                <span style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px', display: 'block' }}>
+                  Ketik nama teknologi (contoh: Next.js, Tailwind CSS) lalu tekan <strong>Koma (,)</strong> atau <strong>Enter</strong> untuk menambahkan tag.
+                </span>
               </div>
 
               <div>
