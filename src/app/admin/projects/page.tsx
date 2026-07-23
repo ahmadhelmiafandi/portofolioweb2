@@ -43,6 +43,7 @@ export default function AdminProjectsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [currentProject, setCurrentProject] = useState<Partial<Project> | null>(null)
   const [saving, setSaving] = useState(false)
+  const [techStackText, setTechStackText] = useState('')
   
   // Confirm Delete Dialog State
   const [deleteId, setDeleteId] = useState<string | null>(null)
@@ -70,11 +71,17 @@ export default function AdminProjectsPage() {
     const method = currentProject?.id ? 'PATCH' : 'POST'
     const url = currentProject?.id ? `/api/projects/${currentProject.id}` : '/api/projects'
 
+    // Parse tech stack text into array at save time
+    const projectData = {
+      ...currentProject,
+      tech_stack: techStackText.split(',').map(s => s.trim()).filter(Boolean)
+    }
+
     try {
       const res = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(currentProject)
+        body: JSON.stringify(projectData)
       })
       if (res.ok) {
         toast(`Project ${currentProject?.id ? 'updated' : 'created'} successfully!`, 'success')
@@ -125,7 +132,7 @@ export default function AdminProjectsPage() {
         icon={Briefcase}
         action={
           <button 
-            onClick={() => { setCurrentProject({ tech_stack: [], featured: false, published: true, category: 'Web', order: 0 }); setIsModalOpen(true); }}
+            onClick={() => { setCurrentProject({ tech_stack: [], featured: false, published: true, category: 'Web', order: 0 }); setTechStackText(''); setIsModalOpen(true); }}
             className="btn-primary"
           >
             <Plus size={16} /> Add Project
@@ -201,7 +208,7 @@ export default function AdminProjectsPage() {
                   <td>
                     <div style={{ display: 'flex', gap: '12px' }}>
                       <button 
-                        onClick={() => { setCurrentProject(project); setIsModalOpen(true); }} 
+                        onClick={() => { setCurrentProject(project); setTechStackText(project.tech_stack?.join(', ') || ''); setIsModalOpen(true); }} 
                         style={{ color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer' }}
                         aria-label="Edit project"
                       >
@@ -332,8 +339,8 @@ export default function AdminProjectsPage() {
                 <label className="label">Tech Stack (separated by commas)</label>
                 <input 
                   type="text" className="input" required
-                  value={currentProject?.tech_stack?.join(', ') || ''}
-                  onChange={(e) => setCurrentProject({ ...currentProject, tech_stack: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })}
+                  value={techStackText}
+                  onChange={(e) => setTechStackText(e.target.value)}
                   placeholder="Next.js, Tailwind CSS, TypeScript"
                 />
               </div>
