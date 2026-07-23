@@ -48,6 +48,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [user, setUser] = useState<{ name: string; email: string; role: string } | null>(null)
+  const [authChecked, setAuthChecked] = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -55,12 +56,31 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const saved = localStorage.getItem('admin_sidebar_collapsed')
     if (saved === 'true') setCollapsed(true)
 
-    // Fetch user profile info
+    // Skip auth check on the login page itself
+    if (pathname === '/admin/login') {
+      setAuthChecked(true)
+      return
+    }
+
+    // Fetch user profile info — redirect to login if not authenticated
     fetch('/api/auth/me')
-      .then(res => res.ok ? res.json() : null)
-      .then(data => setUser(data))
-      .catch(err => console.error('Failed to load user info', err))
-  }, [])
+      .then(res => {
+        if (!res.ok) {
+          router.replace('/admin/login')
+          return null
+        }
+        return res.json()
+      })
+      .then(data => {
+        if (data) {
+          setUser(data)
+          setAuthChecked(true)
+        }
+      })
+      .catch(() => {
+        router.replace('/admin/login')
+      })
+  }, [pathname, router])
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' })
@@ -90,6 +110,32 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (pathname === '/admin/login') {
     return <ToastProvider>{children}</ToastProvider>
+  }
+
+  // Show loading spinner while verifying authentication
+  if (!authChecked) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'var(--bg)',
+        flexDirection: 'column',
+        gap: '16px'
+      }}>
+        <div style={{
+          width: '40px',
+          height: '40px',
+          border: '3px solid var(--border)',
+          borderTopColor: 'var(--accent)',
+          borderRadius: '50%',
+          animation: 'spin 0.8s linear infinite'
+        }} />
+        <span style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>Verifying authentication...</span>
+        <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
+      </div>
+    )
   }
 
   return (
