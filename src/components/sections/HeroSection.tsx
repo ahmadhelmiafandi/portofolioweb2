@@ -229,27 +229,7 @@ export function HeroSection({
         <div className="hero-corner-mark hero-corner-tl" />
         <div className="hero-corner-mark hero-corner-br" />
 
-        {/* Scroll indicator on right side */}
-        <m.div
-          className="hero-side-text"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: dur ?? 0.8 }}
-        >
-          <span className="hero-side-label">
-            {lang === "en" ? "Scroll" : "Gulir"}
-          </span>
-          {shouldAnimate ? (
-            <m.div
-              className="hero-side-line"
-              animate={{ scaleY: [1, 0.4, 1] }}
-              transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-              style={{ transformOrigin: "top" }}
-            />
-          ) : (
-            <div className="hero-side-line" />
-          )}
-        </m.div>
+
 
 
 
