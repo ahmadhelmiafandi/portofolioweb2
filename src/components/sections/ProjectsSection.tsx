@@ -255,15 +255,21 @@ export function ProjectsSection({ data }: { data?: Project[] | null }) {
         </div>
 
         <m.div
+          key={activeCategory}
           {...(mounted ? {
             variants: containerVariants,
             initial: "hidden",
-            whileInView: "show",
-            viewport: { once: true, margin: "-60px" }
+            animate: "show",
           } : {})}
           style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: 28, marginTop: 32 }}
         >
-           {filtered.map((p, i) => <ProjectCard key={p.id} project={p} index={i} mounted={mounted} />)}
+          {filtered.length === 0 ? (
+            <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '48px 0', color: 'var(--text-secondary)', fontSize: 15 }}>
+              {lang === 'en' ? 'No projects found in this category.' : 'Tidak ada proyek dalam kategori ini.'}
+            </div>
+          ) : (
+            filtered.map((p, i) => <ProjectCard key={p.id} project={p} index={i} mounted={mounted} />)
+          )}
         </m.div>
       </div>
     </section>

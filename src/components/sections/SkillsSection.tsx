@@ -147,11 +147,11 @@ export function SkillsSection({ data }: { data?: Skill[] | null }) {
 
         {/* Icon grid */}
         <m.div
+          key={activeCategory}
           {...(mounted ? {
             variants: containerVariants,
             initial: "hidden",
-            whileInView: "show",
-            viewport: { once: true, margin: "-60px" }
+            animate: "show",
           } : {})}
           style={{
             display: 'grid',
