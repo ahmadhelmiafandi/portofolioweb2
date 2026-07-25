@@ -71,11 +71,13 @@ export default function AdminProjectsPage() {
     const method = currentProject?.id ? 'PATCH' : 'POST'
     const url = currentProject?.id ? `/api/projects/${currentProject.id}` : '/api/projects'
 
-    // Combine tech_stack chips array with any pending text in input
+    // Combine tech_stack chips array with any pending text in input and deduplicate
     const pendingTag = techStackText.trim()
-    const finalTechStack = pendingTag 
-      ? [...(currentProject?.tech_stack || []), pendingTag]
-      : (currentProject?.tech_stack || [])
+    const pendingTags = pendingTag ? pendingTag.split(',').map(s => s.trim()).filter(Boolean) : []
+    const rawStack = [...(currentProject?.tech_stack || []), ...pendingTags]
+    const finalTechStack = Array.from(new Set(
+      rawStack.flatMap(item => String(item).split(',')).map(s => s.trim()).filter(Boolean)
+    ))
 
     const projectData = {
       ...currentProject,
@@ -213,7 +215,15 @@ export default function AdminProjectsPage() {
                   <td>
                     <div style={{ display: 'flex', gap: '12px' }}>
                       <button 
-                        onClick={() => { setCurrentProject(project); setTechStackText(project.tech_stack?.join(', ') || ''); setIsModalOpen(true); }} 
+                        onClick={() => { 
+                          const rawStack = project.tech_stack || []
+                          const cleanStack = Array.from(new Set(
+                            rawStack.flatMap((item: string) => String(item).split(',')).map((s: string) => s.trim()).filter(Boolean)
+                          ))
+                          setCurrentProject({ ...project, tech_stack: cleanStack })
+                          setTechStackText('')
+                          setIsModalOpen(true)
+                        }} 
                         style={{ color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer' }}
                         aria-label="Edit project"
                       >

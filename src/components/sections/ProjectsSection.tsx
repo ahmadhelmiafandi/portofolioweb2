@@ -45,6 +45,13 @@ const ProjectCard = memo(function ProjectCard({ project, index, mounted }: { pro
   const shadowColor = shadowColors[index % shadowColors.length]
   const displayCategory = project.category === 'Web' ? 'Full Stack Developer' : project.category
 
+  const cleanedTechStack = useMemo(() => {
+    if (!project.tech_stack) return []
+    const rawList = Array.isArray(project.tech_stack) ? project.tech_stack : [project.tech_stack]
+    const items = rawList.flatMap(item => String(item).split(',')).map(s => s.trim()).filter(Boolean)
+    return Array.from(new Set(items))
+  }, [project.tech_stack])
+
   return (
     <m.article
       {...(mounted ? { variants: cardRevealUp } : {})}
@@ -156,8 +163,8 @@ const ProjectCard = memo(function ProjectCard({ project, index, mounted }: { pro
         </div>
 
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center', marginTop: 'auto' }}>
-          {project.tech_stack.slice(0, 4).map(tech => <span key={tech} className="tech-tag">{tech}</span>)}
-          {project.tech_stack.length > 4 && (
+          {cleanedTechStack.slice(0, 4).map(tech => <span key={tech} className="tech-tag">{tech}</span>)}
+          {cleanedTechStack.length > 4 && (
             <span style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -172,7 +179,7 @@ const ProjectCard = memo(function ProjectCard({ project, index, mounted }: { pro
               border: '1.5px solid var(--text-primary)',
               boxShadow: '1.5px 1.5px 0px var(--text-primary)',
             }}>
-              +{project.tech_stack.length - 4}
+              +{cleanedTechStack.length - 4}
             </span>
           )}
         </div>
