@@ -1,10 +1,12 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
+import { containerVariants, itemRevealLeft, itemRevealRight } from '@/lib/motion'
 import { useLang } from '@/contexts/LangContext'
+import { translations } from '@/lib/i18n'
 import { Mail, MapPin, Phone, Link2, Send, Globe } from 'lucide-react'
 import { Github, Linkedin, Instagram, Twitter, Facebook, Youtube, Twitch, Whatsapp } from '@/components/icons/BrandIcons'
-import { useState } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 
 interface ContactData {
   email: string; phone?: string | null; location?: string | null
@@ -29,12 +31,21 @@ const ICON_MAP: Record<string, React.ElementType> = {
 }
 
 export function ContactSection({ contact, socials }: { contact?: ContactData | null; socials?: Social[] | null }) {
-  const { lang, t } = useLang()
+  const { lang: clientLang, t: clientT } = useLang()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const lang = mounted ? clientLang : 'id'
+  const t = mounted ? clientT : translations.id
+
   const cd = contact || DEFAULT_CONTACT
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
   const [form, setForm] = useState({ name: '', email: '', message: '' })
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault()
     setStatus('sending')
     try {
@@ -46,7 +57,7 @@ export function ContactSection({ contact, socials }: { contact?: ContactData | n
       else setStatus('error')
     } catch { setStatus('error') }
     setTimeout(() => setStatus('idle'), 4000)
-  }
+  }, [form])
 
   const contactTitle = lang === 'en' ? (cd.title_en || "Let's Talk") : (cd.title_id || "Mari Bicara")
   const contactDesc  = lang === 'en'
@@ -62,20 +73,29 @@ export function ContactSection({ contact, socials }: { contact?: ContactData | n
   return (
     <section id="contact" className="section" style={{ background: 'var(--bg-secondary)' }}>
       <div className="container">
-        <motion.div className="section-header"
+        <m.div className="section-header"
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
           <span className="section-subtitle">{t.contact.subtitle}</span>
           <h2 className="section-title">{t.contact.title}</h2>
           <p className="section-desc">
             {lang === 'en' ? "Have a project in mind? Let's build something amazing together." : 'Punya proyek? Mari kita bangun sesuatu yang luar biasa bersama.'}
           </p>
-        </motion.div>
+        </m.div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 40, maxWidth: 960, margin: '0 auto' }}>
+        <m.div
+          {...(mounted ? {
+            variants: containerVariants,
+            initial: "hidden",
+            whileInView: "show",
+            viewport: { once: true, margin: "-60px" }
+          } : {})}
+          style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 40, maxWidth: 960, margin: '0 auto' }}
+        >
 
           {/* Info */}
-          <motion.div initial={{ opacity: 0, x: -24 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
+          <m.div {...(mounted ? { variants: itemRevealRight } : {})}
             style={{ display: 'flex', flexDirection: 'column', gap: 24 }}
           >
             <div>
@@ -97,9 +117,7 @@ export function ContactSection({ contact, socials }: { contact?: ContactData | n
                     <item.icon size={15} />
                   </div>
                   {item.href ? (
-                    <a href={item.href} style={{ color: 'var(--text-primary)', fontSize: 14, textDecoration: 'none', transition: 'color 0.2s' }}
-                      onMouseEnter={e => (e.currentTarget.style.color = 'var(--accent)')}
-                      onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-primary)')}
+                    <a href={item.href} className="contact-link-hover" style={{ color: 'var(--text-primary)', fontSize: 14, textDecoration: 'none' }}
                     >{item.value}</a>
                   ) : (
                     <span style={{ color: 'var(--text-secondary)', fontSize: 14 }}>{item.value}</span>
@@ -119,13 +137,12 @@ export function ContactSection({ contact, socials }: { contact?: ContactData | n
                     return (
                       <a key={s.id} href={formatLink(s.link)} target="_blank" rel="noopener noreferrer"
                         aria-label={s.name}
+                        className="contact-social-perf"
                         style={{
                           width: 38, height: 38, display: 'flex', alignItems: 'center', justifyContent: 'center',
                           background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '10px',
-                          color: 'var(--text-secondary)', textDecoration: 'none', transition: 'var(--transition)',
+                          color: 'var(--text-secondary)', textDecoration: 'none',
                         }}
-                        onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; e.currentTarget.style.background = 'var(--accent-light)' }}
-                        onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-secondary)'; e.currentTarget.style.background = 'var(--surface)' }}
                       >
                         <Icon size={15} />
                       </a>
@@ -134,10 +151,10 @@ export function ContactSection({ contact, socials }: { contact?: ContactData | n
                 </div>
               </div>
             )}
-          </motion.div>
+          </m.div>
 
           {/* Form */}
-          <motion.div initial={{ opacity: 0, x: 24 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
+          <m.div {...(mounted ? { variants: itemRevealLeft } : {})}>
             <form onSubmit={handleSubmit}
               style={{
                 background: 'var(--surface)', border: '1px solid var(--border)',
@@ -184,8 +201,8 @@ export function ContactSection({ contact, socials }: { contact?: ContactData | n
                   : t.contact.send}
               </button>
             </form>
-          </motion.div>
-        </div>
+          </m.div>
+        </m.div>
       </div>
     </section>
   )

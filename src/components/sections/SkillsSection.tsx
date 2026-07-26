@@ -1,7 +1,7 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import { useState, useEffect } from 'react'
+import { m, useScroll, useTransform } from 'framer-motion'
+import { useState, useEffect, useRef, memo } from 'react'
 import { useLang } from '@/contexts/LangContext'
 
 interface Skill {
@@ -20,25 +20,35 @@ const DEFAULT_SKILLS: Skill[] = [
   { id: '9', name: 'Figma',            level: 72, category: 'Design',   icon: 'figma' },
 ]
 
-function SkillCard({ skill, index }: { skill: Skill; index: number }) {
+const SkillCard = memo(function SkillCard({ skill, index, mounted }: { skill: Skill; index: number; mounted: boolean }) {
+  const cardRef = useRef<HTMLDivElement>(null)
+  
+  // Motion.dev scroll-text-lines pattern: Scroll-driven progress relative to viewport position
+  const { scrollYProgress } = useScroll({
+    target: cardRef,
+    offset: ["start 92%", "start 65%"]
+  })
+
+  const opacity = useTransform(scrollYProgress, [0, 1], [0.15, 1])
+  const y       = useTransform(scrollYProgress, [0, 1], [28, 0])
+  const scale   = useTransform(scrollYProgress, [0, 1], [0.94, 1])
+
   const iconName = skill.icon?.toLowerCase().replace(/[\s/.]/g, '') || ''
-
-  // Icon yang punya versi -original hitam (perlu invert di dark mode)
-  const darkIcons = ['github', 'express', 'nextjs', 'prisma', 'vercel', 'figma', 'flask']
-  const needsInvert = darkIcons.includes(iconName)
-
+  const monochromeIcons = ['github', 'nextjs', 'vercel', 'express', 'flask']
+  const needsFilter = monochromeIcons.includes(iconName)
   const iconUrl = iconName
     ? `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${iconName}/${iconName}-original.svg`
     : null
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.05, duration: 0.4 }}
+    <m.div
+      ref={cardRef}
       style={{
+        opacity: mounted ? opacity : 1,
+        y: mounted ? y : 0,
+        scale: mounted ? scale : 1,
         background: 'var(--surface)',
+        border: '1px solid var(--border)',
         borderRadius: '14px',
         padding: '20px',
         display: 'flex',
@@ -48,30 +58,33 @@ function SkillCard({ skill, index }: { skill: Skill; index: number }) {
         cursor: 'default',
         textAlign: 'center',
         boxShadow: 'var(--shadow-sm)',
-        transition: 'var(--transition)',
+        willChange: 'opacity, transform',
+        transform: 'translateZ(0)',
       }}
-      whileHover={{ y: -4, boxShadow: '0 8px 24px rgba(20,184,166,0.12)' }}
+      className="skill-card-perf"
       suppressHydrationWarning
     >
       {/* Icon container */}
       <div style={{
-        width: 52, height: 52,
-        borderRadius: '12px',
+        width: 64, height: 64,
+        borderRadius: '14px',
         background: 'var(--surface-2)',
+        border: '1px solid var(--border)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         overflow: 'hidden', flexShrink: 0,
+        transition: 'var(--transition)'
       }}>
         {iconUrl ? (
-          <img
-            src={iconUrl}
-            alt={skill.name}
-            width={32} height={32}
-            style={{
-              objectFit: 'contain',
-              // icon hitam tidak terlihat di dark mode → invert jadi putih
-              filter: needsInvert ? 'invert(1)' : 'none',
-            }}
-            onError={(e) => {
+           <img
+             src={iconUrl}
+             alt={skill.name}
+             width={36} height={36}
+             loading="lazy"
+             style={{
+               objectFit: 'contain',
+               filter: needsFilter ? 'var(--skill-icon-filter)' : 'none',
+             }}
+             onError={(e) => {
               const target = e.currentTarget
               if (!target.src.includes('-plain')) {
                 target.src = `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${iconName}/${iconName}-plain.svg`
@@ -81,13 +94,13 @@ function SkillCard({ skill, index }: { skill: Skill; index: number }) {
                 target.style.display = 'none'
                 const parent = target.parentElement
                 if (parent) {
-                  parent.innerHTML = `<span style="font-size:20px;font-weight:800;color:var(--accent);font-family:Outfit,sans-serif;">${skill.name.charAt(0)}</span>`
+                  parent.innerHTML = `<span style="font-size:24px;font-weight:800;color:var(--accent);font-family:Outfit,sans-serif;">${skill.name.charAt(0)}</span>`
                 }
               }
             }}
-          />
+           />
         ) : (
-          <span style={{ fontSize: 20, fontWeight: 800, color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
+          <span style={{ fontSize: 24, fontWeight: 800, color: 'var(--accent)', fontFamily: 'Outfit, sans-serif' }}>
             {skill.name.charAt(0)}
           </span>
         )}
@@ -97,62 +110,41 @@ function SkillCard({ skill, index }: { skill: Skill; index: number }) {
       <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', fontFamily: 'Outfit, sans-serif', lineHeight: 1.3 }}>
         {skill.name}
       </span>
-    </motion.div>
+    </m.div>
   )
-}
+})
 
 export function SkillsSection({ data }: { data?: Skill[] | null }) {
   const { t } = useLang()
-  const skills     = (data && data.length > 0) ? data : DEFAULT_SKILLS
-  const categories = ['All', ...Array.from(new Set(skills.map(s => s.category)))]
-  const [activeCategory, setActiveCategory] = useState('All')
+  const skills = (data && data.length > 0) ? data : DEFAULT_SKILLS
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => { setMounted(true) }, [])
 
-  const filtered = activeCategory === 'All'
-    ? skills
-    : skills.filter(s => s.category === activeCategory)
-
   return (
     <section id="skills" className="section" style={{ background: 'var(--bg)' }}>
       <div className="container">
-        <motion.div className="section-header"
-          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+        <m.div className="section-header"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          style={{ marginBottom: 40 }}
         >
           <span className="section-subtitle">{t.skills.subtitle}</span>
           <h2 className="section-title">{t.skills.title}</h2>
-        </motion.div>
-
-        {/* Category pills */}
-        {mounted && (
-          <div style={{ display: 'flex', gap: 8, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 48 }}>
-            {categories.map(cat => (
-              <button key={cat} onClick={() => setActiveCategory(cat)}
-                style={{
-                  padding: '7px 20px', borderRadius: '9999px',
-                  fontSize: 13, fontWeight: 500,
-                  fontFamily: 'Outfit, sans-serif',
-                  cursor: 'pointer', border: '1px solid',
-                  transition: 'var(--transition)',
-                  borderColor: activeCategory === cat ? 'var(--accent)' : 'var(--border)',
-                  background:  activeCategory === cat ? 'var(--accent-light)' : 'transparent',
-                  color:       activeCategory === cat ? 'var(--accent)' : 'var(--text-secondary)',
-                }}
-              >{cat}</button>
-            ))}
-          </div>
-        )}
+        </m.div>
 
         {/* Icon grid */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))',
-          gap: 16,
-        }}>
-          {filtered.map((skill, i) => (
-            <SkillCard key={skill.id} skill={skill} index={i} />
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))',
+            gap: 16,
+          }}
+        >
+          {skills.map((skill, i) => (
+            <SkillCard key={skill.id} skill={skill} index={i} mounted={mounted} />
           ))}
         </div>
       </div>

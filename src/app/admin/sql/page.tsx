@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { Play, Database, Terminal, AlertOctagon, HelpCircle, Code } from 'lucide-react'
 
 const TEMPLATE_QUERIES = [
@@ -199,7 +199,7 @@ export default function SQLEditorPage() {
         )}
 
         {error && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             style={{
@@ -219,7 +219,7 @@ export default function SQLEditorPage() {
               <div style={{ fontFamily: 'Space Grotesk', fontSize: '16px', marginBottom: '4px' }}>Execution Failed</div>
               <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'monospace', fontSize: '13px' }}>{error}</pre>
             </div>
-          </motion.div>
+          </m.div>
         )}
 
         {!executing && !error && results && results.length > 0 && (

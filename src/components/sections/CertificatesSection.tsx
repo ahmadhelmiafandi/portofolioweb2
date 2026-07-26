@@ -1,9 +1,11 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
+import { containerVariants, cardRevealUp } from '@/lib/motion'
 import { useLang } from '@/contexts/LangContext'
+import { translations } from '@/lib/i18n'
 import { Award, Calendar, ExternalLink, ShieldCheck, ChevronDown, ChevronUp } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 
 interface Certificate {
   id: string; name: string; issuer: string
@@ -14,35 +16,53 @@ interface Certificate {
 }
 
 export function CertificatesSection({ data }: { data?: Certificate[] | null }) {
-  const { t, lang } = useLang()
+  const { t: clientT, lang: clientLang } = useLang()
   const [showAll, setShowAll] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
-  if (!data || data.length === 0) return null
-  const publishedCerts = data.filter(c => c.published)
-  if (publishedCerts.length === 0) return null
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
-  const visibleCerts = showAll ? publishedCerts : publishedCerts.slice(0, 3)
+  const lang = mounted ? clientLang : 'id'
+  const t = mounted ? clientT : translations.id
 
-  const accentPairs = [
+  const publishedCerts = useMemo(() => data ? data.filter(c => c.published) : [], [data])
+  const visibleCerts = useMemo(() => showAll ? publishedCerts : publishedCerts.slice(0, 3), [publishedCerts, showAll])
+
+  const accentPairs = useMemo(() => [
     { bg: 'var(--accent-light)',   color: 'var(--accent)' },
     { bg: 'var(--accent-2-light)', color: 'var(--accent-2)' },
     { bg: 'rgba(99,102,241,0.1)',  color: '#818cf8' },
     { bg: 'rgba(234,179,8,0.1)',   color: '#eab308' },
-  ]
+  ], [])
+
+  if (!data || data.length === 0) return null
+  if (publishedCerts.length === 0) return null
 
   return (
-    <section id="certificates" className="section" style={{ background: 'var(--bg-secondary)', position: 'relative', overflow: 'hidden' }}>
+    <section id="certificates" className="section" style={{ background: 'var(--bg-secondary)', position: 'relative' }}>
       <div className="grid-pattern" style={{ position: 'absolute', inset: 0, opacity: 1, zIndex: 0 }} />
 
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-        <motion.div className="section-header"
+        <m.div className="section-header"
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
           <span className="section-subtitle">{t.certificates.subtitle}</span>
           <h2 className="section-title">{t.certificates.title}</h2>
-        </motion.div>
+        </m.div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 20 }}>
+        <m.div
+          {...(mounted ? {
+            variants: containerVariants,
+            initial: showAll ? "show" : "hidden",
+            whileInView: "show",
+            animate: showAll ? "show" : undefined,
+            viewport: { once: true, margin: "-60px" }
+          } : {})}
+          style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 20 }}
+        >
           {visibleCerts.map((cert, index) => {
             const pair = accentPairs[index % accentPairs.length]
             const formattedDate = cert.issue_date
@@ -50,44 +70,60 @@ export function CertificatesSection({ data }: { data?: Certificate[] | null }) {
               : ''
 
             return (
-              <motion.article
+              <m.article
                 key={cert.id}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-80px' }}
-                transition={{ duration: 0.45, delay: index * 0.08 }}
+                {...(mounted ? { variants: cardRevealUp } : {})}
+                className="cert-card-perf"
                 style={{
                   background: 'var(--surface)',
                   border: '1px solid var(--border)',
-                  borderRadius: '16px',
+                  borderLeft: `4px solid ${pair.color}`,
+                  borderRadius: '14px',
                   padding: '24px',
                   display: 'flex', flexDirection: 'column',
                   justifyContent: 'space-between',
                   position: 'relative',
-                  transition: 'var(--transition)',
+                  boxShadow: 'var(--shadow-sm)',
+                  overflow: 'hidden'
                 }}
-                whileHover={{ borderColor: 'var(--accent)' }}
               >
-                {/* Accent icon top-right */}
+                {/* CSS gradient on hover — replaces expensive iframe anim-svg.html */}
+                <div className="cert-hover-glow" style={{
+                  position: 'absolute', top: -50, right: -50,
+                  width: 200, height: 200,
+                  background: `radial-gradient(circle, ${pair.color}15 0%, transparent 70%)`,
+                  opacity: 0,
+                  transition: 'opacity 0.4s ease',
+                  transform: 'scale(1.5)',
+                  pointerEvents: 'none',
+                  zIndex: 0,
+                }} />
+
+                {/* Issuer badge with larger icon */}
                 <div style={{
-                  position: 'absolute', top: 16, right: 16,
-                  width: 36, height: 36, borderRadius: '10px',
-                  background: pair.bg, color: pair.color,
+                  position: 'absolute', top: 20, right: 20,
+                  width: 48, height: 48, borderRadius: '12px',
+                  background: pair.bg, 
+                  border: `2px solid ${pair.color}20`,
+                  color: pair.color,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  boxShadow: `0 4px 12px ${pair.color}25`,
+                  zIndex: 2
                 }}>
-                  <Award size={17} />
+                  <Award size={24} strokeWidth={2.5} />
                 </div>
 
-                <div>
-                  {/* Issuer badge */}
+                <div style={{ position: 'relative', zIndex: 2 }}>
+                  {/* Issuer text badge */}
                   <div style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 5,
-                    fontSize: 11, fontWeight: 600, color: pair.color,
+                    display: 'inline-flex', alignItems: 'center', gap: 6,
+                    fontSize: 11, fontWeight: 700, color: pair.color,
                     background: pair.bg,
-                    padding: '3px 10px', borderRadius: '9999px',
+                    padding: '5px 12px', borderRadius: '9999px',
                     marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.08em',
+                    border: `1px solid ${pair.color}30`
                   }}>
-                    <ShieldCheck size={12} />
+                    <ShieldCheck size={13} />
                     {cert.issuer}
                   </div>
 
@@ -110,37 +146,29 @@ export function CertificatesSection({ data }: { data?: Certificate[] | null }) {
                   </div>
                 </div>
 
-                {/* Action buttons */}
+                {/* Action button - Single primary CTA */}
                 {(cert.link || cert.file_url) && (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                    {cert.link && (
-                      <a href={cert.link} target="_blank" rel="noopener noreferrer"
-                        className="btn-secondary"
-                        style={{ justifyContent: 'center', fontSize: 13, padding: '9px 14px' }}
-                      >
-                        <ExternalLink size={13} />
-                        {lang === 'en' ? `View on ${cert.issuer}` : `Lihat di ${cert.issuer}`}
-                      </a>
-                    )}
-                    {cert.file_url && (
-                      <a href={cert.file_url} target="_blank" rel="noopener noreferrer"
-                        className="btn-primary"
-                        style={{ justifyContent: 'center', fontSize: 13, padding: '9px 14px' }}
-                      >
-                        {t.certificates.view_pdf}
-                        <ExternalLink size={13} />
-                      </a>
-                    )}
+                  <div style={{ position: 'relative', zIndex: 2 }}>
+                    <a 
+                      href={cert.file_url || cert.link || '#'} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="btn-primary"
+                      style={{ justifyContent: 'center', fontSize: 13, padding: '10px 16px', width: '100%' }}
+                    >
+                      <ExternalLink size={14} />
+                      {lang === 'en' ? 'View Certificate' : 'Lihat Sertifikat'}
+                    </a>
                   </div>
                 )}
-              </motion.article>
+
+              </m.article>
             )
           })}
-        </div>
+        </m.div>
 
         {publishedCerts.length > 3 && (
-          <motion.div
-            initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+          <div
             style={{ display: 'flex', justifyContent: 'center', marginTop: 40 }}
           >
             <button
@@ -161,7 +189,7 @@ export function CertificatesSection({ data }: { data?: Certificate[] | null }) {
                 <><ChevronDown size={15} />{lang === 'en' ? `View All Certificates (${publishedCerts.length})` : `Lihat Semua Sertifikat (${publishedCerts.length})`}</>
               )}
             </button>
-          </motion.div>
+          </div>
         )}
       </div>
     </section>

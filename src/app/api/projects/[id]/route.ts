@@ -33,11 +33,11 @@ export async function PATCH(
   try {
     const body = await request.json()
 
-    // Auto translate fields if Indonesian text is modified
-    if (body.title_id) {
+    // Auto translate fields if not manually provided
+    if (body.title_id && !body.title_en) {
       body.title_en = await translateIdToEn(body.title_id)
     }
-    if (body.description_id) {
+    if (body.description_id && !body.description_en) {
       body.description_en = await translateIdToEn(body.description_id)
     }
 

@@ -28,9 +28,10 @@ export default function AdminMessagesPage() {
     try {
       const res = await fetch('/api/messages')
       const data = await res.json()
-      setMessages(data)
+      setMessages(Array.isArray(data) ? data : [])
     } catch (err) {
       console.error(err)
+      setMessages([])
     } finally {
       setLoading(false)
     }
@@ -52,23 +53,39 @@ export default function AdminMessagesPage() {
   if (loading) return <div style={{ display: 'flex', justifyContent: 'center', padding: '100px' }}><Loader2 className="animate-spin" /></div>
 
   return (
-    <div style={{ maxWidth: '1200px' }}>
-      <div style={{ marginBottom: '40px' }}>
-        <h1 style={{ fontSize: '32px', fontWeight: '800', fontFamily: 'Syne', marginBottom: '8px' }}>Manage Messages</h1>
-        <p style={{ color: 'var(--text-secondary)' }}>View and manage contact form submissions from your website.</p>
+    <div style={{ maxWidth: '1400px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '32px' }}>
+        <div style={{
+          width: '48px',
+          height: '48px',
+          background: 'var(--accent-light)',
+          borderRadius: '12px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'var(--accent)'
+        }}>
+          <MessageSquare size={24} />
+        </div>
+        <div>
+          <h1 style={{ fontSize: '28px', fontWeight: '800', fontFamily: 'Outfit', marginBottom: '4px' }}>Messages</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>View and manage contact form submissions from your website.</p>
+        </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '400px 1fr', gap: '32px', minHeight: '600px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '380px 1fr', gap: '24px', minHeight: '600px' }}>
         {/* List */}
         <div style={{ 
           background: 'var(--surface)', 
           border: '1px solid var(--border)', 
-          borderRadius: 'var(--radius-lg)',
+          borderRadius: '12px',
           overflow: 'hidden',
           display: 'flex',
-          flexDirection: 'column'
+          flexDirection: 'column',
+          boxShadow: 'var(--shadow-sm)'
         }}>
-          <div style={{ padding: '16px', borderBottom: '1px solid var(--border)', fontWeight: 600 }}>
+          <div style={{ padding: '20px', borderBottom: '1px solid var(--border)', fontWeight: 700, fontSize: '15px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Mail size={16} color="var(--accent)" />
             Inbox ({messages.length})
           </div>
           <div style={{ flex: 1, overflowY: 'auto', maxHeight: '700px' }}>
@@ -80,12 +97,13 @@ export default function AdminMessagesPage() {
                   key={m.id}
                   onClick={() => setSelectedMessage(m)}
                   style={{ 
-                    padding: '16px', 
+                    padding: '16px 20px', 
                     borderBottom: '1px solid var(--border)', 
                     cursor: 'pointer',
                     background: selectedMessage?.id === m.id ? 'var(--accent-light)' : 'transparent',
-                    transition: '0.2s',
-                    position: 'relative'
+                    transition: 'all 0.2s ease',
+                    position: 'relative',
+                    borderLeft: selectedMessage?.id === m.id ? '3px solid var(--accent)' : '3px solid transparent'
                   }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
@@ -107,10 +125,11 @@ export default function AdminMessagesPage() {
         <div style={{ 
           background: 'var(--surface)', 
           border: '1px solid var(--border)', 
-          borderRadius: 'var(--radius-lg)',
-          padding: '40px',
+          borderRadius: '12px',
+          padding: '32px',
           display: 'flex',
-          flexDirection: 'column'
+          flexDirection: 'column',
+          boxShadow: 'var(--shadow-sm)'
         }}>
           {selectedMessage ? (
             <>
@@ -138,13 +157,14 @@ export default function AdminMessagesPage() {
               </div>
               <div style={{ 
                 flex: 1, 
-                padding: '24px', 
-                background: 'rgba(0,0,0,0.05)', 
-                borderRadius: 'var(--radius)',
-                fontSize: '16px',
-                lineHeight: '1.7',
+                padding: '20px', 
+                background: 'var(--surface-2)', 
+                borderRadius: '10px',
+                fontSize: '15px',
+                lineHeight: '1.8',
                 whiteSpace: 'pre-wrap',
-                color: 'var(--text-primary)'
+                color: 'var(--text-primary)',
+                border: '1px solid var(--border)'
               }}>
                 {selectedMessage.message}
               </div>
