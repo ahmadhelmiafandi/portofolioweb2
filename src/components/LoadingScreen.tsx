@@ -32,6 +32,7 @@ export function LoadingScreen() {
         justifyContent: "center",
         background: "#050505",
         overflow: "hidden",
+        pointerEvents: visible ? "auto" : "none",
         opacity: visible ? 1 : 0,
         transform: visible ? "scale(1)" : "scale(1.04)",
         transition: "opacity 0.4s ease, transform 0.4s ease",

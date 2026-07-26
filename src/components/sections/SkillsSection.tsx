@@ -1,8 +1,7 @@
 'use client'
 
-import { m } from 'framer-motion'
-import { containerVariants, cardRevealUp } from '@/lib/motion'
-import { useState, useEffect, useMemo, memo } from 'react'
+import { m, useScroll, useTransform } from 'framer-motion'
+import { useState, useEffect, useRef, memo } from 'react'
 import { useLang } from '@/contexts/LangContext'
 
 interface Skill {
@@ -22,20 +21,32 @@ const DEFAULT_SKILLS: Skill[] = [
 ]
 
 const SkillCard = memo(function SkillCard({ skill, index, mounted }: { skill: Skill; index: number; mounted: boolean }) {
+  const cardRef = useRef<HTMLDivElement>(null)
+  
+  // Motion.dev scroll-text-lines pattern: Scroll-driven progress relative to viewport position
+  const { scrollYProgress } = useScroll({
+    target: cardRef,
+    offset: ["start 92%", "start 65%"]
+  })
+
+  const opacity = useTransform(scrollYProgress, [0, 1], [0.15, 1])
+  const y       = useTransform(scrollYProgress, [0, 1], [28, 0])
+  const scale   = useTransform(scrollYProgress, [0, 1], [0.94, 1])
+
   const iconName = skill.icon?.toLowerCase().replace(/[\s/.]/g, '') || ''
-
-  const darkModeIcons = ['github', 'nextjs', 'express', 'prisma', 'vercel', 'figma', 'flask', 'dbeaver', 'java', 'postgresql']
-  const needsFilter = darkModeIcons.includes(iconName)
-
+  const monochromeIcons = ['github', 'nextjs', 'vercel', 'express', 'flask']
+  const needsFilter = monochromeIcons.includes(iconName)
   const iconUrl = iconName
     ? `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${iconName}/${iconName}-original.svg`
     : null
 
   return (
     <m.div
-      {...(mounted ? { variants: cardRevealUp } : {})}
-      className="skill-card-perf"
+      ref={cardRef}
       style={{
+        opacity: mounted ? opacity : 1,
+        y: mounted ? y : 0,
+        scale: mounted ? scale : 1,
         background: 'var(--surface)',
         border: '1px solid var(--border)',
         borderRadius: '14px',
@@ -47,7 +58,10 @@ const SkillCard = memo(function SkillCard({ skill, index, mounted }: { skill: Sk
         cursor: 'default',
         textAlign: 'center',
         boxShadow: 'var(--shadow-sm)',
+        willChange: 'opacity, transform',
+        transform: 'translateZ(0)',
       }}
+      className="skill-card-perf"
       suppressHydrationWarning
     >
       {/* Icon container */}
@@ -96,76 +110,44 @@ const SkillCard = memo(function SkillCard({ skill, index, mounted }: { skill: Sk
       <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', fontFamily: 'Outfit, sans-serif', lineHeight: 1.3 }}>
         {skill.name}
       </span>
-
     </m.div>
   )
 })
 
 export function SkillsSection({ data }: { data?: Skill[] | null }) {
   const { t } = useLang()
-  const skills     = (data && data.length > 0) ? data : DEFAULT_SKILLS
-  const categories = useMemo(() => ['All', ...Array.from(new Set(skills.map(s => s.category)))], [skills])
-  const [activeCategory, setActiveCategory] = useState('All')
+  const skills = (data && data.length > 0) ? data : DEFAULT_SKILLS
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => { setMounted(true) }, [])
-
-  const filtered = useMemo(() => activeCategory === 'All'
-    ? skills
-    : skills.filter(s => s.category === activeCategory), [skills, activeCategory])
 
   return (
     <section id="skills" className="section" style={{ background: 'var(--bg)' }}>
       <div className="container">
         <m.div className="section-header"
-          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          style={{ marginBottom: 40 }}
         >
           <span className="section-subtitle">{t.skills.subtitle}</span>
           <h2 className="section-title">{t.skills.title}</h2>
         </m.div>
 
-        {/* Category pills */}
-        {mounted && (
-          <div style={{ display: 'flex', gap: 8, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 48 }}>
-            {categories.map(cat => (
-              <button key={cat} onClick={() => setActiveCategory(cat)}
-                style={{
-                  padding: '7px 20px', borderRadius: '9999px',
-                  fontSize: 13, fontWeight: 500,
-                  fontFamily: 'Outfit, sans-serif',
-                  cursor: 'pointer', border: '1px solid',
-                  transition: 'var(--transition)',
-                  borderColor: activeCategory === cat ? 'var(--accent)' : 'var(--border)',
-                  background:  activeCategory === cat ? 'var(--accent-light)' : 'transparent',
-                  color:       activeCategory === cat ? 'var(--accent)' : 'var(--text-secondary)',
-                }}
-              >{cat}</button>
-            ))}
-          </div>
-        )}
-
         {/* Icon grid */}
-        <m.div
-          key={activeCategory}
-          {...(mounted ? {
-            variants: containerVariants,
-            initial: "hidden",
-            animate: "show",
-          } : {})}
+        <div
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))',
             gap: 16,
           }}
         >
-          {filtered.map((skill, i) => (
+          {skills.map((skill, i) => (
             <SkillCard key={skill.id} skill={skill} index={i} mounted={mounted} />
           ))}
-        </m.div>
+        </div>
       </div>
-
-
     </section>
   )
 }

@@ -4,7 +4,6 @@ import { AboutSection } from "@/components/sections/AboutSection";
 import { SkillsSection } from "@/components/sections/SkillsSection";
 import { Footer } from "@/components/Footer";
 import { ScrollToTop } from "@/components/ScrollToTop";
-import { ScrollProgress } from "@/components/ScrollProgress";
 import { prisma } from "@/lib/prisma";
 import dynamicImport from "next/dynamic";
 
@@ -140,7 +139,6 @@ export default async function HomePage() {
 
   return (
     <>
-      <ScrollProgress />
       <Navbar hero={hero} contact={contact} />
       <main>
         <HeroSection

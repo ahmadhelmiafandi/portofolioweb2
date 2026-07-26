@@ -215,7 +215,7 @@ function LanyardCard({ image, name }: { image?: string | null; name: string }) {
                 <div style={{
                   fontSize: 12,
                   fontWeight: 700,
-                  color: 'var(--text-primary)',
+                  color: '#ffffff',
                   fontFamily: 'Outfit, sans-serif',
                   letterSpacing: '-0.02em',
                   lineHeight: 1.2,
@@ -227,7 +227,7 @@ function LanyardCard({ image, name }: { image?: string | null; name: string }) {
                 }}>
                   {name}
                 </div>
-                <div style={{ fontSize: 8, color: 'var(--text-muted)', fontFamily: 'Outfit, sans-serif', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase', lineHeight: 1 }}>
+                <div style={{ fontSize: 8, color: 'rgba(255, 255, 255, 0.65)', fontFamily: 'Outfit, sans-serif', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase', lineHeight: 1 }}>
                   Jepara, ID
                 </div>
               </div>
@@ -260,7 +260,7 @@ function LanyardCard({ image, name }: { image?: string | null; name: string }) {
                   <rect x="43" width="1" height="15" fill="#fff" />
                   <rect x="45" width="2" height="15" fill="#fff" />
                 </svg>
-                <span style={{ fontSize: 7, color: 'var(--text-muted)', fontFamily: 'monospace', letterSpacing: '0.05em' }}>
+                <span style={{ fontSize: 7, color: 'rgba(255, 255, 255, 0.65)', fontFamily: 'monospace', letterSpacing: '0.05em' }}>
                   ID-82323
                 </span>
               </div>
